@@ -1,5 +1,9 @@
 # Dashboard Specification: ACA Marketplace Market Intelligence
 
+Canonical dashboard requirements now live in `docs/dashboard_spec.md`. This file
+is retained in `dashboards/` for BI-oriented project structure and mirrors the
+same stakeholder-facing intent.
+
 ## Audience
 
 Analytics, product, actuarial, operations, and market strategy stakeholders at a
