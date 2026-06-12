@@ -3,6 +3,10 @@
 Validated on June 12, 2026 using official CMS Plan Year 2026 Marketplace Public
 Use Files downloaded from `https://download.cms.gov/marketplace-puf/2026/`.
 
+This document is the evidence log for the project. It records the real data
+files used, row counts, profiling checks, dbt status, modeling adjustments made
+for official PY2026 schemas, and known limitations.
+
 ## Download results
 
 The downloader attempted Data.HealthCare.gov and catalog.data.gov metadata
@@ -60,6 +64,10 @@ Final `dbt build` status:
 PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
 ```
 
+Validation included dbt model materialization plus not-null, unique,
+accepted-values, and relationships tests across staging, intermediate, and mart
+layers.
+
 ## Mart row counts
 
 | Model | Rows |
@@ -104,6 +112,8 @@ PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
 - DuckDB is used for local development. The dbt layering, tests, and marts are
   structured to be portable to a cloud warehouse with adapter-specific profile
   changes.
+- The project does not claim production deployment. It demonstrates production-
+  style analytics engineering patterns in a reproducible local environment.
 
 ## How to reproduce
 

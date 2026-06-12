@@ -1,9 +1,80 @@
 # ACA Marketplace Analytics Engineering
 
-Portfolio-grade analytics engineering project using official CMS Plan Year 2026
-ACA Marketplace Public Use Files. The project builds a reproducible local
-warehouse that models plan pricing, benefit design, issuer competition, and
-county-level plan availability for a tech-driven health insurance company.
+**A healthcare insurance analytics engineering project using real CMS ACA
+Marketplace Public Use Files to model premiums, benefits, plan availability, and
+geography into tested analytics marts.**
+
+This is a recruiter-ready portfolio project for an Analytics Engineer I role in
+health insurance analytics. It demonstrates how raw public healthcare insurance
+files can become a documented, tested, BI-ready warehouse using Python, DuckDB,
+dbt, SQL, and LookML-style semantic modeling.
+
+## Project pitch
+
+Health insurance teams need reliable answers to market questions: where plans
+are offered, how premiums vary, which issuers compete in each county, and how
+benefit design differs across metal levels. This project simulates that internal
+analytics engineering use case using official CMS Plan Year 2026 ACA Marketplace
+Public Use Files.
+
+The result is a reproducible local analytics warehouse with:
+
+- Automated CMS PUF download with manual fallback instructions.
+- Raw profiling for row counts, null rates, duplicate checks, key coverage, and
+  sample values.
+- DuckDB raw tables for local development on multi-million-row CSV files.
+- dbt staging, intermediate, and dimensional mart models.
+- dbt tests for not-null, uniqueness, accepted values, and relationships.
+- LookML semantic layer files for BI exploration.
+- Stakeholder-facing docs, dashboard spec, metric dictionary, and sample SQL.
+
+## Real Data Validation Results
+
+Validated against real official CMS PY2026 Marketplace PUF CSVs downloaded from
+`https://download.cms.gov/marketplace-puf/2026/`.
+
+| Dataset | Rows validated | Columns |
+| --- | ---: | ---: |
+| Rate PUF - PY2026 | 2,235,761 | 20 |
+| Plan Attributes PUF - PY2026 | 22,059 | 151 |
+| Benefits and Cost Sharing PUF - PY2026 | 1,457,952 | 24 |
+| Service Area PUF - PY2026 | 8,820 | 14 |
+
+Final real-data dbt build:
+
+```text
+PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
+```
+
+Raw CSVs, local DuckDB databases, dbt target artifacts, raw profile outputs, and
+caches are generated locally and intentionally **not committed**.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A["CMS PY2026 Marketplace PUF ZIPs"] --> B["data/raw/py2026/*.csv"]
+    B --> C["Python profiling<br/>Polars lazy scans"]
+    B --> D["DuckDB raw tables"]
+    D --> E["dbt staging models<br/>typed, renamed, cleaned"]
+    E --> F["dbt intermediate models<br/>business grain + normalized flags"]
+    F --> G["dbt marts<br/>dimensions + facts"]
+    G --> H["LookML semantic layer"]
+    H --> I["Stakeholder dashboard specification"]
+    G --> J["Sample SQL + metric dictionary"]
+```
+
+## Why this matches Analytics Engineer I
+
+| Requirement | How this project demonstrates it |
+| --- | --- |
+| SQL | Builds dimensional marts and sample stakeholder queries over premiums, benefits, issuers, geographies, and plan availability. |
+| dbt | Uses staged, intermediate, and mart layers with model documentation and 83 passing real-data dbt checks. |
+| Semantic modeling / LookML | Defines LookML views and explores for plans, premiums, benefits, and geography with business metrics. |
+| Cloud warehouse readiness | Uses DuckDB locally while keeping layered models, source contracts, tests, and BI semantics portable to Snowflake, BigQuery, Redshift, or Databricks with adapter/profile changes. |
+| Dimensional modeling | Implements `dim_issuer`, `dim_plan`, `dim_geography`, `dim_metal_level`, `dim_benefit`, `dim_age_band`, `fact_premium`, `fact_plan_availability`, and `fact_benefit_cost_sharing`. |
+| Healthcare insurance analytics | Uses real ACA Marketplace public files to analyze premiums, metal levels, plan design, benefits, service areas, and county availability. |
+| Stakeholder communication | Includes executive summary, metric dictionary, dashboard spec, real-data validation notes, and sample SQL for analytics/product/actuarial/operations/strategy audiences. |
 
 ## Business framing
 
@@ -34,28 +105,9 @@ Health Insurance Exchange Public Use Files, Plan Year 2026:
 3. Benefits and Cost Sharing PUF - PY2026
 4. Service Area PUF - PY2026
 
-Raw CSV files are intentionally ignored by git.
-
-## Real data validation results
-
-This project was validated against real official CMS PY2026 Marketplace PUF CSVs
-downloaded from `https://download.cms.gov/marketplace-puf/2026/`.
-
-| Dataset | Real rows validated |
-| --- | ---: |
-| Rate PUF - PY2026 | 2,235,761 |
-| Plan Attributes PUF - PY2026 | 22,059 |
-| Benefits and Cost Sharing PUF - PY2026 | 1,457,952 |
-| Service Area PUF - PY2026 | 8,820 |
-
-Final real-data `dbt build` status:
-
-```text
-PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
-```
-
-See `docs/real_data_validation_results.md` for raw profiling highlights, mart
-row counts, known limitations, and exact reproduction commands.
+Raw CSV files and DuckDB database files are intentionally ignored by git. See
+`docs/real_data_validation_results.md` for raw profiling highlights, mart row
+counts, known limitations, and exact reproduction commands.
 
 ## Repository structure
 
@@ -70,8 +122,8 @@ row counts, known limitations, and exact reproduction commands.
 │       ├── staging/
 │       ├── intermediate/
 │       └── marts/
-├── docs/                        # Executive summary, metrics, sample SQL
-├── dashboards/                  # Dashboard specification
+├── docs/                        # Executive summary, metrics, validation, dashboard spec, SQL
+├── dashboards/                  # BI dashboard planning artifact
 ├── lookml/                      # LookML semantic layer
 └── scripts/                     # Download, profile, and DuckDB load scripts
 ```
@@ -81,7 +133,7 @@ row counts, known limitations, and exact reproduction commands.
 ### 1. Create a Python environment
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -91,7 +143,7 @@ pip install -r requirements.txt
 Try automatic discovery and download:
 
 ```bash
-python scripts/download_cms_pufs.py
+python3 scripts/download_cms_pufs.py
 ```
 
 If automatic discovery succeeds, the four CSV files will be saved under
@@ -100,7 +152,7 @@ If automatic discovery succeeds, the four CSV files will be saved under
 ### 3. Profile raw files
 
 ```bash
-python scripts/profile_raw_data.py
+python3 scripts/profile_raw_data.py
 ```
 
 Outputs:
@@ -114,7 +166,7 @@ and sample values.
 ### 4. Load raw CSVs into DuckDB
 
 ```bash
-python scripts/load_to_duckdb.py
+python3 scripts/load_to_duckdb.py
 ```
 
 Output database:
@@ -151,11 +203,20 @@ benefits_cost_sharing_puf_py2026.csv
 service_area_puf_py2026.csv
 ```
 
+Direct CMS ZIP URLs validated for PY2026:
+
+```text
+https://download.cms.gov/marketplace-puf/2026/rate-puf.zip
+https://download.cms.gov/marketplace-puf/2026/plan-attributes-puf.zip
+https://download.cms.gov/marketplace-puf/2026/benefits-and-cost-sharing-puf.zip
+https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip
+```
+
 Then continue with:
 
 ```bash
-python scripts/profile_raw_data.py
-python scripts/load_to_duckdb.py
+python3 scripts/profile_raw_data.py
+python3 scripts/load_to_duckdb.py
 cd dbt_project && dbt build --profiles-dir .
 ```
 
@@ -250,12 +311,35 @@ benefit cost sharing.
 - `docs/executive_summary.md`
 - `docs/metric_dictionary.md`
 - `docs/sample_queries.sql`
+- `docs/dashboard_spec.md`
 - `dashboards/dashboard_specification.md`
+
+## Resume bullets
+
+### Analytics Engineer version
+
+- Built a tested ACA Marketplace analytics warehouse using real CMS PY2026 PUFs,
+  DuckDB, dbt, dimensional modeling, and LookML-style semantic models; validated
+  3.7M+ raw rows with 83 passing dbt checks.
+
+### Data Analyst version
+
+- Modeled public healthcare insurance data into reusable premium, benefit,
+  issuer, metal-level, and county availability metrics with stakeholder-facing
+  SQL queries, metric definitions, and dashboard requirements.
+
+### Data Scientist / Analytics version
+
+- Created a reproducible healthcare market intelligence dataset from CMS ACA
+  Marketplace files, enabling analysis of premium variation, plan design,
+  issuer competition, and geography-level plan availability.
 
 ## Notes for cloud warehouse readiness
 
-The project uses DuckDB locally for development, but the layered model design is
-portable to Snowflake, BigQuery, Redshift, or Databricks with adapter-specific
-profile changes. Raw file ingestion, staged typing, conformed dimensions, fact
-grains, dbt tests, docs, and LookML semantics mirror production analytics
-engineering workflows.
+This project is a local development warehouse, not a deployed production
+platform. DuckDB is used for reproducible local validation, while the layered
+model design is intentionally portable to Snowflake, BigQuery, Redshift, or
+Databricks with adapter-specific profile changes. Raw file ingestion, staged
+typing, conformed dimensions, fact grains, dbt tests, docs, and LookML semantics
+mirror production analytics engineering patterns without overclaiming production
+deployment.

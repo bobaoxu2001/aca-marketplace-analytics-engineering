@@ -1,27 +1,42 @@
 # Executive Summary: ACA Marketplace Analytics Warehouse
 
-This project models the CMS Plan Year 2026 ACA Marketplace Public Use Files into
-an analytics-ready warehouse for a tech-driven health insurance organization.
-The warehouse connects plan pricing, benefit design, issuers, metal levels, age
-bands, and county-level availability so stakeholders can answer core market
-questions from reproducible data models.
+## One-line pitch
 
-## Business use case
+This project turns real CMS Plan Year 2026 ACA Marketplace Public Use Files into
+a tested local analytics warehouse for premiums, benefits, issuer competition,
+plan availability, and geography-level market analysis.
 
-Health insurance teams need to understand where plans are available, how prices
-vary across rating areas and metal levels, and how benefit design differs by
-issuer and market. This warehouse supports:
+## Why this matters
 
-- **Analytics:** repeatable SQL-ready marts for plan, premium, availability, and
-  benefits analysis.
-- **Product:** comparisons of deductible, out-of-pocket, and benefit coverage
-  patterns across plan designs.
-- **Actuarial:** premium benchmarking by age band, rating area, issuer, and
-  metal level.
-- **Operations:** county-level visibility into plan availability and service
-  area coverage.
-- **Market strategy:** issuer competition, plan density, and premium positioning
-  across geographies.
+Health insurance teams make pricing, product, actuarial, operations, and market
+strategy decisions from fragmented public datasets. Raw CMS PUF files are large,
+wide, and not directly stakeholder-friendly. This project demonstrates how an
+analytics engineer can convert those files into trusted marts, documented
+metrics, semantic models, and dashboard-ready analysis surfaces.
+
+## Validated data scale
+
+| Dataset | Rows validated |
+| --- | ---: |
+| Rate PUF - PY2026 | 2,235,761 |
+| Plan Attributes PUF - PY2026 | 22,059 |
+| Benefits and Cost Sharing PUF - PY2026 | 1,457,952 |
+| Service Area PUF - PY2026 | 8,820 |
+
+Final real-data dbt build status: `PASS=83 WARN=0 ERROR=0 SKIP=0`.
+
+## Stakeholder use cases
+
+- **Analytics:** maintain reusable SQL marts and metric definitions for plan,
+  premium, benefit, issuer, and geography analysis.
+- **Product:** compare metal levels, plan types, deductibles, out-of-pocket
+  maximums, and covered benefits.
+- **Actuarial:** benchmark monthly premiums by age band, rating area, tobacco
+  usage, issuer, and metal level.
+- **Operations:** understand county/service-area plan availability and partial
+  county coverage flags.
+- **Market strategy:** identify issuer competition, plan density, and geographic
+  opportunities using public marketplace data.
 
 ## Modeled data assets
 
@@ -41,15 +56,18 @@ issuer and market. This warehouse supports:
 - Benefit coverage rate
 - Premium difference by metal level
 
-## Recommended executive dashboard
+## Recommended executive dashboard flow
 
-The dashboard should start with market coverage and competitiveness KPIs, then
-drill into pricing and benefit design:
-
-1. County market overview: plan count, issuer count, and service area coverage.
-2. Premium benchmarking: average and median premiums by state, rating area,
+1. **Market availability:** plan count, issuer count, and service-area coverage.
+2. **Premium benchmarking:** average and median premiums by state, rating area,
    metal level, issuer, age band, and tobacco usage.
-3. Benefit design: deductible, out-of-pocket maximum, and coverage rate by
-   benefit category and metal level.
-4. Market strategy deep dive: issuer premium positioning and plan availability
-   gaps by county.
+3. **Benefit design:** deductible, out-of-pocket maximum, benefit coverage rate,
+   and cost-sharing details.
+4. **Market strategy:** issuer premium positioning and county-level availability
+   gaps.
+
+## Important scope note
+
+This project uses public plan design and premium data only. It does not include
+claims, enrollment, subsidy eligibility, member demographics, or deployed
+production infrastructure.
