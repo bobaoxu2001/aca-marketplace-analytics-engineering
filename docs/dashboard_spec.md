@@ -5,6 +5,9 @@ from the dbt marts and LookML semantic layer. It intentionally avoids fabricated
 screenshots or fake results; it defines the intended dashboard structure,
 metrics, filters, and data-quality callouts.
 
+A static preview generated from real aggregate mart queries is available at
+`assets/dashboard_preview.png`.
+
 ## Audience
 
 - Analytics leaders monitoring data quality and metric consistency.
