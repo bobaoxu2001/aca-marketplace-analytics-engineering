@@ -18,9 +18,9 @@ select
     {{ clean_numeric('"PrimarySubscriberAndOneDependent"') }} as primary_subscriber_one_dependent_rate,
     {{ clean_numeric('"PrimarySubscriberAndTwoDependents"') }} as primary_subscriber_two_dependents_rate,
     {{ clean_numeric('"PrimarySubscriberAndThreeOrMoreDependents"') }} as primary_subscriber_three_plus_dependents_rate,
-    trim("FederalTIN") as federal_tin,
+    cast(null as varchar) as federal_tin,
     trim("SourceName") as source_name,
-    try_cast("VersionNum" as integer) as version_num,
+    cast(null as integer) as version_num,
     try_cast("ImportDate" as timestamp) as import_date
 from source
 where nullif(trim("PlanId"), '') is not null

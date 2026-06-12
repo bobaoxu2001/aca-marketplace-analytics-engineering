@@ -80,11 +80,17 @@ models:
         tests: [not_null]
 
   - name: dim_plan
-    description: Plan dimension containing product, issuer, metal level, network, deductible, and out-of-pocket attributes.
+    description: Conformed standard-component plan dimension containing product, issuer, metal level, network, deductible, out-of-pocket, and plan variant attributes.
     columns:
       - name: plan_key
-        description: Deterministic surrogate key for plan, year, and state.
+        description: Deterministic surrogate key for standard component plan, year, and state.
         tests: [not_null, unique]
+      - name: plan_id
+        description: CMS standard component identifier used to join Rate PUF premiums to plan attributes.
+      - name: standard_component_id
+        description: CMS standard component identifier; retained separately for clarity in BI tools.
+      - name: plan_variant_count
+        description: Count of Plan Attributes variant IDs represented by this standard component.
       - name: issuer_key
         tests:
           - not_null

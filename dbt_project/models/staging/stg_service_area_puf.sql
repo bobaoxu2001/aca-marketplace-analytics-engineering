@@ -14,7 +14,7 @@ select
     nullif(trim("ZipCodes"), '') as zip_codes,
     nullif(trim("PartialCountyJustification"), '') as partial_county_justification,
     trim("SourceName") as source_name,
-    try_cast("VersionNum" as integer) as version_num,
+    cast(null as integer) as version_num,
     try_cast("ImportDate" as timestamp) as import_date
 from source
 where nullif(trim("ServiceAreaId"), '') is not null
