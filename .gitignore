@@ -1,0 +1,31 @@
+# Raw CMS files are large and should be downloaded locally.
+data/raw/**/*.csv
+data/raw/**/*.csv.gz
+data/raw/**/*.zip
+data/raw/**/*.parquet
+
+# Processed local warehouse artifacts.
+data/processed/*
+!data/processed/.gitkeep
+*.duckdb
+*.duckdb.wal
+
+# dbt build outputs and logs.
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/.user.yml
+logs/
+
+# Python caches and environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local environment files.
+.env
+.env.*
