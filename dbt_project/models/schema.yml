@@ -1,0 +1,226 @@
+version: 2
+
+models:
+  - name: stg_rate_puf
+    description: Cleaned Rate PUF rows with typed plan, rating-area, age, tobacco, and premium fields.
+    columns:
+      - name: business_year
+        description: CMS plan year.
+        tests: [not_null]
+      - name: state_code
+        description: Two-letter state code for the plan market.
+        tests: [not_null]
+      - name: plan_id
+        description: CMS HIOS plan identifier.
+        tests: [not_null]
+      - name: individual_rate
+        description: Monthly premium for one non-tobacco individual where available.
+
+  - name: stg_plan_attributes_puf
+    description: Cleaned Plan Attributes PUF rows at plan level with issuer, product, metal, service area, deductible, and out-of-pocket fields.
+    columns:
+      - name: business_year
+        tests: [not_null]
+      - name: state_code
+        tests: [not_null]
+      - name: issuer_id
+        tests: [not_null]
+      - name: plan_id
+        tests: [not_null]
+      - name: metal_level
+        description: CMS metal level or dental level.
+        tests:
+          - accepted_values:
+              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High']
+              config:
+                where: "metal_level is not null"
+
+  - name: stg_benefits_cost_sharing_puf
+    description: Cleaned Benefits and Cost Sharing PUF rows at plan-benefit grain.
+    columns:
+      - name: plan_id
+        tests: [not_null]
+      - name: benefit_name
+        tests: [not_null]
+
+  - name: stg_service_area_puf
+    description: Cleaned Service Area PUF rows with county and service-area availability details.
+    columns:
+      - name: state_code
+        tests: [not_null]
+      - name: service_area_id
+        tests: [not_null]
+
+  - name: int_plan_base
+    description: Deduplicated plan-grain intermediate model used by all plan-centric marts.
+    columns:
+      - name: plan_id
+        tests: [not_null]
+
+  - name: int_rate_enriched
+    description: Rate PUF rows enriched with stakeholder-friendly age bands.
+    columns:
+      - name: age_band
+        tests: [not_null]
+
+  - name: int_benefit_cost_sharing
+    description: Benefit cost-sharing rows with normalized boolean coverage flags.
+    columns:
+      - name: benefit_name
+        tests: [not_null]
+
+  - name: dim_issuer
+    description: Issuer dimension for state-level CMS Marketplace issuers.
+    columns:
+      - name: issuer_key
+        description: Deterministic surrogate key for issuer, year, and state.
+        tests: [not_null, unique]
+      - name: issuer_id
+        tests: [not_null]
+
+  - name: dim_plan
+    description: Plan dimension containing product, issuer, metal level, network, deductible, and out-of-pocket attributes.
+    columns:
+      - name: plan_key
+        description: Deterministic surrogate key for plan, year, and state.
+        tests: [not_null, unique]
+      - name: issuer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_issuer')
+              field: issuer_key
+      - name: metal_level_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_metal_level')
+              field: metal_level_key
+      - name: metal_level
+        tests:
+          - accepted_values:
+              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
+
+  - name: dim_geography
+    description: Conformed geography dimension for service-area counties and rating areas.
+    columns:
+      - name: geography_key
+        tests: [not_null, unique]
+      - name: state_code
+        tests: [not_null]
+      - name: geography_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['service_area_county', 'rating_area']
+
+  - name: dim_metal_level
+    description: Metal level dimension for ACA plan tier ordering and comparisons.
+    columns:
+      - name: metal_level_key
+        tests: [not_null, unique]
+      - name: metal_level
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
+
+  - name: dim_benefit
+    description: Benefit dimension with a lightweight analytic benefit category.
+    columns:
+      - name: benefit_key
+        tests: [not_null, unique]
+      - name: benefit_name
+        tests: [not_null]
+
+  - name: dim_age_band
+    description: Age-band dimension for premium analysis.
+    columns:
+      - name: age_band_key
+        tests: [not_null, unique]
+      - name: age_band
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['0-20', '21-29', '30-39', '40-49', '50-59', '60+', 'Family/Other']
+
+  - name: fact_premium
+    description: Premium fact table at plan, rating-area, age, tobacco, and effective-date grain.
+    columns:
+      - name: premium_key
+        tests: [not_null, unique]
+      - name: plan_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_plan')
+              field: plan_key
+      - name: issuer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_issuer')
+              field: issuer_key
+      - name: age_band_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_age_band')
+              field: age_band_key
+      - name: geography_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_geography')
+              field: geography_key
+      - name: monthly_premium
+        tests: [not_null]
+
+  - name: fact_plan_availability
+    description: Plan availability fact table at plan and county/service-area grain.
+    columns:
+      - name: plan_availability_key
+        tests: [not_null, unique]
+      - name: plan_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_plan')
+              field: plan_key
+      - name: issuer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_issuer')
+              field: issuer_key
+      - name: geography_key
+        tests:
+          - relationships:
+              to: ref('dim_geography')
+              field: geography_key
+              config:
+                where: "county_name is not null"
+
+  - name: fact_benefit_cost_sharing
+    description: Benefit coverage and cost-sharing fact table at plan-benefit-cost-sharing grain.
+    columns:
+      - name: benefit_cost_sharing_key
+        tests: [not_null, unique]
+      - name: plan_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_plan')
+              field: plan_key
+      - name: issuer_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_issuer')
+              field: issuer_key
+      - name: benefit_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_benefit')
+              field: benefit_key
