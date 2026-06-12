@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Raw CMS Plan Year 2026 ACA Marketplace Public Use Files loaded into DuckDB
+      by scripts/load_to_duckdb.py.
+    schema: main
+    tables:
+      - name: rate_puf_py2026
+        description: Raw Rate PUF with age, tobacco, rating area, and monthly premium rows.
+      - name: plan_attributes_puf_py2026
+        description: Raw Plan Attributes PUF with plan, issuer, metal level, deductible, and network attributes.
+      - name: benefits_cost_sharing_puf_py2026
+        description: Raw Benefits and Cost Sharing PUF with benefit-level coverage and cost-sharing details.
+      - name: service_area_puf_py2026
+        description: Raw Service Area PUF with county and service area availability.

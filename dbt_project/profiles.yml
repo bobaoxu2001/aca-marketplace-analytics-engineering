@@ -1,0 +1,8 @@
+aca_marketplace_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/processed/aca_marketplace_py2026.duckdb
+      schema: main
+      threads: 4
