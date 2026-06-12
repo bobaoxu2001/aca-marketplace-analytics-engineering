@@ -31,7 +31,8 @@ models:
         description: CMS metal level or dental level.
         tests:
           - accepted_values:
-              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High']
+              arguments:
+                values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High']
               config:
                 where: "metal_level is not null"
 
@@ -88,18 +89,21 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_issuer')
-              field: issuer_key
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
       - name: metal_level_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_metal_level')
-              field: metal_level_key
+              arguments:
+                to: ref('dim_metal_level')
+                field: metal_level_key
       - name: metal_level
         tests:
           - accepted_values:
-              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
+              arguments:
+                values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
 
   - name: dim_geography
     description: Conformed geography dimension for service-area counties and rating areas.
@@ -112,7 +116,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['service_area_county', 'rating_area']
+              arguments:
+                values: ['service_area_county', 'rating_area']
 
   - name: dim_metal_level
     description: Metal level dimension for ACA plan tier ordering and comparisons.
@@ -123,7 +128,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
+              arguments:
+                values: ['Bronze', 'Expanded Bronze', 'Silver', 'Gold', 'Platinum', 'Catastrophic', 'Low', 'High', 'Unknown']
 
   - name: dim_benefit
     description: Benefit dimension with a lightweight analytic benefit category.
@@ -142,7 +148,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['0-20', '21-29', '30-39', '40-49', '50-59', '60+', 'Family/Other']
+              arguments:
+                values: ['0-20', '21-29', '30-39', '40-49', '50-59', '60+', 'Family/Other']
 
   - name: fact_premium
     description: Premium fact table at plan, rating-area, age, tobacco, and effective-date grain.
@@ -153,26 +160,30 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_plan')
-              field: plan_key
+              arguments:
+                to: ref('dim_plan')
+                field: plan_key
       - name: issuer_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_issuer')
-              field: issuer_key
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
       - name: age_band_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_age_band')
-              field: age_band_key
+              arguments:
+                to: ref('dim_age_band')
+                field: age_band_key
       - name: geography_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_geography')
-              field: geography_key
+              arguments:
+                to: ref('dim_geography')
+                field: geography_key
       - name: monthly_premium
         tests: [not_null]
 
@@ -185,19 +196,22 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_plan')
-              field: plan_key
+              arguments:
+                to: ref('dim_plan')
+                field: plan_key
       - name: issuer_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_issuer')
-              field: issuer_key
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
       - name: geography_key
         tests:
           - relationships:
-              to: ref('dim_geography')
-              field: geography_key
+              arguments:
+                to: ref('dim_geography')
+                field: geography_key
               config:
                 where: "county_name is not null"
 
@@ -210,17 +224,20 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_plan')
-              field: plan_key
+              arguments:
+                to: ref('dim_plan')
+                field: plan_key
       - name: issuer_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_issuer')
-              field: issuer_key
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
       - name: benefit_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_benefit')
-              field: benefit_key
+              arguments:
+                to: ref('dim_benefit')
+                field: benefit_key

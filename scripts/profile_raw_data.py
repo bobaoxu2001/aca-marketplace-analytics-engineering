@@ -84,6 +84,10 @@ def scan_csv(path: Path) -> pl.LazyFrame:
     )
 
 
+def collect_streaming(lf: pl.LazyFrame) -> pl.DataFrame:
+    return lf.collect(engine="streaming")
+
+
 def choose_duplicate_key(columns: list[str], candidates: tuple[tuple[str, ...], ...]) -> list[str]:
     column_set = set(columns)
     for candidate in candidates:
@@ -109,7 +113,7 @@ def duplicate_profile(lf: pl.LazyFrame, key_columns: list[str]) -> dict[str, Any
             pl.len().alias("duplicate_groups"),
             (pl.col("row_count") - 1).sum().alias("duplicate_rows"),
         )
-        .collect(streaming=True)
+        .pipe(collect_streaming)
     )
     row = result.row(0, named=True)
     return {
@@ -124,7 +128,7 @@ def sample_values(lf: pl.LazyFrame, columns: list[str], max_columns: int = 12) -
     for column in columns[:max_columns]:
         values = (
             lf.select(pl.col(column).cast(pl.Utf8).drop_nulls().unique().head(5))
-            .collect(streaming=True)
+            .pipe(collect_streaming)
             .to_series()
             .to_list()
         )
@@ -145,11 +149,11 @@ def profile_dataset(config: DatasetProfileConfig, raw_dir: Path) -> dict[str, An
     lf = scan_csv(path)
     schema = lf.collect_schema()
     columns = list(schema.names())
-    row_count = int(lf.select(pl.len().alias("row_count")).collect(streaming=True).item())
+    row_count = int(collect_streaming(lf.select(pl.len().alias("row_count"))).item())
 
     null_counts = (
         lf.select([pl.col(column).null_count().alias(column) for column in columns])
-        .collect(streaming=True)
+        .pipe(collect_streaming)
         .row(0, named=True)
     )
     null_rates = {
