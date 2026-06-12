@@ -3,6 +3,8 @@
 This project is intentionally honest about what it does and does not prove. It
 uses real public CMS data and production-style analytics engineering patterns,
 but it is not a deployed production insurance analytics platform.
+The v2 mart includes the PY2026 Quality PUF, but not the broader Nationwide QRS
+reporting-unit dataset.
 
 ## Current limitations
 
@@ -41,12 +43,24 @@ CMS Service Area `County` values are used as published and may be FIPS-like
 identifiers. A production analytics layer should add a county reference table for
 friendly names, state/county keys, and geospatial joins.
 
+### Crosswalk history is one transition, not full SCD history
+
+The current `dim_plan_history` models PY2025 to PY2026 continuity only. A full
+SCD implementation would add more plan years, effective date ranges, and
+surrogate versioning across repeated annual crosswalk files.
+
+### Quality joins are partially limited by source scope
+
+The plan-level Quality PUF includes some rows that do not join to the modeled
+Exchange PUF plan dimension. These rows are retained and flagged with
+`joins_to_dim_plan` rather than dropped.
+
 ## Recommended next steps
 
-1. **Add CMS Quality Ratings PUF** to compare price, plan design, and quality.
-2. **Add Network PUF** to analyze provider network breadth and network design.
-3. **Add Plan ID crosswalk / SCD modeling** to support plan changes across plan
-   years.
+1. **Add Network PUF** to analyze provider network breadth and network design.
+2. **Add Nationwide QRS PUF** if reporting-unit/product-level quality measures
+   are needed beyond plan-level Quality PUF star ratings.
+3. **Extend Plan ID crosswalk / SCD modeling** to additional plan years.
 4. **Add county reference dimension** for FIPS, county names, state names, and
    map-ready geography.
 5. **Create a BigQuery or Snowflake profile** for cloud warehouse deployment.

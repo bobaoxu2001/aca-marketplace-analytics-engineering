@@ -11,8 +11,8 @@ for official PY2026 schemas, and known limitations.
 
 The downloader attempted Data.HealthCare.gov and catalog.data.gov metadata
 discovery first; those API searches returned HTTP 404 in this environment. The
-script then used direct CMS Marketplace PUF ZIP URLs and successfully downloaded
-all four required files.
+script then used direct CMS Marketplace and Quality Initiative ZIP URLs and
+successfully downloaded all required v2 files.
 
 | Dataset | CMS ZIP URL | Local filename | Rows | Columns |
 | --- | --- | --- | ---: | ---: |
@@ -20,6 +20,8 @@ all four required files.
 | Plan Attributes PUF - PY2026 | `https://download.cms.gov/marketplace-puf/2026/plan-attributes-puf.zip` | `plan_attributes_puf_py2026.csv` | 22,059 | 151 |
 | Benefits and Cost Sharing PUF - PY2026 | `https://download.cms.gov/marketplace-puf/2026/benefits-and-cost-sharing-puf.zip` | `benefits_cost_sharing_puf_py2026.csv` | 1,457,952 | 24 |
 | Service Area PUF - PY2026 | `https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip` | `service_area_puf_py2026.csv` | 8,820 | 14 |
+| Plan ID Crosswalk PUF - PY2025 to PY2026 | `https://download.cms.gov/marketplace-puf/2026/plan-id-crosswalk-puf.zip` | `plan_id_crosswalk_puf_py2025_py2026.csv` | 158,746 | 24 |
+| Quality PUF - PY2026 | `https://www.cms.gov/files/zip/quality-puf-py2026.zip` | `quality_puf_py2026.csv` | 4,302 | 9 |
 
 ## Raw profiling highlights
 
@@ -29,6 +31,8 @@ all four required files.
 | Plan Attributes PUF | BusinessYear, StateCode, IssuerId, PlanId | 0 | All selected key fields were 100% populated. |
 | Benefits and Cost Sharing PUF | BusinessYear, StateCode, IssuerId, PlanId, BenefitName | 0 | All selected key fields were 100% populated. |
 | Service Area PUF | BusinessYear, StateCode, IssuerId, ServiceAreaId, County | 0 | BusinessYear, StateCode, IssuerId, and ServiceAreaId were 100% populated; County was 97.14% populated because some service areas cover an entire state or have non-county rows. |
+| Plan ID Crosswalk PUF | State, PlanID_2025, FIPSCode, ZipCode, PlanID_2026 | 0 | Key fields were populated at crosswalk row grain; some 2026 plan IDs are CMS placeholders for prior plans without a current 2026 target. |
+| Quality PUF | IssuerID, State, PlanID | 0 | Plan-level Quality PUF key fields were 100% populated. |
 
 Full null-rate and sample-value profiles are generated locally at:
 
@@ -45,6 +49,8 @@ These files are generated artifacts and are intentionally not committed.
 | `plan_attributes_puf_py2026` | 22,059 |
 | `benefits_cost_sharing_puf_py2026` | 1,457,952 |
 | `service_area_puf_py2026` | 8,820 |
+| `plan_id_crosswalk_puf_py2025_py2026` | 158,746 |
+| `quality_puf_py2026` | 4,302 |
 
 ## dbt validation status
 
@@ -61,7 +67,7 @@ dbt build --profiles-dir .
 Final `dbt build` status:
 
 ```text
-PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
+PASS=108 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=108
 ```
 
 Validation included dbt model materialization plus not-null, unique,
@@ -81,6 +87,8 @@ layers.
 | `fact_premium` | 2,235,761 |
 | `fact_plan_availability` | 73,842 |
 | `fact_benefit_cost_sharing` | 1,457,952 |
+| `dim_plan_history` | 5,559 |
+| `fact_plan_quality_rating` | 4,302 |
 
 ## Generated case-study outputs
 
@@ -91,6 +99,7 @@ reviewer-friendly outputs from real aggregate queries:
 - `assets/dashboard_preview.png`
 - `assets/star_schema.png`
 - `assets/pipeline_architecture.png`
+- The dashboard preview includes plan continuity and quality rating panels in v2.
 
 These are static, reproducible artifacts generated from local mart tables; they
 are not fabricated dashboard screenshots.

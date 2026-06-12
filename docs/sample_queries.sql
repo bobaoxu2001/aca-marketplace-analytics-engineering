@@ -118,3 +118,44 @@ group by 1, 2, 3
 having count(distinct availability.issuer_key) = 1
 order by plan_count desc, state_code, geography_label
 limit 10;
+
+-- 9. Plan continuity from PY2025 to PY2026.
+select
+    continuity_status,
+    count(*) as history_rows,
+    count(distinct current_plan_id) as current_plan_count,
+    count(distinct previous_plan_id) as previous_plan_count
+from main_marts.dim_plan_history
+group by 1
+order by history_rows desc;
+
+-- 10. Quality rating distribution.
+select
+    overall_rating_value,
+    quality_rating_status,
+    count(*) as quality_puf_rows
+from main_marts.fact_plan_quality_rating
+group by 1, 2
+order by quality_puf_rows desc;
+
+-- 11. Quality vs premium where plan-level joins are available.
+with plan_premium as (
+    select
+        plan_key,
+        avg(monthly_premium) as average_monthly_premium,
+        median(monthly_premium) as median_monthly_premium
+    from main_marts.fact_premium
+    group by 1
+)
+
+select
+    quality.overall_rating_value,
+    count(distinct quality.plan_key) as joined_plan_count,
+    avg(plan_premium.average_monthly_premium) as average_monthly_premium,
+    median(plan_premium.median_monthly_premium) as median_plan_premium
+from main_marts.fact_plan_quality_rating as quality
+join plan_premium
+    on quality.plan_key = plan_premium.plan_key
+where quality.overall_rating_numeric is not null
+group by 1
+order by try_cast(quality.overall_rating_value as integer);

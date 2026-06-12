@@ -15,6 +15,8 @@ A static preview generated from real aggregate mart queries is available at
 - Actuarial teams benchmarking premiums by geography and segment.
 - Operations teams reviewing county and service-area availability.
 - Market strategy teams studying issuer competition and market density.
+- Analytics and product teams reviewing plan continuity and quality-vs-cost
+  tradeoffs.
 
 ## Global filters
 
@@ -26,6 +28,8 @@ A static preview generated from real aggregate mart queries is available at
 - Plan type
 - Age band
 - Tobacco usage
+- Continuity status
+- Quality rating status
 
 ## Page 1: Market availability
 
@@ -64,6 +68,15 @@ A static preview generated from real aggregate mart queries is available at
 | County opportunity table | Table | Plan count, issuer count, median silver premium | Marts joined through semantic layer | State, county |
 | Metal-level comparison | Bar chart | Premium difference by metal level | `fact_premium` + `dim_plan` | Metal level, state |
 
+## Page 5: Plan history and quality
+
+| Tile | Visualization | Metric | Source model | Dimensions |
+| --- | --- | --- | --- | --- |
+| Plan continuity | Stacked or grouped bar | Current plan count by continuity status | `dim_plan_history` | State, issuer |
+| Issuer churn table | Table | Current plans, new/not-in-crosswalk plans, crosswalked plans | `dim_plan_history` | State, issuer |
+| Quality rating distribution | Bar chart | Quality PUF rows by overall rating | `fact_plan_quality_rating` | State, issuer, plan type |
+| Quality vs premium | Bar or scatter | Average premium by overall rating | `fact_plan_quality_rating` + `fact_premium` | State, metal level, issuer |
+
 ## Data-quality callouts
 
 - Display last successful raw load timestamp from `raw_load_audit`.
@@ -73,6 +86,7 @@ A static preview generated from real aggregate mart queries is available at
 - Note that CMS Service Area `County` values may need a reference join for
   display-friendly county names.
 - Use dbt test status as the dashboard data freshness/trust signal.
+- Show the count of Quality PUF rows that do and do not join to `dim_plan`.
 
 ## Suggested default view
 

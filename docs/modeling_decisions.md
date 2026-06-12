@@ -14,6 +14,8 @@ The mart layer is organized around three analytical events:
 1. Premium observations
 2. Plan availability by geography
 3. Benefit cost-sharing rows
+4. Plan continuity from PY2025 to PY2026
+5. Plan-level Quality PUF ratings
 
 Shared dimensions make common filters consistent across facts.
 
@@ -24,6 +26,7 @@ Shared dimensions make common filters consistent across facts.
 | `fact_premium` | Plan, issuer, state, rating area, age, tobacco usage, and rate effective date | Matches Rate PUF pricing behavior and supports actuarial-style premium comparisons by geography, age, and metal level. |
 | `fact_plan_availability` | Plan, issuer, service area, and service-area geography | Supports county/service-area plan count and issuer competition questions. |
 | `fact_benefit_cost_sharing` | Plan, issuer, benefit, and cost-sharing configuration | Preserves benefit-level cost-sharing detail while enabling coverage-rate metrics. |
+| `fact_plan_quality_rating` | Quality PUF plan row | Preserves the actual plan-level grain of the CMS Quality PUF and supports quality distribution and quality-vs-premium analysis where joins are available. |
 
 ## Dimension tables
 
@@ -35,6 +38,7 @@ Shared dimensions make common filters consistent across facts.
 | `dim_metal_level` | ACA metal-level ordering and accepted values. |
 | `dim_benefit` | Benefit names and simple benefit categories. |
 | `dim_age_band` | BI-friendly age bands for premium analysis. |
+| `dim_plan_history` | PY2025 to PY2026 plan continuity and crosswalk status. |
 
 ## Conformed plan grain
 
@@ -43,6 +47,36 @@ while Plan Attributes and Benefits include plan variant IDs. `dim_plan` is
 therefore modeled at standard component grain so premiums can join cleanly to
 plan design attributes. The column `plan_variant_count` preserves how many Plan
 Attributes variants roll into each standard component.
+
+## Plan history / SCD-style modeling
+
+The CMS Plan ID Crosswalk PUF maps PY2025 plans to PY2026 plans and includes
+crosswalk reasons plus geographic crosswalk detail. `dim_plan_history`
+summarizes that raw crosswalk into a BI-friendly history dimension with:
+
+- `effective_plan_year`
+- `previous_plan_id`
+- `current_plan_id`
+- `is_current`
+- `continuity_status`
+
+The supported continuity statuses are:
+
+- `continuing_same_plan`
+- `crosswalked_from_prior_plan`
+- `new_or_not_in_crosswalk`
+- `discontinued_or_no_2026_crosswalk`
+
+This is not a full multi-year SCD Type 2 table yet, but it demonstrates the
+modeling pattern needed to track plan continuity and churn across plan years.
+
+## Quality PUF modeling
+
+CMS publishes both a plan-level Quality PUF and a Nationwide QRS PUF at broader
+reporting-unit/product grain. This v2 project uses only the requested PY2026
+Quality PUF because it supports cleaner plan-level joins to the existing marts.
+Rows that do not join to `dim_plan` are retained in `fact_plan_quality_rating`
+and flagged with `joins_to_dim_plan`.
 
 ## Geography modeling
 
@@ -98,7 +132,6 @@ metric consumption.
 
 - Claims, enrollment, subsidy eligibility, or member-level data.
 - Provider network files.
-- Quality ratings.
-- Plan crosswalk / slowly changing plan history.
+- Nationwide QRS reporting-unit/product-level quality detail.
 - County reference names and geospatial shapes.
 - Production orchestration, deployment, and monitoring.

@@ -203,6 +203,87 @@ def load_insights(connection: duckdb.DuckDBPyConnection) -> dict[str, Any]:
         where issuer_count = 1
         """,
     )
+    results["plan_continuity"] = fetch_result(
+        connection,
+        """
+        select
+            continuity_status,
+            count(*) as row_count,
+            count(distinct current_plan_id) as current_plan_count,
+            count(distinct previous_plan_id) as previous_plan_count
+        from main_marts.dim_plan_history
+        group by 1
+        order by row_count desc
+        """,
+    )
+    results["issuer_plan_churn"] = fetch_result(
+        connection,
+        """
+        select
+            state_code,
+            current_issuer_id,
+            count(distinct current_plan_id) as current_plan_count,
+            sum(case when continuity_status = 'new_or_not_in_crosswalk' then 1 else 0 end) as new_or_unmatched_plan_count,
+            sum(case when continuity_status = 'crosswalked_from_prior_plan' then 1 else 0 end) as crosswalked_plan_count
+        from main_marts.dim_plan_history
+        where is_current
+        group by 1, 2
+        order by current_plan_count desc, state_code, current_issuer_id
+        limit 10
+        """,
+    )
+    results["quality_distribution"] = fetch_result(
+        connection,
+        """
+        select
+            overall_rating_value,
+            count(*) as plan_quality_rows
+        from main_marts.fact_plan_quality_rating
+        group by 1
+        order by
+            case
+                when overall_rating_value in ('1', '2', '3', '4', '5') then try_cast(overall_rating_value as integer)
+                when overall_rating_value = 'NR - New-Ineligible for Scoring' then 6
+                else 7
+            end
+        """,
+    )
+    results["quality_join_coverage"] = fetch_result(
+        connection,
+        """
+        select
+            joins_to_dim_plan,
+            count(*) as plan_quality_rows
+        from main_marts.fact_plan_quality_rating
+        group by 1
+        order by joins_to_dim_plan desc
+        """,
+    )
+    results["quality_vs_premium"] = fetch_result(
+        connection,
+        """
+        with plan_premium as (
+            select
+                plan_key,
+                avg(monthly_premium) as average_monthly_premium,
+                median(monthly_premium) as median_monthly_premium
+            from main_marts.fact_premium
+            group by 1
+        )
+
+        select
+            quality.overall_rating_value,
+            count(distinct quality.plan_key) as plan_count,
+            avg(plan_premium.average_monthly_premium) as average_monthly_premium,
+            median(plan_premium.median_monthly_premium) as median_plan_premium
+        from main_marts.fact_plan_quality_rating as quality
+        join plan_premium
+            on quality.plan_key = plan_premium.plan_key
+        where quality.overall_rating_numeric is not null
+        group by 1
+        order by try_cast(quality.overall_rating_value as integer)
+        """,
+    )
     results["states_over_10_issuers"] = scalar(
         connection,
         """
@@ -230,6 +311,11 @@ def build_selected_findings(results: dict[str, Any]) -> list[str]:
     top_state = issuer_rows[0]
     low_competition_count = results["low_competition_count"]
     service_area_geographies = results["service_area_geographies"]
+    continuity = {row[0]: row for row in results["plan_continuity"].rows}
+    quality_distribution = {row[0]: row[1] for row in results["quality_distribution"].rows}
+    quality_joinable = next(
+        row[1] for row in results["quality_join_coverage"].rows if row[0] is True
+    )
 
     return [
         (
@@ -260,6 +346,22 @@ def build_selected_findings(results: dict[str, Any]) -> list[str]:
             f"service-area geography rows have one issuer represented, marking them "
             f"for closer market review."
         ),
+        (
+            f"Plan history modeling identifies {fmt_int(continuity['continuing_same_plan'][2])} "
+            f"current plans that continue under the same plan ID and "
+            f"{fmt_int(continuity['new_or_not_in_crosswalk'][2])} current plans that are "
+            f"new or not represented in the crosswalk."
+        ),
+        (
+            f"The Quality PUF contributes {fmt_int(sum(quality_distribution.values()))} "
+            f"plan-level quality rows; {fmt_int(quality_distribution['3'])} have an "
+            f"overall 3-star rating and {fmt_int(quality_distribution['4'])} have an "
+            f"overall 4-star rating."
+        ),
+        (
+            f"{fmt_int(quality_joinable)} Quality PUF rows join to the modeled PY2026 "
+            f"plan dimension for quality-vs-cost analysis."
+        ),
     ]
 
 
@@ -287,6 +389,28 @@ def write_insight_snapshot(results: dict[str, Any], output_path: Path) -> None:
         (state, label, service_area, fmt_int(plan_count), fmt_int(issuer_count))
         for state, label, service_area, plan_count, issuer_count in results["low_competition"].rows
     ]
+    plan_continuity_rows = [
+        (status, fmt_int(row_count), fmt_int(current_plans), fmt_int(previous_plans))
+        for status, row_count, current_plans, previous_plans in results["plan_continuity"].rows
+    ]
+    issuer_churn_rows = [
+        (
+            state,
+            issuer_id,
+            fmt_int(current_plans),
+            fmt_int(new_or_unmatched),
+            fmt_int(crosswalked),
+        )
+        for state, issuer_id, current_plans, new_or_unmatched, crosswalked
+        in results["issuer_plan_churn"].rows
+    ]
+    quality_distribution_rows = [
+        (rating, fmt_int(row_count)) for rating, row_count in results["quality_distribution"].rows
+    ]
+    quality_vs_premium_rows = [
+        (rating, fmt_int(plan_count), fmt_money_2(avg_premium), fmt_money_2(median_premium))
+        for rating, plan_count, avg_premium, median_premium in results["quality_vs_premium"].rows
+    ]
 
     findings = build_selected_findings(results)
     content = [
@@ -307,6 +431,7 @@ def write_insight_snapshot(results: dict[str, Any], output_path: Path) -> None:
                 ("Total geography rows", fmt_int(results["total_geographies"])),
                 ("Service-area geography rows", fmt_int(results["service_area_geographies"])),
                 ("Rating-area geography rows", fmt_int(results["rating_area_geographies"])),
+                ("Quality PUF plan rows", fmt_int(sum(row[1] for row in results["quality_distribution"].rows))),
             ],
         ),
         "",
@@ -382,14 +507,61 @@ def write_insight_snapshot(results: dict[str, Any], output_path: Path) -> None:
             "product, actuarial, or operations review, but public PUF data alone does not "
             "explain the cause of limited competition.",
             "",
+            "## Plan continuity and market churn",
+            "",
+            markdown_table(
+                [
+                    "Continuity status",
+                    "History rows",
+                    "Current plans",
+                    "Previous plans",
+                ],
+                plan_continuity_rows,
+            ),
+            "",
+            "## Top issuers by current plan count",
+            "",
+            markdown_table(
+                [
+                    "State",
+                    "Issuer ID",
+                    "Current plans",
+                    "New/not-in-crosswalk plans",
+                    "Crosswalked plans",
+                ],
+                issuer_churn_rows,
+            ),
+            "",
+            "## Quality rating distribution",
+            "",
+            markdown_table(["Overall rating value", "Quality PUF rows"], quality_distribution_rows),
+            "",
+            "## Quality vs premium where plan joins are available",
+            "",
+            markdown_table(
+                [
+                    "Overall rating",
+                    "Joined plans",
+                    "Average monthly premium",
+                    "Median plan premium",
+                ],
+                quality_vs_premium_rows,
+            ),
+            "",
+            "Quality-vs-premium metrics are limited to Quality PUF rows that join to "
+            "`dim_plan`. The Quality PUF also includes some rows outside the modeled "
+            "Exchange PUF plan universe; those rows are retained and flagged with "
+            "`joins_to_dim_plan` in `fact_plan_quality_rating`.",
+            "",
             "## Limitations surfaced by the insight queries",
             "",
             "- County display names are not modeled yet; the Service Area PUF county field is "
             "used as published.",
             "- Premium metrics are not enrollment weighted because enrollment is not included "
             "in the selected public PUFs.",
-            "- The current model focuses on public plan design, premiums, and availability; it "
-            "does not include quality ratings, provider networks, claims, or member-level data.",
+            "- The current model focuses on public plan design, premiums, availability, plan "
+            "history, and Quality PUF ratings; it does not include provider networks, claims, "
+            "or member-level data.",
             "- The dashboard preview in `assets/dashboard_preview.png` is a static visual "
             "generated from these aggregate queries, not a deployed BI application.",
             "",
@@ -414,7 +586,7 @@ def style_axis(ax: plt.Axes) -> None:
 
 
 def create_dashboard_preview(results: dict[str, Any], output_path: Path) -> None:
-    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    fig, axes = plt.subplots(2, 3, figsize=(20, 10))
     fig.suptitle("ACA Marketplace Intelligence Preview | CMS PY2026", fontsize=18, fontweight="bold")
 
     ax = axes[0, 0]
@@ -425,7 +597,7 @@ def create_dashboard_preview(results: dict[str, Any], output_path: Path) -> None
         ("Issuers", fmt_int(results["total_issuers"])),
         ("States", fmt_int(results["total_states"])),
         ("Geographies", fmt_int(results["total_geographies"])),
-        ("dbt checks", "83 passed"),
+        ("dbt checks", "108 passed"),
     ]
     for index, (label, value) in enumerate(kpis):
         x = 0.05 + (index % 2) * 0.48
@@ -465,6 +637,29 @@ def create_dashboard_preview(results: dict[str, Any], output_path: Path) -> None
     ax.set_title("Top states by issuer count", loc="left", fontweight="bold")
     ax.set_xlabel("Issuers")
     style_axis(ax)
+
+    ax = axes[0, 2]
+    continuity_rows = list(reversed(results["plan_continuity"].rows))
+    ax.barh(
+        [row[0].replace("_", " ") for row in continuity_rows],
+        [row[2] for row in continuity_rows],
+        color="#b279a2",
+    )
+    ax.set_title("Plan continuity / market churn", loc="left", fontweight="bold")
+    ax.set_xlabel("Current plans")
+    style_axis(ax)
+
+    ax = axes[1, 2]
+    quality_rows = [
+        row for row in results["quality_distribution"].rows if str(row[0]).startswith(("1", "2", "3", "4", "5"))
+    ]
+    ax.bar([row[0] for row in quality_rows], [row[1] for row in quality_rows], color="#e45756")
+    ax.set_title("Quality rating distribution", loc="left", fontweight="bold")
+    ax.set_xlabel("Overall rating")
+    ax.set_ylabel("Quality PUF rows")
+    ax.grid(axis="y", alpha=0.2)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     fig.text(
         0.01,
@@ -539,7 +734,7 @@ def create_pipeline_architecture(output_path: Path) -> None:
     ax.set_title("Pipeline Architecture", fontsize=18, fontweight="bold", pad=15)
 
     boxes = [
-        ((0.02, 0.42), "CMS PY2026\nPUF ZIPs", "#e8f4f8"),
+        ((0.02, 0.42), "CMS PY2026\nPUF ZIPs\n+ Crosswalk/Quality", "#e8f4f8"),
         ((0.18, 0.42), "Raw CSVs\n/data/raw/py2026", "#eef7e8"),
         ((0.34, 0.42), "DuckDB\nraw tables", "#fff4e6"),
         ((0.50, 0.42), "dbt\nstaging -> intermediate -> marts", "#f2ecff"),
@@ -569,20 +764,22 @@ def create_star_schema(output_path: Path) -> None:
     ax.axis("off")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    ax.set_title("Dimensional Model: ACA Marketplace Analytics Marts", fontsize=16, fontweight="bold")
+    ax.set_title("Dimensional Model: ACA Marketplace Analytics Marts v2", fontsize=16, fontweight="bold")
 
     facts = {
-        "fact_premium\nPlan + rating area + age + tobacco": (0.37, 0.66),
-        "fact_plan_availability\nPlan + service-area geography": (0.37, 0.43),
-        "fact_benefit_cost_sharing\nPlan + benefit": (0.37, 0.20),
+        "fact_premium\nPlan + rating area + age + tobacco": (0.37, 0.72),
+        "fact_plan_availability\nPlan + service-area geography": (0.37, 0.52),
+        "fact_benefit_cost_sharing\nPlan + benefit": (0.37, 0.32),
+        "fact_plan_quality_rating\nPlan + quality rating": (0.37, 0.12),
     }
     dims = {
-        "dim_plan\nStandard component grain": (0.05, 0.66),
-        "dim_issuer": (0.05, 0.43),
-        "dim_metal_level": (0.05, 0.20),
-        "dim_geography\nRating areas + service areas": (0.72, 0.66),
-        "dim_age_band": (0.72, 0.43),
-        "dim_benefit": (0.72, 0.20),
+        "dim_plan\nStandard component grain": (0.05, 0.72),
+        "dim_issuer": (0.05, 0.52),
+        "dim_metal_level": (0.05, 0.32),
+        "dim_plan_history\nPY2025 -> PY2026 continuity": (0.05, 0.12),
+        "dim_geography\nRating areas + service areas": (0.72, 0.72),
+        "dim_age_band": (0.72, 0.52),
+        "dim_benefit": (0.72, 0.32),
     }
 
     for label, xy in facts.items():
@@ -602,6 +799,10 @@ def create_star_schema(output_path: Path) -> None:
         ("dim_plan\nStandard component grain", "fact_benefit_cost_sharing\nPlan + benefit"),
         ("dim_issuer", "fact_benefit_cost_sharing\nPlan + benefit"),
         ("dim_benefit", "fact_benefit_cost_sharing\nPlan + benefit"),
+        ("dim_plan\nStandard component grain", "fact_plan_quality_rating\nPlan + quality rating"),
+        ("dim_issuer", "fact_plan_quality_rating\nPlan + quality rating"),
+        ("dim_metal_level", "fact_plan_quality_rating\nPlan + quality rating"),
+        ("dim_plan_history\nPY2025 -> PY2026 continuity", "fact_plan_quality_rating\nPlan + quality rating"),
     ]
 
     centers = {
@@ -614,7 +815,7 @@ def create_star_schema(output_path: Path) -> None:
     fig.text(
         0.5,
         0.03,
-        "Star schema optimized for BI metrics: premiums, availability, benefits, issuers, metal levels, age bands, and geography.",
+        "Star schema optimized for BI metrics: premiums, availability, benefits, plan continuity, quality, issuers, metal levels, age bands, and geography.",
         ha="center",
         fontsize=10,
         color="#555555",

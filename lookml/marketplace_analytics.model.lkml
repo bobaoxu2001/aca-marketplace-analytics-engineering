@@ -43,3 +43,31 @@ explore: benefits {
     sql_on: ${benefits.plan_key} = ${plans.plan_key} ;;
   }
 }
+
+explore: plan_history {
+  label: "Plan Continuity"
+  description: "PY2025 to PY2026 plan continuity and crosswalk analysis."
+
+  join: plans {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${plan_history.plan_key} = ${plans.plan_key} ;;
+  }
+}
+
+explore: quality {
+  label: "Quality Ratings"
+  description: "PY2026 plan-level Quality PUF ratings and quality-vs-cost analysis where plan joins are available."
+
+  join: plans {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${quality.plan_key} = ${plans.plan_key} ;;
+  }
+
+  join: premiums {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${quality.plan_key} = ${premiums.plan_key} ;;
+  }
+}

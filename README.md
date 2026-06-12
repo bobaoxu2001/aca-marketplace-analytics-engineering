@@ -1,12 +1,12 @@
 # Health Insurance Marketplace Intelligence Mart
 
 **Business-ready ACA Marketplace intelligence from real CMS PY2026 public data:
-premiums, benefits, issuers, plan availability, and geography modeled into
-tested analytics marts.**
+premiums, benefits, issuer competition, plan availability, plan history, quality
+ratings, and geography modeled into tested analytics marts.**
 
 ![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
-![3.7M Raw Rows](https://img.shields.io/badge/3.7M%2B-Raw%20Rows-green)
-![83 dbt Checks](https://img.shields.io/badge/83-dbt%20Checks%20Passing-brightgreen)
+![3.9M Raw Rows](https://img.shields.io/badge/3.9M%2B-Raw%20Rows-green)
+![108 dbt Checks](https://img.shields.io/badge/108-dbt%20Checks%20Passing-brightgreen)
 ![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
 
 ![Dashboard preview generated from real CMS PY2026 marts](assets/dashboard_preview.png)
@@ -18,13 +18,15 @@ raw CMS ACA Marketplace Public Use Files into a tested local warehouse and
 business-readable market intelligence layer. It demonstrates the full Analytics
 Engineer I skill set: Python ingestion, DuckDB development, SQL transformations,
 dbt tests/docs, dimensional modeling, LookML-style semantic modeling,
-stakeholder-facing metrics, and honest limitations.
+stakeholder-facing metrics, plan history modeling, quality-vs-cost analytics,
+and honest limitations.
 
 ## Project pitch
 
 A healthcare insurance analytics engineering project using real CMS ACA
 Marketplace Public Use Files to model premiums, benefits, plan availability, and
-geography into tested analytics marts.
+geography into tested analytics marts, then extends the model with plan
+crosswalk history and Quality PUF ratings.
 
 Health insurance teams need reliable answers to market questions: where plans
 are offered, how premiums vary, which issuers compete in each county, and how
@@ -45,6 +47,11 @@ Generated from real DuckDB/dbt mart queries in `docs/insight_snapshot.md`:
 - **16 states** have more than 10 issuers represented.
 - **4,394 of 5,923 service-area geography rows** have one issuer represented,
   marking them for closer market review.
+- Plan history modeling identifies **3,815 current plans** that continue under
+  the same plan ID and **909 current plans** that are new or not represented in
+  the crosswalk.
+- The Quality PUF contributes **4,302 plan-level quality rows**; **4,183** join
+  to the modeled PY2026 plan dimension for quality-vs-cost analysis.
 
 These are descriptive summaries of public CMS plan and premium data. They are
 not causal conclusions and are not enrollment weighted.
@@ -55,6 +62,10 @@ not causal conclusions and are not enrollment weighted.
 - How do premiums vary by metal level, geography, age, and tobacco status?
 - How do deductibles and out-of-pocket maximums differ by plan design?
 - Which markets may need closer product, actuarial, or operations review?
+- Which plans continued from PY2025 to PY2026, which crosswalked, and which
+  appear new or not represented in the crosswalk?
+- How are public quality ratings distributed, and where can quality be compared
+  with modeled premiums?
 - Which issuer and plan design patterns should be standardized into reusable BI
   metrics?
 
@@ -65,6 +76,10 @@ The result is a reproducible local analytics warehouse with:
   sample values.
 - DuckDB raw tables for local development on multi-million-row CSV files.
 - dbt staging, intermediate, and dimensional mart models.
+- Plan history / slowly changing dimension-style modeling from the CMS Plan ID
+  Crosswalk PUF.
+- Plan-level Quality PUF ratings for quality distribution and quality-vs-cost
+  analysis where joins are supported.
 - dbt tests for not-null, uniqueness, accepted values, and relationships.
 - LookML semantic layer files for BI exploration.
 - Stakeholder-facing docs, dashboard spec, metric dictionary, and sample SQL.
@@ -80,11 +95,13 @@ Validated against real official CMS PY2026 Marketplace PUF CSVs downloaded from
 | Plan Attributes PUF - PY2026 | 22,059 | 151 |
 | Benefits and Cost Sharing PUF - PY2026 | 1,457,952 | 24 |
 | Service Area PUF - PY2026 | 8,820 | 14 |
+| Plan ID Crosswalk PUF - PY2025 to PY2026 | 158,746 | 24 |
+| Quality PUF - PY2026 | 4,302 | 9 |
 
 Final real-data dbt build:
 
 ```text
-PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
+PASS=108 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=108
 ```
 
 Raw CSVs, local DuckDB databases, dbt target artifacts, raw profile outputs, and
@@ -95,6 +112,7 @@ caches are generated locally and intentionally **not committed**.
 ```mermaid
 flowchart LR
     A["CMS PY2026 Marketplace PUF ZIPs"] --> B["data/raw/py2026/*.csv"]
+    A2["CMS Plan ID Crosswalk + Quality PUFs"] --> B
     B --> C["Python profiling<br/>Polars lazy scans"]
     B --> D["DuckDB raw tables"]
     D --> E["dbt staging models<br/>typed, renamed, cleaned"]
@@ -119,7 +137,7 @@ Generated static architecture assets:
 | Requirement | How this project demonstrates it |
 | --- | --- |
 | SQL | Builds dimensional marts and sample stakeholder queries over premiums, benefits, issuers, geographies, and plan availability. |
-| dbt | Uses staged, intermediate, and mart layers with model documentation and 83 passing real-data dbt checks. |
+| dbt | Uses staged, intermediate, and mart layers with model documentation and 108 passing real-data dbt checks. |
 | Semantic modeling / LookML | Defines LookML views and explores for plans, premiums, benefits, and geography with business metrics. |
 | Cloud warehouse readiness | Uses DuckDB locally while keeping layered models, source contracts, tests, and BI semantics portable to Snowflake, BigQuery, Redshift, or Databricks with adapter/profile changes. |
 | Dimensional modeling | Implements `dim_issuer`, `dim_plan`, `dim_geography`, `dim_metal_level`, `dim_benefit`, `dim_age_band`, `fact_premium`, `fact_plan_availability`, and `fact_benefit_cost_sharing`. |
@@ -154,6 +172,8 @@ Health Insurance Exchange Public Use Files, Plan Year 2026:
 2. Plan Attributes PUF - PY2026
 3. Benefits and Cost Sharing PUF - PY2026
 4. Service Area PUF - PY2026
+5. Plan ID Crosswalk PUF - PY2025 to PY2026
+6. Quality PUF - PY2026
 
 Raw CSV files and DuckDB database files are intentionally ignored by git. See
 `docs/real_data_validation_results.md` for raw profiling highlights, mart row
@@ -197,7 +217,7 @@ Try automatic discovery and download:
 python3 scripts/download_cms_pufs.py
 ```
 
-If automatic discovery succeeds, the four CSV files will be saved under
+If automatic discovery succeeds, the required CSV files will be saved under
 `data/raw/py2026/`.
 
 ### 3. Profile raw files
@@ -266,6 +286,8 @@ rate_puf_py2026.csv
 plan_attributes_puf_py2026.csv
 benefits_cost_sharing_puf_py2026.csv
 service_area_puf_py2026.csv
+plan_id_crosswalk_puf_py2025_py2026.csv
+quality_puf_py2026.csv
 ```
 
 Direct CMS ZIP URLs validated for PY2026:
@@ -275,6 +297,8 @@ https://download.cms.gov/marketplace-puf/2026/rate-puf.zip
 https://download.cms.gov/marketplace-puf/2026/plan-attributes-puf.zip
 https://download.cms.gov/marketplace-puf/2026/benefits-and-cost-sharing-puf.zip
 https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip
+https://download.cms.gov/marketplace-puf/2026/plan-id-crosswalk-puf.zip
+https://www.cms.gov/files/zip/quality-puf-py2026.zip
 ```
 
 Then continue with:
@@ -307,6 +331,8 @@ cd dbt_project && dbt build --profiles-dir .
 - `stg_plan_attributes_puf`
 - `stg_benefits_cost_sharing_puf`
 - `stg_service_area_puf`
+- `stg_plan_id_crosswalk_puf`
+- `stg_quality_puf`
 
 Staging models standardize names, trim text fields, and cast dates/numeric
 values.
@@ -330,12 +356,14 @@ Dimensions:
 - `dim_metal_level`
 - `dim_benefit`
 - `dim_age_band`
+- `dim_plan_history`
 
 Facts:
 
 - `fact_premium`
 - `fact_plan_availability`
 - `fact_benefit_cost_sharing`
+- `fact_plan_quality_rating`
 
 ## Data quality and dbt tests
 
@@ -359,15 +387,20 @@ Defined in `docs/metric_dictionary.md`, `docs/sample_queries.sql`, and LookML:
 - Average out-of-pocket maximum
 - Benefit coverage rate
 - Premium difference by metal level
+- Continuing plans vs new/crosswalked/discontinued plans
+- Quality rating distribution
+- Quality vs premium where Quality PUF rows join to modeled plans
 
 ## Semantic layer
 
 LookML files in `lookml/`:
 
 - `plans.view.lkml`
+- `plan_history.view.lkml`
 - `premiums.view.lkml`
 - `benefits.view.lkml`
 - `geography.view.lkml`
+- `quality.view.lkml`
 - `marketplace_analytics.model.lkml`
 
 These files define explores and measures for plan availability, premiums, and
@@ -390,7 +423,7 @@ benefit cost sharing.
 
 - Built a tested ACA Marketplace analytics warehouse using real CMS PY2026 PUFs,
   DuckDB, dbt, dimensional modeling, and LookML-style semantic models; validated
-  3.7M+ raw rows with 83 passing dbt checks.
+  3.9M+ raw rows with 108 passing dbt checks.
 
 ### Data Analyst version
 
