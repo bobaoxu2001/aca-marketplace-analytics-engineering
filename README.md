@@ -1,21 +1,62 @@
-# ACA Marketplace Analytics Engineering
+# Health Insurance Marketplace Intelligence Mart
 
-**A healthcare insurance analytics engineering project using real CMS ACA
-Marketplace Public Use Files to model premiums, benefits, plan availability, and
-geography into tested analytics marts.**
+**Business-ready ACA Marketplace intelligence from real CMS PY2026 public data:
+premiums, benefits, issuers, plan availability, and geography modeled into
+tested analytics marts.**
 
-This is a recruiter-ready portfolio project for an Analytics Engineer I role in
-health insurance analytics. It demonstrates how raw public healthcare insurance
-files can become a documented, tested, BI-ready warehouse using Python, DuckDB,
-dbt, SQL, and LookML-style semantic modeling.
+![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
+![3.7M Raw Rows](https://img.shields.io/badge/3.7M%2B-Raw%20Rows-green)
+![83 dbt Checks](https://img.shields.io/badge/83-dbt%20Checks%20Passing-brightgreen)
+![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
+
+![Dashboard preview generated from real CMS PY2026 marts](assets/dashboard_preview.png)
+
+## Hiring Manager TL;DR
+
+This repository is a healthcare analytics engineering case study: it turns large,
+raw CMS ACA Marketplace Public Use Files into a tested local warehouse and
+business-readable market intelligence layer. It demonstrates the full Analytics
+Engineer I skill set: Python ingestion, DuckDB development, SQL transformations,
+dbt tests/docs, dimensional modeling, LookML-style semantic modeling,
+stakeholder-facing metrics, and honest limitations.
 
 ## Project pitch
+
+A healthcare insurance analytics engineering project using real CMS ACA
+Marketplace Public Use Files to model premiums, benefits, plan availability, and
+geography into tested analytics marts.
 
 Health insurance teams need reliable answers to market questions: where plans
 are offered, how premiums vary, which issuers compete in each county, and how
 benefit design differs across metal levels. This project simulates that internal
 analytics engineering use case using official CMS Plan Year 2026 ACA Marketplace
 Public Use Files.
+
+## Selected Findings from PY2026 CMS Data
+
+Generated from real DuckDB/dbt mart queries in `docs/insight_snapshot.md`:
+
+- The marts model **5,144 conformed standard-component plans** across **30
+  states** and **359 issuers**.
+- **Silver plans represent 29.7%** of modeled plans (**1,528 plans**).
+- Across all modeled premium rows, **Platinum** has the highest median monthly
+  premium at **$1,480.33**; **Low** has the lowest at **$19.96**.
+- **TX** has the most issuers represented in the marts (**32 issuers**).
+- **16 states** have more than 10 issuers represented.
+- **4,394 of 5,923 service-area geography rows** have one issuer represented,
+  marking them for closer market review.
+
+These are descriptive summaries of public CMS plan and premium data. They are
+not causal conclusions and are not enrollment weighted.
+
+## Business Questions Answered
+
+- Which counties or service areas have limited issuer competition?
+- How do premiums vary by metal level, geography, age, and tobacco status?
+- How do deductibles and out-of-pocket maximums differ by plan design?
+- Which markets may need closer product, actuarial, or operations review?
+- Which issuer and plan design patterns should be standardized into reusable BI
+  metrics?
 
 The result is a reproducible local analytics warehouse with:
 
@@ -63,6 +104,15 @@ flowchart LR
     H --> I["Stakeholder dashboard specification"]
     G --> J["Sample SQL + metric dictionary"]
 ```
+
+Generated static architecture assets:
+
+- `assets/pipeline_architecture.png`
+- `assets/star_schema.png`
+
+![Pipeline architecture](assets/pipeline_architecture.png)
+
+![Star schema](assets/star_schema.png)
 
 ## Why this matches Analytics Engineer I
 
@@ -116,6 +166,7 @@ counts, known limitations, and exact reproduction commands.
 ├── data/
 │   ├── raw/py2026/              # Manual fallback location for CMS CSV files
 │   └── processed/               # Local DuckDB database and profiling outputs
+├── assets/                      # Generated PNG visuals from real mart outputs
 ├── dbt_project/                 # dbt DuckDB project
 │   ├── macros/
 │   └── models/
@@ -184,6 +235,20 @@ dbt build --profiles-dir .
 dbt docs generate --profiles-dir .
 ```
 
+### 6. Generate insight snapshot and visual assets
+
+```bash
+cd ..
+python3 scripts/generate_case_study_outputs.py
+```
+
+Outputs:
+
+- `docs/insight_snapshot.md`
+- `assets/dashboard_preview.png`
+- `assets/star_schema.png`
+- `assets/pipeline_architecture.png`
+
 ## Manual data download fallback
 
 CMS public dataset links can change. If `scripts/download_cms_pufs.py` cannot
@@ -231,6 +296,8 @@ cd dbt_project && dbt build --profiles-dir .
    DuckDB database as raw tables.
 4. **Transform:** dbt builds layered staging, intermediate, and mart models.
 5. **Serve:** LookML and sample SQL expose stakeholder-facing metrics.
+6. **Present:** `scripts/generate_case_study_outputs.py` creates real insight
+   tables and PNG visuals from the dbt marts.
 
 ## dbt architecture
 
@@ -309,7 +376,10 @@ benefit cost sharing.
 ## Stakeholder deliverables
 
 - `docs/executive_summary.md`
+- `docs/insight_snapshot.md`
 - `docs/metric_dictionary.md`
+- `docs/modeling_decisions.md`
+- `docs/limitations_and_next_steps.md`
 - `docs/sample_queries.sql`
 - `docs/dashboard_spec.md`
 - `dashboards/dashboard_specification.md`

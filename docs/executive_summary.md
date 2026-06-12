@@ -25,6 +25,22 @@ metrics, semantic models, and dashboard-ready analysis surfaces.
 
 Final real-data dbt build status: `PASS=83 WARN=0 ERROR=0 SKIP=0`.
 
+## Selected descriptive findings
+
+Generated from the dbt marts in `docs/insight_snapshot.md`:
+
+- The marts model 5,144 conformed standard-component plans across 30 states and
+  359 issuers.
+- Silver plans represent 29.7% of modeled plans.
+- TX has the most issuers represented in the marts, with 32 issuers.
+- 4,394 of 5,923 service-area geography rows have one issuer represented,
+  marking them for closer market review.
+- Platinum has the highest median modeled monthly premium at $1,480.33 across
+  all premium rows; Low has the lowest at $19.96.
+
+These findings are descriptive summaries of public CMS data and are not
+enrollment weighted.
+
 ## Stakeholder use cases
 
 - **Analytics:** maintain reusable SQL marts and metric definitions for plan,
@@ -71,3 +87,8 @@ Final real-data dbt build status: `PASS=83 WARN=0 ERROR=0 SKIP=0`.
 This project uses public plan design and premium data only. It does not include
 claims, enrollment, subsidy eligibility, member demographics, or deployed
 production infrastructure.
+
+For technical tradeoffs and future improvements, see:
+
+- `docs/modeling_decisions.md`
+- `docs/limitations_and_next_steps.md`

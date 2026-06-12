@@ -2,3 +2,4 @@ duckdb
 polars
 dbt-core
 dbt-duckdb
+matplotlib

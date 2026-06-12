@@ -82,6 +82,19 @@ layers.
 | `fact_plan_availability` | 73,842 |
 | `fact_benefit_cost_sharing` | 1,457,952 |
 
+## Generated case-study outputs
+
+After the marts are built, `scripts/generate_case_study_outputs.py` creates
+reviewer-friendly outputs from real aggregate queries:
+
+- `docs/insight_snapshot.md`
+- `assets/dashboard_preview.png`
+- `assets/star_schema.png`
+- `assets/pipeline_architecture.png`
+
+These are static, reproducible artifacts generated from local mart tables; they
+are not fabricated dashboard screenshots.
+
 ## Real-data modeling fixes made during validation
 
 - PY2026 Rate, Benefits, and Service Area files do not include `VersionNum`; the
@@ -127,4 +140,6 @@ dbt parse --profiles-dir . --no-partial-parse
 dbt run --profiles-dir .
 dbt test --profiles-dir .
 dbt build --profiles-dir .
+cd ..
+python3 scripts/generate_case_study_outputs.py
 ```

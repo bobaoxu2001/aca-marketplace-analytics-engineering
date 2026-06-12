@@ -5,6 +5,9 @@ PY2026 ACA Marketplace Public Use Files. Metrics are intended for marketplace
 analytics and plan design analysis, not claims experience or enrollment
 reporting.
 
+For real aggregate outputs generated from these metrics, see
+`docs/insight_snapshot.md`.
+
 | Metric | Business question | Definition / formula | Primary model | Suggested dimensions | Caveats |
 | --- | --- | --- | --- | --- | --- |
 | Average monthly premium | How expensive are plans in a market segment? | `avg(fact_premium.monthly_premium)` | `fact_premium` | State, rating area, issuer, plan, metal level, age band, tobacco usage | Premium rows are at rating-area, age, tobacco, and effective-date grain. |
