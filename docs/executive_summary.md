@@ -4,7 +4,8 @@
 
 This project turns real CMS Plan Year 2026 ACA Marketplace Public Use Files into
 a tested local analytics warehouse for premiums, benefits, issuer competition,
-plan availability, and geography-level market analysis.
+plan availability, plan history, quality ratings, and geography-level market
+analysis.
 
 ## Why this matters
 
@@ -22,8 +23,10 @@ metrics, semantic models, and dashboard-ready analysis surfaces.
 | Plan Attributes PUF - PY2026 | 22,059 |
 | Benefits and Cost Sharing PUF - PY2026 | 1,457,952 |
 | Service Area PUF - PY2026 | 8,820 |
+| Plan ID Crosswalk PUF - PY2025 to PY2026 | 158,746 |
+| Quality PUF - PY2026 | 4,302 |
 
-Final real-data dbt build status: `PASS=83 WARN=0 ERROR=0 SKIP=0`.
+Final real-data dbt build status: `PASS=108 WARN=0 ERROR=0 SKIP=0`.
 
 ## Selected descriptive findings
 
@@ -37,6 +40,11 @@ Generated from the dbt marts in `docs/insight_snapshot.md`:
   marking them for closer market review.
 - Platinum has the highest median modeled monthly premium at $1,480.33 across
   all premium rows; Low has the lowest at $19.96.
+- Plan history modeling identifies 3,815 current plans that continue under the
+  same plan ID and 909 current plans that are new or not represented in the
+  crosswalk.
+- The Quality PUF contributes 4,302 plan-level quality rows; 4,183 join to the
+  modeled PY2026 plan dimension for quality-vs-cost analysis.
 
 These findings are descriptive summaries of public CMS data and are not
 enrollment weighted.
@@ -71,6 +79,9 @@ enrollment weighted.
 - Average out-of-pocket maximum
 - Benefit coverage rate
 - Premium difference by metal level
+- Plan continuity status
+- Quality rating distribution
+- Quality vs premium where plan-level joins are supported
 
 ## Recommended executive dashboard flow
 
@@ -81,6 +92,9 @@ enrollment weighted.
    and cost-sharing details.
 4. **Market strategy:** issuer premium positioning and county-level availability
    gaps.
+5. **Plan history and quality:** continuity/churn from PY2025 to PY2026 and
+   quality-vs-premium summaries where public Quality PUF rows join to modeled
+   plans.
 
 ## Important scope note
 

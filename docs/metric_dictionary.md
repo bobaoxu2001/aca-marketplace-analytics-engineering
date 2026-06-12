@@ -18,6 +18,9 @@ For real aggregate outputs generated from these metrics, see
 | Average out-of-pocket maximum | What is the average maximum member exposure? | `avg(dim_plan.medical_oop_max_integrated)` | `dim_plan` | State, issuer, metal level, plan type | Plan design attribute; not observed spend. |
 | Benefit coverage rate | Which benefits are broadly covered? | `sum(is_covered_flag) / count(*)` | `fact_benefit_cost_sharing` | Benefit, benefit category, plan, issuer, metal level | Uses CMS `IsCovered`; null/ambiguous values should be reviewed in detailed analysis. |
 | Premium difference by metal level | How do premiums compare across benefit richness tiers? | Metal-level average premium minus benchmark average premium | `fact_premium` + `dim_plan` | State, rating area, issuer, age band | Choose comparison benchmark explicitly: state average, Silver, or overall average. |
+| Plan continuity status | Which plans continued, crosswalked, appeared new, or discontinued/no-current-plan across PY2025 to PY2026? | Count rows by `dim_plan_history.continuity_status` | `dim_plan_history` | State, issuer, previous plan, current plan | Based on CMS Plan ID Crosswalk; geographic crosswalk detail is aggregated to plan history status. |
+| Quality rating distribution | How are public QRS overall ratings distributed? | Count Quality PUF rows by `overall_rating_value` or `quality_rating_status` | `fact_plan_quality_rating` | State, issuer, plan type, metal level where joined | Quality PUF includes non-rated statuses and some rows outside the modeled Exchange PUF plan universe. |
+| Quality vs premium | How do modeled premiums vary by public quality rating? | Average or median plan premium by `overall_rating_value` where `joins_to_dim_plan = true` | `fact_plan_quality_rating` + `fact_premium` | State, issuer, metal level, plan type | Limited to Quality PUF rows that join to `dim_plan`; not enrollment weighted. |
 
 ## Grain notes
 
@@ -25,6 +28,9 @@ For real aggregate outputs generated from these metrics, see
   date grain.
 - `fact_plan_availability` is modeled at plan and service-area county grain.
 - `fact_benefit_cost_sharing` is modeled at plan-benefit-cost-sharing grain.
+- `dim_plan_history` is modeled at current plan plus discontinued/no-current
+  prior plan grain for PY2025 to PY2026 continuity analysis.
+- `fact_plan_quality_rating` is modeled at Quality PUF plan row grain.
 - `dim_plan` is conformed at CMS standard component grain so Rate PUF premiums
   can join cleanly to plan attributes; `plan_variant_count` preserves the number
   of Plan Attributes variants represented by each standard component.

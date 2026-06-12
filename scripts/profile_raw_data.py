@@ -71,6 +71,22 @@ DATASETS: tuple[DatasetProfileConfig, ...] = (
             ("BusinessYear", "StateCode", "ServiceAreaId", "County"),
         ),
     ),
+    DatasetProfileConfig(
+        key="plan_id_crosswalk_puf",
+        filename="plan_id_crosswalk_puf_py2025_py2026.csv",
+        duplicate_key_candidates=(
+            ("State", "PlanID_2025", "FIPSCode", "ZipCode", "PlanID_2026"),
+            ("State", "PlanID_2025", "PlanID_2026"),
+        ),
+    ),
+    DatasetProfileConfig(
+        key="quality_puf",
+        filename="quality_puf_py2026.csv",
+        duplicate_key_candidates=(
+            ("IssuerID", "State", "PlanID"),
+            ("Reportingunitid", "PlanID"),
+        ),
+    ),
 )
 
 

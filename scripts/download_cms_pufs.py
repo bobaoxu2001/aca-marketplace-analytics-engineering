@@ -64,6 +64,20 @@ DATASETS: tuple[PufDataset, ...] = (
         cms_zip_url="https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip",
         search_terms=("2026", "service", "area", "puf"),
     ),
+    PufDataset(
+        key="plan_id_crosswalk",
+        label="Plan ID Crosswalk PUF - PY2025 to PY2026",
+        filename="plan_id_crosswalk_puf_py2025_py2026.csv",
+        cms_zip_url="https://download.cms.gov/marketplace-puf/2026/plan-id-crosswalk-puf.zip",
+        search_terms=("2026", "plan", "id", "crosswalk", "puf"),
+    ),
+    PufDataset(
+        key="quality",
+        label="Quality PUF - PY2026",
+        filename="quality_puf_py2026.csv",
+        cms_zip_url="https://www.cms.gov/files/zip/quality-puf-py2026.zip",
+        search_terms=("2026", "quality", "puf"),
+    ),
 )
 
 
@@ -239,6 +253,7 @@ def print_manual_fallback(raw_dir: Path, missing: list[PufDataset]) -> None:
     print("\nAutomatic CMS URL discovery did not complete for every required file.")
     print("Manual data download fallback:")
     print("1. Download the Plan Year 2026 Marketplace PUF CSV files from CMS or Data.HealthCare.gov.")
+    print("   For Quality PUF, use the CMS Marketplace Quality Initiatives downloads page if needed.")
     print("   Direct CMS ZIP URLs attempted:")
     for dataset in missing:
         print(f"   - {dataset.cms_zip_url}")

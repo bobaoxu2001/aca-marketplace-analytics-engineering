@@ -52,6 +52,31 @@ models:
       - name: service_area_id
         tests: [not_null]
 
+  - name: stg_plan_id_crosswalk_puf
+    description: Cleaned CMS Plan ID Crosswalk PUF rows mapping PY2025 plans to PY2026 plans at crosswalk geography grain.
+    columns:
+      - name: state_code
+        tests: [not_null]
+      - name: plan_id_2025
+        tests: [not_null]
+      - name: reason_for_crosswalk
+        description: CMS crosswalk reason code as published.
+
+  - name: stg_quality_puf
+    description: Cleaned CMS PY2026 Quality PUF rows with plan-level QRS star ratings for HealthCare.gov plans.
+    columns:
+      - name: state_code
+        tests: [not_null]
+      - name: issuer_id
+        tests: [not_null]
+      - name: plan_id
+        tests: [not_null]
+      - name: quality_rating_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['rated', 'not_rated_new', 'not_rated', 'unknown']
+
   - name: int_plan_base
     description: Deduplicated plan-grain intermediate model used by all plan-centric marts.
     columns:
@@ -247,3 +272,68 @@ models:
               arguments:
                 to: ref('dim_benefit')
                 field: benefit_key
+
+  - name: dim_plan_history
+    description: Plan history dimension that maps PY2025 plans to PY2026 plans and identifies current, crosswalked, new, and discontinued/no-current-plan records.
+    columns:
+      - name: plan_history_key
+        tests: [not_null, unique]
+      - name: plan_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_plan')
+                field: plan_key
+              config:
+                where: "plan_key is not null"
+      - name: issuer_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
+              config:
+                where: "issuer_key is not null"
+      - name: effective_plan_year
+        tests: [not_null]
+      - name: continuity_status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - continuing_same_plan
+                  - crosswalked_from_prior_plan
+                  - new_or_not_in_crosswalk
+                  - discontinued_or_no_2026_crosswalk
+
+  - name: fact_plan_quality_rating
+    description: Plan-level PY2026 Quality PUF fact table with overall, medical care, member experience, and plan administration star ratings.
+    columns:
+      - name: plan_quality_key
+        tests: [not_null, unique]
+      - name: plan_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_plan')
+                field: plan_key
+              config:
+                where: "plan_key is not null"
+      - name: issuer_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_issuer')
+                field: issuer_key
+              config:
+                where: "joins_to_dim_plan = true"
+      - name: plan_id
+        tests: [not_null]
+      - name: quality_rating_status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['rated', 'not_rated_new', 'not_rated', 'unknown']

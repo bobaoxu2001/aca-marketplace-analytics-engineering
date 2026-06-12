@@ -15,3 +15,7 @@ sources:
         description: Raw Benefits and Cost Sharing PUF with benefit-level coverage and cost-sharing details.
       - name: service_area_puf_py2026
         description: Raw Service Area PUF with county and service area availability.
+      - name: plan_id_crosswalk_puf_py2025_py2026
+        description: Raw Plan ID Crosswalk PUF mapping PY2025 plans to PY2026 plans.
+      - name: quality_puf_py2026
+        description: Raw CMS Quality PUF with PY2026 plan-level QRS star ratings for HealthCare.gov plans.

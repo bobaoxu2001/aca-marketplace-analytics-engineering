@@ -35,6 +35,12 @@ RAW_TABLES: tuple[RawTable, ...] = (
         "CMS Benefits and Cost Sharing PUF",
     ),
     RawTable("service_area_puf_py2026", "service_area_puf_py2026.csv", "CMS Service Area PUF"),
+    RawTable(
+        "plan_id_crosswalk_puf_py2025_py2026",
+        "plan_id_crosswalk_puf_py2025_py2026.csv",
+        "CMS Plan ID Crosswalk PUF from PY2025 to PY2026",
+    ),
+    RawTable("quality_puf_py2026", "quality_puf_py2026.csv", "CMS Quality PUF"),
 )
 
 
