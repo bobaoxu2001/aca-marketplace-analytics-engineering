@@ -11,6 +11,7 @@ select
     issuer_id,
     plan_id,
     standard_component_id,
+    plan_variant_count,
     plan_name,
     hios_product_id,
     network_id,

@@ -1,5 +1,8 @@
 with plan_rows as (
-    select * from {{ ref('stg_plan_attributes_puf') }}
+    select
+        *,
+        coalesce(standard_component_id, plan_id) as conformed_plan_id
+    from {{ ref('stg_plan_attributes_puf') }}
 )
 
 select
@@ -7,8 +10,9 @@ select
     state_code,
     issuer_id,
     max(issuer_name) as issuer_name,
-    plan_id,
-    max(standard_component_id) as standard_component_id,
+    conformed_plan_id as plan_id,
+    conformed_plan_id as standard_component_id,
+    count(distinct plan_id) as plan_variant_count,
     max(plan_name) as plan_name,
     max(hios_product_id) as hios_product_id,
     max(network_id) as network_id,

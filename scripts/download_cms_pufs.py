@@ -31,6 +31,7 @@ class PufDataset:
     key: str
     label: str
     filename: str
+    cms_zip_url: str
     search_terms: tuple[str, ...]
 
 
@@ -39,24 +40,28 @@ DATASETS: tuple[PufDataset, ...] = (
         key="rate",
         label="Rate PUF - PY2026",
         filename="rate_puf_py2026.csv",
+        cms_zip_url="https://download.cms.gov/marketplace-puf/2026/rate-puf.zip",
         search_terms=("2026", "rate", "puf"),
     ),
     PufDataset(
         key="plan_attributes",
         label="Plan Attributes PUF - PY2026",
         filename="plan_attributes_puf_py2026.csv",
+        cms_zip_url="https://download.cms.gov/marketplace-puf/2026/plan-attributes-puf.zip",
         search_terms=("2026", "plan", "attributes", "puf"),
     ),
     PufDataset(
         key="benefits_cost_sharing",
         label="Benefits and Cost Sharing PUF - PY2026",
         filename="benefits_cost_sharing_puf_py2026.csv",
+        cms_zip_url="https://download.cms.gov/marketplace-puf/2026/benefits-and-cost-sharing-puf.zip",
         search_terms=("2026", "benefits", "cost", "sharing", "puf"),
     ),
     PufDataset(
         key="service_area",
         label="Service Area PUF - PY2026",
         filename="service_area_puf_py2026.csv",
+        cms_zip_url="https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip",
         search_terms=("2026", "service", "area", "puf"),
     ),
 )
@@ -168,7 +173,7 @@ def discover_from_cms_pages(dataset: PufDataset) -> set[str]:
 
 
 def discover_candidates(dataset: PufDataset) -> list[str]:
-    candidates: set[str] = set()
+    candidates: set[str] = {dataset.cms_zip_url}
     candidates.update(discover_from_data_healthcare(dataset))
     candidates.update(discover_from_catalog_data_gov(dataset))
     candidates.update(discover_from_cms_pages(dataset))
@@ -234,6 +239,9 @@ def print_manual_fallback(raw_dir: Path, missing: list[PufDataset]) -> None:
     print("\nAutomatic CMS URL discovery did not complete for every required file.")
     print("Manual data download fallback:")
     print("1. Download the Plan Year 2026 Marketplace PUF CSV files from CMS or Data.HealthCare.gov.")
+    print("   Direct CMS ZIP URLs attempted:")
+    for dataset in missing:
+        print(f"   - {dataset.cms_zip_url}")
     print(f"2. Place the files in: {raw_dir}")
     print("3. Rename them exactly as follows:")
     for dataset in missing:

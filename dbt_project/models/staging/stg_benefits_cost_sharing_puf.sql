@@ -23,7 +23,7 @@ select
     nullif(trim("CoinsInnTier2"), '') as coinsurance_in_network_tier_2,
     nullif(trim("CoinsOutofNet"), '') as coinsurance_out_of_network,
     trim("SourceName") as source_name,
-    try_cast("VersionNum" as integer) as version_num,
+    cast(null as integer) as version_num,
     try_cast("ImportDate" as timestamp) as import_date
 from source
 where nullif(trim("PlanId"), '') is not null

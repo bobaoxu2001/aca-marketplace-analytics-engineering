@@ -123,6 +123,36 @@ def duplicate_profile(lf: pl.LazyFrame, key_columns: list[str]) -> dict[str, Any
     }
 
 
+def key_field_coverage(lf: pl.LazyFrame, key_columns: list[str], row_count: int) -> dict[str, Any]:
+    if not key_columns:
+        return {}
+
+    coverage_frame = collect_streaming(
+        lf.select(
+            [
+                (
+                    pl.col(column)
+                    .cast(pl.Utf8)
+                    .str.strip_chars()
+                    .is_not_null()
+                    .and_(pl.col(column).cast(pl.Utf8).str.strip_chars() != "")
+                    .sum()
+                    .alias(column)
+                )
+                for column in key_columns
+            ]
+        )
+    )
+    coverage_row = coverage_frame.row(0, named=True)
+    return {
+        column: {
+            "populated_rows": int(coverage_row[column] or 0),
+            "coverage_rate": (float(coverage_row[column] or 0) / row_count if row_count else None),
+        }
+        for column in key_columns
+    }
+
+
 def sample_values(lf: pl.LazyFrame, columns: list[str], max_columns: int = 12) -> dict[str, list[str]]:
     samples: dict[str, list[str]] = {}
     for column in columns[:max_columns]:
@@ -171,6 +201,7 @@ def profile_dataset(config: DatasetProfileConfig, raw_dir: Path) -> dict[str, An
         "columns": columns,
         "null_rates": null_rates,
         "duplicate_check": duplicate_profile(lf, key_columns),
+        "key_field_coverage": key_field_coverage(lf, key_columns, row_count),
         "sample_values": sample_values(lf, columns),
     }
 
@@ -198,6 +229,19 @@ def write_markdown(profile: dict[str, Any], output_path: Path) -> None:
                 f"- Duplicate key: `{', '.join(dataset['duplicate_check']['key_columns'])}`",
                 f"- Duplicate groups: {dataset['duplicate_check']['duplicate_groups']}",
                 f"- Duplicate rows beyond first occurrence: {dataset['duplicate_check']['duplicate_rows']}",
+                "",
+                "| Key field | Populated rows | Coverage rate |",
+                "| --- | ---: | ---: |",
+            ]
+        )
+        for column, coverage in dataset["key_field_coverage"].items():
+            coverage_rate = coverage["coverage_rate"]
+            rendered_coverage_rate = "n/a" if coverage_rate is None else f"{coverage_rate:.2%}"
+            lines.append(
+                f"| `{column}` | {coverage['populated_rows']:,} | {rendered_coverage_rate} |"
+            )
+        lines.extend(
+            [
                 "",
                 "| Column | Null rate | Sample values |",
                 "| --- | ---: | --- |",

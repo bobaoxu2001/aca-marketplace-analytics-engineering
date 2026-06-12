@@ -39,7 +39,7 @@ select
             coalesce(coinsurance_in_network_tier_1, '')
         )
     ) as benefit_cost_sharing_key,
-    md5(concat_ws('|', business_year::varchar, state_code, plan_id)) as plan_key,
+    md5(concat_ws('|', business_year::varchar, state_code, coalesce(standard_component_id, plan_id))) as plan_key,
     md5(concat_ws('|', business_year::varchar, state_code, issuer_id)) as issuer_key,
     md5(benefit_name) as benefit_key,
     business_year,

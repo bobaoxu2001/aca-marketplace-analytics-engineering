@@ -36,6 +36,27 @@ Health Insurance Exchange Public Use Files, Plan Year 2026:
 
 Raw CSV files are intentionally ignored by git.
 
+## Real data validation results
+
+This project was validated against real official CMS PY2026 Marketplace PUF CSVs
+downloaded from `https://download.cms.gov/marketplace-puf/2026/`.
+
+| Dataset | Real rows validated |
+| --- | ---: |
+| Rate PUF - PY2026 | 2,235,761 |
+| Plan Attributes PUF - PY2026 | 22,059 |
+| Benefits and Cost Sharing PUF - PY2026 | 1,457,952 |
+| Service Area PUF - PY2026 | 8,820 |
+
+Final real-data `dbt build` status:
+
+```text
+PASS=83 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=83
+```
+
+See `docs/real_data_validation_results.md` for raw profiling highlights, mart
+row counts, known limitations, and exact reproduction commands.
+
 ## Repository structure
 
 ```text

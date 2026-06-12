@@ -1,16 +1,17 @@
 with service_area_geography as (
-    select distinct
+    select
         business_year,
         state_code,
         service_area_id,
-        service_area_name,
+        max(service_area_name) as service_area_name,
         county_name,
         cast(null as varchar) as rating_area_id,
-        covers_entire_state,
-        partial_county,
-        zip_codes,
+        max(covers_entire_state) as covers_entire_state,
+        max(partial_county) as partial_county,
+        string_agg(distinct zip_codes, '; ') as zip_codes,
         'service_area_county' as geography_type
     from {{ ref('stg_service_area_puf') }}
+    group by 1, 2, 3, 5
 ),
 
 rating_area_geography as (
