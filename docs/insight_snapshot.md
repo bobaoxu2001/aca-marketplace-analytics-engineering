@@ -110,7 +110,7 @@ Deductible and out-of-pocket maximum values come from public Plan Attributes PUF
 | TX | Ellis | TXS001 | 83 | 9 |
 | TX | Rockwall | TXS001 | 83 | 9 |
 
-CMS Service Area `County` values are used as published and may be FIPS-like identifiers rather than display-friendly county names.
+Geography labels prefer `county_display_name` from the Census FIPS seed; unmatched CMS county values retain the raw Service Area value.
 
 ## Examples of low-competition markets
 
@@ -179,7 +179,7 @@ Quality-vs-premium metrics are limited to Quality PUF rows that join to `dim_pla
 
 ## Limitations surfaced by the insight queries
 
-- County display names are not modeled yet; the Service Area PUF county field is used as published.
+- County display names are enriched from the Census FIPS reference seed when a match is found; unmatched CMS county values retain the raw Service Area value.
 - Premium metrics are not enrollment weighted because enrollment is not included in the selected public PUFs.
 - The current model focuses on public plan design, premiums, availability, plan history, and Quality PUF ratings; it does not include provider networks, claims, or member-level data.
 - The dashboard preview in `assets/dashboard_preview.png` is a static visual generated from these aggregate queries, not a deployed BI application.

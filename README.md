@@ -6,7 +6,7 @@ ratings, and geography modeled into tested analytics marts.**
 
 ![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
 ![3.9M Raw Rows](https://img.shields.io/badge/3.9M%2B-Raw%20Rows-green)
-![115 dbt Checks](https://img.shields.io/badge/115-dbt%20Checks%20Passing-brightgreen)
+![118 dbt Checks](https://img.shields.io/badge/118-dbt%20Checks%20Passing-brightgreen)
 ![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
 
 ![Dashboard preview generated from real CMS PY2026 marts](assets/dashboard_preview.png)
@@ -196,6 +196,9 @@ counts, known limitations, and exact reproduction commands.
 │       └── marts/
 ├── tests/                       # Python unit tests
 ├── .github/workflows/           # CI pipeline
+├── Makefile                     # Pipeline orchestration
+├── pyproject.toml               # Ruff + pytest configuration
+├── LICENSE                      # MIT license
 ├── docs/                        # Executive summary, metrics, validation, dashboard spec, SQL
 ├── dashboards/                  # BI dashboard planning artifact
 ├── lookml/                      # LookML semantic layer
@@ -406,6 +409,9 @@ Defined in `docs/metric_dictionary.md`, `docs/sample_queries.sql`, and LookML:
 
 LookML files in `lookml/`:
 
+- `plan_availability.view.lkml`
+- `plan_premium_summary.view.lkml`
+- `issuers.view.lkml`
 - `plans.view.lkml`
 - `plan_history.view.lkml`
 - `premiums.view.lkml`

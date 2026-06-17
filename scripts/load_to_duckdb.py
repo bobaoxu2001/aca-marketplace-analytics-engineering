@@ -4,15 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 import duckdb
 
-
 DEFAULT_RAW_DIR = Path("data/raw/py2026")
 DEFAULT_DATABASE_PATH = Path("data/processed/aca_marketplace_py2026.duckdb")
+DEFAULT_PROFILE_PATH = Path("data/processed/raw_profile_py2026.json")
 
 
 @dataclass(frozen=True)
@@ -48,7 +49,24 @@ def quote_identifier(identifier: str) -> str:
     return '"' + identifier.replace('"', '""') + '"'
 
 
-def load_table(connection: duckdb.DuckDBPyConnection, raw_dir: Path, raw_table: RawTable) -> int:
+def load_profile_row_counts(profile_path: Path) -> dict[str, int]:
+    if not profile_path.exists():
+        return {}
+    payload = json.loads(profile_path.read_text(encoding="utf-8"))
+    return {
+        dataset["dataset"]: int(dataset["row_count"])
+        for dataset in payload.get("datasets", [])
+        if dataset.get("exists") and dataset.get("row_count") is not None
+    }
+
+
+def load_table(
+    connection: duckdb.DuckDBPyConnection,
+    raw_dir: Path,
+    raw_table: RawTable,
+    *,
+    ignore_errors: bool,
+) -> int:
     path = raw_dir / raw_table.filename
     if not path.exists():
         raise FileNotFoundError(f"Missing required raw file: {path}")
@@ -63,7 +81,7 @@ def load_table(connection: duckdb.DuckDBPyConnection, raw_dir: Path, raw_table: 
             ?,
             header = true,
             all_varchar = true,
-            ignore_errors = true,
+            ignore_errors = {str(ignore_errors).lower()},
             union_by_name = true,
             sample_size = 20000
         )
@@ -71,6 +89,8 @@ def load_table(connection: duckdb.DuckDBPyConnection, raw_dir: Path, raw_table: 
         [str(path)],
     )
     row_count = connection.execute(f"select count(*) from {table_identifier}").fetchone()[0]
+    if row_count == 0:
+        raise RuntimeError(f"Loaded zero rows for {raw_table.table_name} from {path}")
     connection.execute(
         """
         insert into raw_load_audit (
@@ -87,10 +107,32 @@ def load_table(connection: duckdb.DuckDBPyConnection, raw_dir: Path, raw_table: 
     return int(row_count)
 
 
+def validate_against_profile(
+    raw_table: RawTable,
+    loaded_rows: int,
+    profile_counts: dict[str, int],
+) -> None:
+    profile_key = raw_table.table_name.removesuffix("_py2026")
+    expected = profile_counts.get(profile_key)
+    if expected is None:
+        return
+    if loaded_rows != expected:
+        print(
+            f"Warning: {raw_table.table_name} loaded {loaded_rows:,} rows "
+            f"but profile reports {expected:,}."
+        )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--raw-dir", type=Path, default=DEFAULT_RAW_DIR)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE_PATH)
+    parser.add_argument("--profile", type=Path, default=DEFAULT_PROFILE_PATH)
+    parser.add_argument(
+        "--ignore-errors",
+        action="store_true",
+        help="Allow read_csv_auto to skip malformed rows (not recommended).",
+    )
     return parser.parse_args()
 
 
@@ -105,6 +147,8 @@ def main() -> int:
         print("Run scripts/download_cms_pufs.py or place files manually before loading.")
         return 2
 
+    profile_counts = load_profile_row_counts(args.profile)
+
     with duckdb.connect(str(args.database)) as connection:
         connection.execute(
             """
@@ -118,7 +162,13 @@ def main() -> int:
             """
         )
         for raw_table in RAW_TABLES:
-            row_count = load_table(connection, args.raw_dir, raw_table)
+            row_count = load_table(
+                connection,
+                args.raw_dir,
+                raw_table,
+                ignore_errors=args.ignore_errors,
+            )
+            validate_against_profile(raw_table, row_count, profile_counts)
             print(f"Loaded {raw_table.table_name}: {row_count:,} rows")
 
     print(f"DuckDB database ready: {args.database}")

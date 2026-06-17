@@ -4,3 +4,5 @@ dbt-core==1.11.11
 dbt-duckdb==1.10.1
 matplotlib==3.11.0
 pytest==8.4.1
+ruff==0.12.4
+pre-commit==4.2.0
