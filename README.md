@@ -6,7 +6,7 @@ ratings, and geography modeled into tested analytics marts.**
 
 ![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
 ![3.9M Raw Rows](https://img.shields.io/badge/3.9M%2B-Raw%20Rows-green)
-![108 dbt Checks](https://img.shields.io/badge/108-dbt%20Checks%20Passing-brightgreen)
+![115 dbt Checks](https://img.shields.io/badge/115-dbt%20Checks%20Passing-brightgreen)
 ![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
 
 ![Dashboard preview generated from real CMS PY2026 marts](assets/dashboard_preview.png)
@@ -101,7 +101,7 @@ Validated against real official CMS PY2026 Marketplace PUF CSVs downloaded from
 Final real-data dbt build:
 
 ```text
-PASS=108 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=108
+PASS=115 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=117
 ```
 
 Raw CSVs, local DuckDB databases, dbt target artifacts, raw profile outputs, and
@@ -137,7 +137,7 @@ Generated static architecture assets:
 | Requirement | How this project demonstrates it |
 | --- | --- |
 | SQL | Builds dimensional marts and sample stakeholder queries over premiums, benefits, issuers, geographies, and plan availability. |
-| dbt | Uses staged, intermediate, and mart layers with model documentation and 108 passing real-data dbt checks. |
+| dbt | Uses staged, intermediate, and mart layers with model documentation and 115 passing real-data dbt checks. |
 | Semantic modeling / LookML | Defines LookML views and explores for plans, premiums, benefits, and geography with business metrics. |
 | Cloud warehouse readiness | Uses DuckDB locally while keeping layered models, source contracts, tests, and BI semantics portable to Snowflake, BigQuery, Redshift, or Databricks with adapter/profile changes. |
 | Dimensional modeling | Implements `dim_issuer`, `dim_plan`, `dim_geography`, `dim_metal_level`, `dim_benefit`, `dim_age_band`, `fact_premium`, `fact_plan_availability`, and `fact_benefit_cost_sharing`. |
@@ -187,12 +187,15 @@ counts, known limitations, and exact reproduction commands.
 │   ├── raw/py2026/              # Manual fallback location for CMS CSV files
 │   └── processed/               # Local DuckDB database and profiling outputs
 ├── assets/                      # Generated PNG visuals from real mart outputs
-├── dbt_project/                 # dbt DuckDB project
+├── dbt_project/                 # dbt DuckDB project (models, seeds, exposures)
 │   ├── macros/
+│   ├── seeds/                   # County FIPS reference (Census Bureau)
 │   └── models/
 │       ├── staging/
 │       ├── intermediate/
 │       └── marts/
+├── tests/                       # Python unit tests
+├── .github/workflows/           # CI pipeline
 ├── docs/                        # Executive summary, metrics, validation, dashboard spec, SQL
 ├── dashboards/                  # BI dashboard planning artifact
 ├── lookml/                      # LookML semantic layer
@@ -200,6 +203,14 @@ counts, known limitations, and exact reproduction commands.
 ```
 
 ## Quickstart
+
+Use the Makefile for a guided workflow, or run the steps manually below.
+
+```bash
+make install    # create venv + install dependencies
+make pipeline   # download → profile → load → dbt build → outputs
+make ci         # CI-safe checks: dbt parse + unit tests
+```
 
 ### 1. Create a Python environment
 
@@ -316,7 +327,7 @@ cd dbt_project && dbt build --profiles-dir .
    resources. If discovery fails, it prints clear manual fallback instructions.
 2. **Profile:** `scripts/profile_raw_data.py` uses Polars lazy CSV scans to
    profile large files, including the Rate PUF.
-3. **Load:** `scripts/load_to_duckdb.py` loads the four raw CSVs into a local
+3. **Load:** `scripts/load_to_duckdb.py` loads all six CMS raw CSVs into a local
    DuckDB database as raw tables.
 4. **Transform:** dbt builds layered staging, intermediate, and mart models.
 5. **Serve:** LookML and sample SQL expose stakeholder-facing metrics.
@@ -423,7 +434,7 @@ benefit cost sharing.
 
 - Built a tested ACA Marketplace analytics warehouse using real CMS PY2026 PUFs,
   DuckDB, dbt, dimensional modeling, and LookML-style semantic models; validated
-  3.9M+ raw rows with 108 passing dbt checks.
+  3.9M+ raw rows with 115 passing dbt checks.
 
 ### Data Analyst version
 

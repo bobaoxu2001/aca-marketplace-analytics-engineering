@@ -1,5 +1,6 @@
-duckdb
-polars
-dbt-core
-dbt-duckdb
-matplotlib
+duckdb==1.5.3
+polars==1.41.2
+dbt-core==1.11.11
+dbt-duckdb==1.10.1
+matplotlib==3.11.0
+pytest==8.4.1
