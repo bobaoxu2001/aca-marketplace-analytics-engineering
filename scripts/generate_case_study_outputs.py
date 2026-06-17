@@ -153,7 +153,12 @@ def load_insights(connection: duckdb.DuckDBPyConnection) -> dict[str, Any]:
         """
         select
             geography.state_code,
-            coalesce(geography.county_name, geography.service_area_id, geography.rating_area_id) as geography_label,
+            coalesce(
+                geography.county_display_name,
+                geography.county_name,
+                geography.service_area_id,
+                geography.rating_area_id
+            ) as geography_label,
             geography.service_area_id,
             count(distinct availability.plan_key) as plan_count,
             count(distinct availability.issuer_key) as issuer_count
@@ -171,7 +176,12 @@ def load_insights(connection: duckdb.DuckDBPyConnection) -> dict[str, Any]:
         """
         select
             geography.state_code,
-            coalesce(geography.county_name, geography.service_area_id, geography.rating_area_id) as geography_label,
+            coalesce(
+                geography.county_display_name,
+                geography.county_name,
+                geography.service_area_id,
+                geography.rating_area_id
+            ) as geography_label,
             geography.service_area_id,
             count(distinct availability.plan_key) as plan_count,
             count(distinct availability.issuer_key) as issuer_count

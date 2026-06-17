@@ -19,3 +19,11 @@ sources:
         description: Raw Plan ID Crosswalk PUF mapping PY2025 plans to PY2026 plans.
       - name: quality_puf_py2026
         description: Raw CMS Quality PUF with PY2026 plan-level QRS star ratings for HealthCare.gov plans.
+      - name: raw_load_audit
+        description: >
+          Load audit metadata written by scripts/load_to_duckdb.py with row counts
+          and UTC load timestamps for each raw table.
+        freshness:
+          warn_after: {count: 180, period: day}
+          error_after: {count: 365, period: day}
+        loaded_at_field: loaded_at_utc

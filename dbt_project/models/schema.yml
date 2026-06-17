@@ -149,6 +149,12 @@ models:
           - accepted_values:
               arguments:
                 values: ['service_area_county', 'rating_area']
+      - name: county_fips
+        description: Five-digit FIPS county code when the CMS county value can be resolved.
+      - name: county_display_name
+        description: Human-readable county label from the FIPS reference seed when available.
+      - name: state_name
+        description: Full state name from the FIPS reference seed when available.
 
   - name: dim_metal_level
     description: Metal level dimension for ACA plan tier ordering and comparisons.
