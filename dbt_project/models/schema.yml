@@ -103,6 +103,8 @@ models:
         tests: [not_null, unique]
       - name: issuer_id
         tests: [not_null]
+      - name: issuer_name
+        description: CMS issuer marketing name for stakeholder-facing reporting.
 
   - name: dim_plan
     description: Conformed standard-component plan dimension containing product, issuer, metal level, network, deductible, out-of-pocket, and plan variant attributes.
@@ -245,6 +247,9 @@ models:
                 field: issuer_key
       - name: geography_key
         tests:
+          - not_null:
+              config:
+                where: "county_name is not null"
           - relationships:
               arguments:
                 to: ref('dim_geography')

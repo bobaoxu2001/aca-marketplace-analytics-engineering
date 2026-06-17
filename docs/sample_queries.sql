@@ -166,3 +166,32 @@ join plan_premium
 where quality.overall_rating_numeric is not null
 group by 1
 order by try_cast(quality.overall_rating_value as integer);
+
+-- 12. County FIPS enrichment coverage for service-area geographies.
+select
+    count(*) as county_geography_rows,
+    count(*) filter (
+        where county_display_name is not null
+        and county_display_name != county_name
+    ) as enriched_county_rows,
+    round(
+        100.0 * count(*) filter (
+            where county_display_name is not null
+            and county_display_name != county_name
+        ) / nullif(count(*), 0),
+        1
+    ) as enrichment_rate_pct
+from main_marts.dim_geography
+where geography_type = 'service_area_county';
+
+-- 13. Quality PUF rows that do not join to the modeled plan dimension.
+select
+    state_code,
+    issuer_id,
+    plan_id,
+    quality_rating_status,
+    overall_rating_value
+from main_marts.fact_plan_quality_rating
+where joins_to_dim_plan = false
+order by state_code, issuer_id, plan_id
+limit 25;

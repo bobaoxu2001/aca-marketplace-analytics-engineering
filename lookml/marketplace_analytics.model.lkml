@@ -2,17 +2,37 @@ connection: "duckdb"
 
 include: "*.view.lkml"
 
-explore: plans {
+explore: plan_availability {
   label: "Plan Availability"
-  description: "County-level plan and issuer availability from Plan Attributes and Service Area PUFs."
+  description: "County-level plan and issuer availability at plan × service-area county grain."
 
   join: geography {
     type: left_outer
-    relationship: many_to_many
-    sql_on:
-      ${plans.state_code} = ${geography.state_code}
-      and ${plans.service_area_id} = ${geography.service_area_id}
-      and ${geography.geography_type} = 'service_area_county' ;;
+    relationship: many_to_one
+    sql_on: ${plan_availability.geography_key} = ${geography.geography_key} ;;
+  }
+
+  join: plans {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${plan_availability.plan_key} = ${plans.plan_key} ;;
+  }
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${plan_availability.issuer_key} = ${issuers.issuer_key} ;;
+  }
+}
+
+explore: plans {
+  label: "Plans"
+  description: "Conformed standard-component plan attributes for product and benefit design analysis."
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${plans.issuer_key} = ${issuers.issuer_key} ;;
   }
 }
 
@@ -31,6 +51,12 @@ explore: premiums {
     relationship: many_to_one
     sql_on: ${premiums.geography_key} = ${geography.geography_key} ;;
   }
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${premiums.issuer_key} = ${issuers.issuer_key} ;;
+  }
 }
 
 explore: benefits {
@@ -41,6 +67,12 @@ explore: benefits {
     type: left_outer
     relationship: many_to_one
     sql_on: ${benefits.plan_key} = ${plans.plan_key} ;;
+  }
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${benefits.issuer_key} = ${issuers.issuer_key} ;;
   }
 }
 
@@ -53,11 +85,19 @@ explore: plan_history {
     relationship: many_to_one
     sql_on: ${plan_history.plan_key} = ${plans.plan_key} ;;
   }
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${plan_history.issuer_key} = ${issuers.issuer_key} ;;
+  }
 }
 
 explore: quality {
   label: "Quality Ratings"
-  description: "PY2026 plan-level Quality PUF ratings and quality-vs-cost analysis where plan joins are available."
+  description: >
+    PY2026 plan-level Quality PUF ratings. Plan-level premium summaries join
+    through plan_premium_summary to avoid fan-out from rating-area premium rows.
 
   join: plans {
     type: left_outer
@@ -65,9 +105,15 @@ explore: quality {
     sql_on: ${quality.plan_key} = ${plans.plan_key} ;;
   }
 
-  join: premiums {
+  join: plan_premium_summary {
     type: left_outer
-    relationship: one_to_many
-    sql_on: ${quality.plan_key} = ${premiums.plan_key} ;;
+    relationship: one_to_one
+    sql_on: ${quality.plan_key} = ${plan_premium_summary.plan_key} ;;
+  }
+
+  join: issuers {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${quality.issuer_key} = ${issuers.issuer_key} ;;
   }
 }

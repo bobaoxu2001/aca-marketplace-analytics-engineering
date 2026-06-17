@@ -21,7 +21,6 @@ exposures:
       - ref('dim_metal_level')
     owner:
       name: Analytics Engineering
-      email: analytics-engineering@example.com
 
   - name: lookml_semantic_layer
     label: LookML Semantic Layer
@@ -42,4 +41,3 @@ exposures:
       - ref('dim_plan_history')
     owner:
       name: Analytics Engineering
-      email: analytics-engineering@example.com

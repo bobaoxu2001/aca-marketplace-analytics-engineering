@@ -83,8 +83,8 @@ view: premiums {
     filters: [plans.metal_level: "Silver"]
   }
 
-  measure: premium_difference_by_metal_level {
-    label: "Premium Difference by Metal Level"
+  measure: average_monthly_premium_by_metal_level {
+    label: "Average Monthly Premium by Metal Level"
     type: average
     value_format_name: usd
     sql: ${TABLE}.monthly_premium ;;

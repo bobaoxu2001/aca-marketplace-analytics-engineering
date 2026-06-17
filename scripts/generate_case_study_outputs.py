@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-import textwrap
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -16,10 +16,19 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
-
 DEFAULT_DATABASE_PATH = Path("data/processed/aca_marketplace_py2026.duckdb")
 DEFAULT_DOCS_DIR = Path("docs")
 DEFAULT_ASSETS_DIR = Path("assets")
+DEFAULT_DBT_RUN_RESULTS = Path("dbt_project/target/run_results.json")
+
+
+def dbt_test_pass_label(run_results_path: Path = DEFAULT_DBT_RUN_RESULTS) -> str:
+    """Read the latest dbt run results and return a dashboard-friendly pass count."""
+    if not run_results_path.exists():
+        return "run dbt build"
+    payload = json.loads(run_results_path.read_text(encoding="utf-8"))
+    passes = sum(1 for result in payload.get("results", []) if result.get("status") == "pass")
+    return f"{passes} passed" if passes else "run dbt build"
 
 
 @dataclass(frozen=True)
@@ -502,8 +511,8 @@ def write_insight_snapshot(results: dict[str, Any], output_path: Path) -> None:
                 top_geo_rows,
             ),
             "",
-            "CMS Service Area `County` values are used as published and may be FIPS-like "
-            "identifiers rather than display-friendly county names.",
+            "Geography labels prefer `county_display_name` from the Census FIPS seed; "
+            "unmatched CMS county values retain the raw Service Area value.",
             "",
             "## Examples of low-competition markets",
             "",
@@ -565,8 +574,8 @@ def write_insight_snapshot(results: dict[str, Any], output_path: Path) -> None:
             "",
             "## Limitations surfaced by the insight queries",
             "",
-            "- County display names are not modeled yet; the Service Area PUF county field is "
-            "used as published.",
+            "- County display names are enriched from the Census FIPS reference seed when a "
+            "match is found; unmatched CMS county values retain the raw Service Area value.",
             "- Premium metrics are not enrollment weighted because enrollment is not included "
             "in the selected public PUFs.",
             "- The current model focuses on public plan design, premiums, availability, plan "
@@ -607,7 +616,7 @@ def create_dashboard_preview(results: dict[str, Any], output_path: Path) -> None
         ("Issuers", fmt_int(results["total_issuers"])),
         ("States", fmt_int(results["total_states"])),
         ("Geographies", fmt_int(results["total_geographies"])),
-        ("dbt checks", "108 passed"),
+        ("dbt checks", dbt_test_pass_label()),
     ]
     for index, (label, value) in enumerate(kpis):
         x = 0.05 + (index % 2) * 0.48
