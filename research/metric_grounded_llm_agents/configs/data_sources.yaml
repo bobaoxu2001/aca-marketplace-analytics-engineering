@@ -1,0 +1,30 @@
+plan_year: 2026
+source_catalogs:
+  cms_exchange_puf_page: https://www.cms.gov/marketplace/resources/data/public-use-files
+  healthdata_catalog: https://healthdata.gov/data.json
+required_files:
+  - local_filename: data/raw/py2026/rate_puf_py2026.csv
+    title: Rate PUF - PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/py2026/Rate_PUF.csv
+    cms_zip_url: https://download.cms.gov/marketplace-puf/2026/rate-puf.zip
+  - local_filename: data/raw/py2026/plan_attributes_puf_py2026.csv
+    title: Plan Attributes PUF - PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/py2026/plan_attributes_PUF.csv
+    cms_zip_url: https://download.cms.gov/marketplace-puf/2026/plan-attributes-puf.zip
+  - local_filename: data/raw/py2026/benefits_cost_sharing_puf_py2026.csv
+    title: Benefits and Cost Sharing PUF - PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/py2026/Benefits_Cost_Sharing_PUF.csv
+    cms_zip_url: https://download.cms.gov/marketplace-puf/2026/benefits-and-cost-sharing-puf.zip
+  - local_filename: data/raw/py2026/service_area_puf_py2026.csv
+    title: Service Area PUF - PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/py2026/service_area_PUF.csv
+    cms_zip_url: https://download.cms.gov/marketplace-puf/2026/service-area-puf.zip
+  - local_filename: data/raw/py2026/plan_id_crosswalk_puf_py2025_py2026.csv
+    title: Plan ID Crosswalk PUF - PY2025 to PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/py2026/plan_id_crosswalk_PUF.csv
+    cms_zip_url: https://download.cms.gov/marketplace-puf/2026/plan-id-crosswalk-puf.zip
+  - local_filename: data/raw/py2026/quality_puf_py2026.csv
+    title: Quality PUF - PY2026
+    official_csv_url: https://data.healthcare.gov/datafile/PY2026_Quality_PUF.csv
+    cms_zip_url: https://www.cms.gov/files/zip/quality-puf-py2026.zip
+
