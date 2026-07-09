@@ -1,0 +1,10 @@
+provider: openai
+model: gpt-4.1-mini
+temperature: 0
+max_output_tokens: 1200
+api_key_env: OPENAI_API_KEY
+notes:
+  - Direct LLM and live LLM-SQL adapters should use this config.
+  - The committed benchmark does not call paid APIs by default.
+  - Do not commit real API keys.
+

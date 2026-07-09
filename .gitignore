@@ -17,6 +17,15 @@ dbt_project/logs/
 dbt_project/.user.yml
 logs/
 
+# Research benchmark generated outputs.
+research/metric_grounded_llm_agents/benchmark/gold_answers/*
+!research/metric_grounded_llm_agents/benchmark/gold_answers/.gitkeep
+!research/metric_grounded_llm_agents/benchmark/gold_answers/README.md
+research/metric_grounded_llm_agents/evaluation/results/*
+!research/metric_grounded_llm_agents/evaluation/results/.gitkeep
+!research/metric_grounded_llm_agents/evaluation/results/README.md
+!research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json
+
 # Python caches and environments.
 __pycache__/
 *.py[cod]

@@ -3,3 +3,7 @@ polars
 dbt-core
 dbt-duckdb
 matplotlib
+pyyaml
+pytest
+requests
+certifi
