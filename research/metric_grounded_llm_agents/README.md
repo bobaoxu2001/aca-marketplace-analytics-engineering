@@ -27,7 +27,10 @@ This folder does not commit CMS raw CSVs, local DuckDB databases, generated dbt
 targets, or fabricated benchmark outputs. If `data/processed/aca_marketplace_py2026.duckdb`
 is missing, scripts return a clear skipped or missing-database status.
 
-The required official file URLs are listed in `configs/data_sources.yaml`.
+The required official file URLs and Socrata view IDs are listed in
+`configs/data_sources.yaml`. The Socrata downloader supports `$limit`/`$offset`
+pagination and resume for tabular views, and writes a diagnostic report if an
+official view is exposed only as a non-tabular `href` asset.
 
 ## Setup
 
@@ -38,6 +41,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python3 scripts/download_cms_pufs.py
+python3 scripts/download_cms_pufs_socrata.py
 python3 scripts/load_to_duckdb.py
 cd dbt_project
 dbt build --profiles-dir .

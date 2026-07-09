@@ -25,17 +25,20 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install dbt-core dbt-duckdb
 
-      - name: Download official CMS/HealthData PUFs
+      - name: Download official CMS/HealthData PUFs through Socrata API
         id: download
         continue-on-error: true
         run: |
           set +e
-          python3 scripts/download_cms_pufs.py --debug --force
+          python3 scripts/download_cms_pufs_socrata.py --force
           status=$?
           echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
           mkdir -p logs
           if [ -f research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json ]; then
             cp research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json logs/download_failure_report.json
+          fi
+          if [ -f research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json ]; then
+            cp research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json logs/socrata_download_report.json
           fi
           exit "$status"
 
@@ -117,11 +120,12 @@ jobs:
           retention-days: 14
           path: |
             logs/download_failure_report.json
+            logs/socrata_download_report.json
             research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json
+            research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json
 
       - name: Fail if official download did not complete
         if: steps.download.outputs.exit_code != '0'
         run: |
           echo "Official CMS/HealthData download failed. See download-failure-diagnostics artifact."
           exit 1
-

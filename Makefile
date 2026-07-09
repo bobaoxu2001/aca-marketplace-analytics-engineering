@@ -13,7 +13,7 @@ research-test:
 	PYTHONPATH=research/metric_grounded_llm_agents pytest research/metric_grounded_llm_agents/tests
 
 research-full-run:
-	python3 scripts/download_cms_pufs.py --debug --force
+	python3 scripts/download_cms_pufs_socrata.py --force
 	python3 scripts/validate_raw_files.py
 	python3 scripts/load_to_duckdb.py
 	cd dbt_project && dbt build --profiles-dir . && cd ..
