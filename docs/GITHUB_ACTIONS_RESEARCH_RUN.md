@@ -16,7 +16,10 @@ The workflow:
 1. Checks out the repository.
 2. Sets up Python 3.11.
 3. Installs Python dependencies, `dbt-core`, and `dbt-duckdb`.
-4. Downloads the official CMS/HealthData ACA Marketplace PY2026 public files.
+4. Downloads the official CMS/HealthData ACA Marketplace PY2026 public files
+   through Socrata row APIs when the official views are tabular. If the official
+   PY2026 views are exposed only as Socrata `href` assets, the workflow records
+   that as a data-access diagnostic instead of fabricating rows.
 5. Validates the raw CSV files.
 6. Loads raw files into DuckDB.
 7. Builds the dbt marts.
@@ -68,9 +71,10 @@ Expected artifacts:
 - `download-failure-diagnostics`
   - included when the official public file hosts still block downloads
 
-If the official download fails, the workflow fails intentionally after uploading
-`download_failure_report.json`; skipped outputs should not be interpreted as
-research results.
+If the official Socrata views are non-tabular `href` assets or the download
+fails, the workflow fails intentionally after uploading
+`socrata_download_report.json` and `download_failure_report.json`; skipped
+outputs should not be interpreted as research results.
 
 ## Local Equivalent
 
@@ -85,4 +89,3 @@ Print GitHub trigger instructions:
 ```bash
 make research-github-help
 ```
-
