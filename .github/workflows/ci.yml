@@ -1,0 +1,28 @@
+name: Fast CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install lightweight test dependencies
+        run: python -m pip install duckdb pyyaml pytest requests
+      - name: Compile Python
+        run: python -m compileall -q research scripts
+      - name: Run research tests
+        run: PYTHONPATH=research/metric_grounded_llm_agents pytest research/metric_grounded_llm_agents/tests
+      - name: Validate workflow and research configuration YAML
+        run: python -c "from pathlib import Path; import yaml; [yaml.safe_load(path.read_text()) for path in list(Path('.github/workflows').glob('*.yml')) + list(Path('research/metric_grounded_llm_agents/configs').glob('*.yaml'))]"
+      - name: Parse dbt project when adapter install succeeds
+        run: |
+          python -m pip install dbt-core dbt-duckdb || { echo 'dbt install unavailable; dbt parse skipped.'; exit 0; }
+          cd dbt_project
+          dbt parse --profiles-dir .

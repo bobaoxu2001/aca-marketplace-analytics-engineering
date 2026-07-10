@@ -1,4 +1,4 @@
-"""Metric-grounded analytics agent for the benchmark."""
+"""Metric-constrained analytics agent using explicit, non-oracle query rules."""
 
 from __future__ import annotations
 
@@ -11,12 +11,9 @@ import duckdb
 
 from .citation_builder import build_citations
 from .metric_registry import MetricRegistry
-from .paths import DEFAULT_DATABASE, RESEARCH_DIR
+from .metric_sql import generate_metric_sql
+from .paths import DEFAULT_DATABASE
 from .validators import claim_support_status, validate_sql
-
-
-def _read_sql(question: dict[str, Any]) -> str:
-    return (RESEARCH_DIR / question["gold_sql"]).read_text()
 
 
 def _execute(database: Path, sql: str) -> list[dict[str, Any]]:
@@ -26,60 +23,60 @@ def _execute(database: Path, sql: str) -> list[dict[str, Any]]:
         return [dict(zip(columns, row)) for row in result.fetchall()]
 
 
-def _summarize_rows(question: dict[str, Any], rows: list[dict[str, Any]]) -> str:
-    if not rows:
-        return "No result rows were returned, so the requested insight is not supported by the available marts."
-    top = rows[0]
-    fields = ", ".join(f"{key}={value}" for key, value in list(top.items())[:5])
-    return f"Top result for '{question['question']}': {fields}. See cited result rows for the supporting data."
-
-
 class MetricGroundedAgent:
+    """Runs a documented metric-template generator over approved mart tables."""
+
     def __init__(self, database: Path = DEFAULT_DATABASE, registry: MetricRegistry | None = None):
         self.database = database
         self.registry = registry or MetricRegistry.from_yaml()
 
     def answer(self, question: dict[str, Any]) -> dict[str, Any]:
         start = time.perf_counter()
-        sql = _read_sql(question)
         selected_metrics = self.registry.select_for_question(question)
         allowed_tables = set(question.get("source_tables", [])) | {
             table for metric in selected_metrics for table in metric.primary_tables
         }
+        sql = generate_metric_sql(question)
         validation = validate_sql(sql, allowed_tables, question.get("required_terms", []))
+        base = {
+            "system": "metric_grounded",
+            "question_id": question["id"],
+            "sql": sql,
+            "validation": validation.checks,
+            "metric_definitions": [metric.__dict__ for metric in selected_metrics],
+        }
         if not self.database.exists():
             return {
-                "system": "metric_grounded",
-                "question_id": question["id"],
+                **base,
                 "status": "skipped_missing_database",
                 "answer": "Local DuckDB database is missing; run the CMS download, load, and dbt build first.",
-                "sql": sql,
-                "validation": validation.checks,
                 "citations": build_citations(question, [], self.registry.as_context(question.get("metrics", []))),
                 "latency_seconds": round(time.perf_counter() - start, 4),
             }
         if not validation.passed:
             return {
-                "system": "metric_grounded",
-                "question_id": question["id"],
+                **base,
                 "status": "blocked_validation_failed",
-                "answer": "The SQL was blocked because validation failed.",
-                "sql": sql,
-                "validation": validation.checks,
+                "answer": "The metric-template SQL was blocked by validation.",
                 "validation_messages": validation.messages,
                 "citations": [],
                 "latency_seconds": round(time.perf_counter() - start, 4),
             }
-        rows = _execute(self.database, sql)
-        answer = _summarize_rows(question, rows)
+        try:
+            rows = _execute(self.database, sql)
+        except duckdb.Error as exc:
+            return {
+                **base,
+                "status": "sql_execution_error",
+                "answer": f"Metric-template SQL could not execute: {exc}",
+                "citations": [],
+                "latency_seconds": round(time.perf_counter() - start, 4),
+            }
+        answer = f"Top result for '{question['question']}': {rows[0]}." if rows else "No result rows were returned."
         return {
-            "system": "metric_grounded",
-            "question_id": question["id"],
+            **base,
             "status": "ok",
             "answer": answer,
-            "sql": sql,
-            "validation": validation.checks,
-            "metric_definitions": [metric.__dict__ for metric in selected_metrics],
             "citations": build_citations(question, rows, self.registry.as_context(question.get("metrics", []))),
             "support_status": claim_support_status(rows, answer),
             "rows": rows[:20],
@@ -88,4 +85,3 @@ class MetricGroundedAgent:
 
     def answer_json(self, question: dict[str, Any]) -> str:
         return json.dumps(self.answer(question), indent=2, default=str)
-
