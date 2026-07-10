@@ -11,10 +11,10 @@ loaded, and built the DuckDB/dbt marts.
 - A 30-question benchmark in `benchmark/questions.yaml`.
 - Gold SQL for every question under `benchmark/gold_sql/`.
 - A semantic metric registry in `configs/metrics.yaml`.
-- Three system variants:
-  - direct LLM baseline interface,
-  - LLM + SQL baseline interface,
-  - metric-grounded agent with metric constraints, SQL validation, and citations.
+- Three distinct system variants:
+  - direct LLM baseline using the question text only,
+  - LLM + SQL baseline using live schema context and model-generated SQL,
+  - metric-grounded agent using documented metric templates, validation, and citations.
 - Evaluation scripts that produce `results.csv`, `summary.json`, and
   `evaluation_report.md`.
 - A CLI demo that shows the answer, SQL, metric definitions, validation checks,
@@ -28,9 +28,11 @@ targets, or fabricated benchmark outputs. If `data/processed/aca_marketplace_py2
 is missing, scripts return a clear skipped or missing-database status.
 
 The required official file URLs and Socrata view IDs are listed in
-`configs/data_sources.yaml`. The Socrata downloader supports `$limit`/`$offset`
-pagination and resume for tabular views, and writes a diagnostic report if an
-official view is exposed only as a non-tabular `href` asset.
+`configs/data_sources.yaml`. The six PY2026 PUF Socrata IDs are non-tabular
+`href`/file assets, so the main pipeline resolves official file URLs from
+Socrata/Data.gov/CMS metadata and downloads those CSV/ZIP assets as files. The
+Socrata row downloader remains as a diagnostic tool for proving row API access
+is unavailable.
 
 ## Setup
 
@@ -41,7 +43,6 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python3 scripts/download_cms_pufs.py
-python3 scripts/download_cms_pufs_socrata.py
 python3 scripts/load_to_duckdb.py
 cd dbt_project
 dbt build --profiles-dir .
@@ -105,11 +106,14 @@ with gold SQL over dbt marts so numerical answers can be regenerated locally.
 
 ## Current Limitations
 
-- The live Direct LLM adapter is intentionally a placeholder unless API
-  credentials and model config are provided.
-- The LLM + SQL baseline uses deterministic gold SQL until a live SQL-generation
-  adapter is configured. This makes local verification possible without
-  fabricating LLM behavior.
+- Direct LLM and LLM + SQL calls require the configured provider key. The
+  Direct LLM baseline receives only the natural-language question; LLM + SQL
+  receives schema context and executes only its generated, validated SQL.
+- The metric-grounded agent has a deterministic, hand-authored template
+  generator derived from `metrics.yaml` and the mart schemas. It can run
+  without an API key but does not use benchmark answer keys.
+- Benchmark SQL is restricted to gold-answer generation, evaluation reference,
+  and tests; runtime agent modules do not read benchmark SQL files.
 - The metric-grounded agent currently maps benchmark questions to approved
   metrics from metadata. A stronger research version should add a learned or
   rule-based mapper for unseen questions.

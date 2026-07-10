@@ -16,10 +16,8 @@ The workflow:
 1. Checks out the repository.
 2. Sets up Python 3.11.
 3. Installs Python dependencies, `dbt-core`, and `dbt-duckdb`.
-4. Downloads the official CMS/HealthData ACA Marketplace PY2026 public files
-   through Socrata row APIs when the official views are tabular. If the official
-   PY2026 views are exposed only as Socrata `href` assets, the workflow records
-   that as a data-access diagnostic instead of fabricating rows.
+4. Resolves official CMS/HealthData ACA Marketplace PY2026 file assets from
+   Socrata/Data.gov/CMS metadata, then downloads those CSV/ZIP files as files.
 5. Validates the raw CSV files.
 6. Loads raw files into DuckDB.
 7. Builds the dbt marts.
@@ -35,16 +33,17 @@ The workflow does not commit raw CMS CSVs or generated databases to git.
 1. Open the repository on GitHub.
 2. Go to **Actions**.
 3. Select **Metric-Grounded Research Data Run**.
-4. Click **Run workflow**.
-5. Choose the branch containing this workflow.
-6. Click **Run workflow** again.
+4. Confirm the workflow file has first been merged into `main`. GitHub cannot
+   manually dispatch a brand-new workflow from a feature branch before the file
+   exists on the default branch.
+5. Click **Run workflow**, select `main`, and click **Run workflow** again.
 
 ## Trigger With GitHub CLI
 
-After the workflow branch is pushed:
+First merge the workflow file into `main`. Then run:
 
 ```bash
-gh workflow run metric_grounded_research_run.yml --ref research/github-actions-data-run
+gh workflow run metric_grounded_research_run.yml --ref main
 ```
 
 To watch the run:
@@ -53,6 +52,9 @@ To watch the run:
 gh run list --workflow metric_grounded_research_run.yml
 gh run watch
 ```
+
+After the workflow exists on `main`, a branch ref can be selected for later
+runs. It cannot bootstrap manual dispatch for a brand-new workflow.
 
 ## Artifacts
 
@@ -71,9 +73,9 @@ Expected artifacts:
 - `download-failure-diagnostics`
   - included when the official public file hosts still block downloads
 
-If the official Socrata views are non-tabular `href` assets or the download
-fails, the workflow fails intentionally after uploading
-`socrata_download_report.json` and `download_failure_report.json`; skipped
+The PY2026 PUF Socrata IDs are non-tabular `href`/file assets, so the row API is
+not used for the main pipeline. If official file downloads fail, the workflow
+fails intentionally after uploading `download_failure_report.json`; skipped
 outputs should not be interpreted as research results.
 
 ## Local Equivalent

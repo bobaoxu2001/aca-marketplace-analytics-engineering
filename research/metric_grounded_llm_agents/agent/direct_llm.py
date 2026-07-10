@@ -7,14 +7,15 @@ unavailable model calls from failed data-grounded answers.
 
 from __future__ import annotations
 
-import os
 import time
 from typing import Any
+
+from .model_client import api_key, response_text
 
 
 def answer(question: dict[str, Any]) -> dict[str, Any]:
     start = time.perf_counter()
-    if not os.getenv("OPENAI_API_KEY"):
+    if not api_key():
         return {
             "system": "direct_llm",
             "question_id": question["id"],
@@ -24,13 +25,16 @@ def answer(question: dict[str, Any]) -> dict[str, Any]:
             "citations": [],
             "latency_seconds": round(time.perf_counter() - start, 4),
         }
+    try:
+        answer_text = response_text(question["question"])
+    except Exception as exc:
+        return {
+            "system": "direct_llm", "question_id": question["id"], "status": "model_api_error",
+            "answer": f"Direct model call failed: {exc}", "sql": None, "citations": [],
+            "latency_seconds": round(time.perf_counter() - start, 4),
+        }
     return {
-        "system": "direct_llm",
-        "question_id": question["id"],
-        "status": "not_implemented_model_adapter",
-        "answer": "Model adapter placeholder. Configure configs/model_config.example.yaml before live calls.",
-        "sql": None,
-        "citations": [],
+        "system": "direct_llm", "question_id": question["id"], "status": "ok",
+        "answer": answer_text, "sql": None, "citations": [],
         "latency_seconds": round(time.perf_counter() - start, 4),
     }
-

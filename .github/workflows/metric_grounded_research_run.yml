@@ -25,12 +25,12 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install dbt-core dbt-duckdb
 
-      - name: Download official CMS/HealthData PUFs through Socrata API
+      - name: Download official CMS/HealthData PUF file assets
         id: download
         continue-on-error: true
         run: |
           set +e
-          python3 scripts/download_cms_pufs_socrata.py --force
+          python3 scripts/download_cms_pufs.py --debug --force
           status=$?
           echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
           mkdir -p logs

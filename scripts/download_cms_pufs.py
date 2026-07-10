@@ -54,6 +54,7 @@ class PufDataset:
     key: str
     label: str
     filename: str
+    socrata_view_id: str
     cms_zip_url: str
     datafile_url: str
     search_terms: tuple[str, ...]
@@ -125,7 +126,8 @@ def load_datasets() -> list[PufDataset]:
         title = item["title"]
         landing_slug = re.sub(r"[^A-Za-z0-9]+", "-", title).strip("-")
         landing_urls = (
-            f"https://healthdata.gov/CMS/{landing_slug}/{item.get('healthdata_view_id', '')}".rstrip("/"),
+            f"https://healthdata.gov/CMS/{landing_slug}/{item.get('socrata_view_id', '')}".rstrip("/"),
+            f"https://healthdata.gov/d/{item.get('socrata_view_id', '')}".rstrip("/"),
             str(item.get("landing_url", "")),
         )
         datasets.append(
@@ -133,6 +135,7 @@ def load_datasets() -> list[PufDataset]:
                 key=key,
                 label=title,
                 filename=filename,
+                socrata_view_id=str(item.get("socrata_view_id", "")),
                 cms_zip_url=item["cms_zip_url"],
                 datafile_url=item["official_csv_url"],
                 search_terms=search_terms_for(key, title),
@@ -188,6 +191,40 @@ def extract_urls(text: str) -> set[str]:
     return urls
 
 
+def extract_urls_from_json(value: Any) -> set[str]:
+    urls: set[str] = set()
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            key_lower = str(key).lower()
+            if key_lower in {
+                "asseturl",
+                "asset_url",
+                "downloadurl",
+                "download_url",
+                "blobfilename",
+                "blob_file_name",
+                "url",
+                "uri",
+                "href",
+                "link",
+                "accessurl",
+                "downloadURL".lower(),
+            }:
+                if isinstance(nested, str):
+                    urls.update(extract_urls(nested))
+                    if nested.startswith("/"):
+                        urls.add(f"https://healthdata.gov{nested}")
+                    if re.search(r"\.(csv|zip|csv\.gz)$", nested, re.I):
+                        urls.add(nested)
+            urls.update(extract_urls_from_json(nested))
+    elif isinstance(value, list):
+        for item in value:
+            urls.update(extract_urls_from_json(item))
+    elif isinstance(value, str):
+        urls.update(extract_urls(value))
+    return urls
+
+
 def note_attempt(
     diagnostics: list[dict[str, Any]],
     dataset: PufDataset,
@@ -205,6 +242,7 @@ def note_attempt(
         {
             "dataset": dataset.key,
             "label": dataset.label,
+            "asset_id": dataset.socrata_view_id,
             "method": method,
             "url": url,
             "status_code": status_code,
@@ -293,7 +331,69 @@ def discover_healthdata_data_json(session: requests.Session) -> dict[str, list[s
     return mapping
 
 
-def discover_catalog_data_gov(session: requests.Session, dataset: PufDataset) -> set[str]:
+def discover_socrata_asset_metadata(
+    session: requests.Session,
+    dataset: PufDataset,
+    diagnostics: list[dict[str, Any]],
+) -> set[str]:
+    urls: set[str] = set()
+    if not dataset.socrata_view_id:
+        return urls
+    metadata_urls = (
+        f"https://data.healthcare.gov/api/views/{dataset.socrata_view_id}",
+        f"https://healthdata.gov/api/views/{dataset.socrata_view_id}",
+        f"https://healthdata.gov/api/views/{dataset.socrata_view_id}/files",
+        f"https://data.healthcare.gov/api/views/{dataset.socrata_view_id}/files",
+    )
+    for metadata_url in metadata_urls:
+        try:
+            response = session.get(
+                metadata_url,
+                headers=headers("https://healthdata.gov/"),
+                timeout=(8, 20),
+                verify=certifi.where(),
+            )
+            found: set[str] = set()
+            preview = None
+            if response.ok:
+                content_type = response.headers.get("content-type", "")
+                if "json" in content_type:
+                    payload = response.json()
+                    found.update(extract_urls_from_json(payload))
+                else:
+                    found.update(extract_urls(response.text))
+                urls.update(found)
+                preview = json.dumps(sorted(found))[:200]
+            else:
+                preview = safe_preview(response.text)
+            note_attempt(
+                diagnostics,
+                dataset,
+                "candidate_discovery_socrata_metadata",
+                metadata_url,
+                status_code=response.status_code,
+                final_url=response.url,
+                content_type=response.headers.get("content-type"),
+                content_length=response.headers.get("content-length"),
+                error=None if response.ok else response.reason,
+                preview=preview,
+            )
+        except (requests.RequestException, ValueError) as exc:
+            note_attempt(
+                diagnostics,
+                dataset,
+                "candidate_discovery_socrata_metadata",
+                metadata_url,
+                error=repr(exc),
+            )
+    return urls
+
+
+def discover_catalog_data_gov(
+    session: requests.Session,
+    dataset: PufDataset,
+    diagnostics: list[dict[str, Any]],
+) -> set[str]:
     query = quote_plus(" ".join(("CMS", "Marketplace", *dataset.search_terms)))
     urls: set[str] = set()
     endpoints = (
@@ -305,6 +405,7 @@ def discover_catalog_data_gov(session: requests.Session, dataset: PufDataset) ->
             response = session.get(endpoint, headers=headers("https://catalog.data.gov/"), timeout=(8, 10))
             if response.headers.get("content-type", "").startswith("application/json"):
                 payload = response.json()
+                urls.update(extract_urls_from_json(payload))
                 for package in payload.get("result", {}).get("results", []):
                     for resource in package.get("resources", []):
                         if resource.get("url"):
@@ -313,12 +414,28 @@ def discover_catalog_data_gov(session: requests.Session, dataset: PufDataset) ->
                             urls.add(resource["downloadURL"])
             else:
                 urls.update(extract_urls(response.text))
+            note_attempt(
+                diagnostics,
+                dataset,
+                "candidate_discovery_data_gov",
+                endpoint,
+                status_code=response.status_code,
+                final_url=response.url,
+                content_type=response.headers.get("content-type"),
+                content_length=response.headers.get("content-length"),
+                error=None if response.ok else response.reason,
+                preview=json.dumps(sorted(urls))[:200] if urls else None,
+            )
         except (requests.RequestException, ValueError):
             continue
     return urls
 
 
-def discover_data_healthcare_api(session: requests.Session, dataset: PufDataset) -> set[str]:
+def discover_data_healthcare_api(
+    session: requests.Session,
+    dataset: PufDataset,
+    diagnostics: list[dict[str, Any]],
+) -> set[str]:
     urls: set[str] = set()
     domains = ("https://healthdata.gov", "https://data.healthcare.gov")
     query = quote_plus(" ".join(dataset.search_terms))
@@ -330,8 +447,21 @@ def discover_data_healthcare_api(session: requests.Session, dataset: PufDataset)
             try:
                 response = session.get(endpoint, headers=headers(domain), timeout=(8, 10))
                 if not response.ok:
+                    note_attempt(
+                        diagnostics,
+                        dataset,
+                        "candidate_discovery_data_healthcare_api",
+                        endpoint,
+                        status_code=response.status_code,
+                        final_url=response.url,
+                        content_type=response.headers.get("content-type"),
+                        content_length=response.headers.get("content-length"),
+                        error=response.reason,
+                        preview=safe_preview(response.text),
+                    )
                     continue
                 payload = response.json()
+                urls.update(extract_urls_from_json(payload))
             except (requests.RequestException, ValueError):
                 continue
             views = payload if isinstance(payload, list) else payload.get("results", [])
@@ -350,39 +480,78 @@ def discover_data_healthcare_api(session: requests.Session, dataset: PufDataset)
                         timeout=(8, 10),
                     )
                     if metadata.ok:
-                        urls.update(extract_urls(metadata.text))
+                        try:
+                            urls.update(extract_urls_from_json(metadata.json()))
+                        except ValueError:
+                            urls.update(extract_urls(metadata.text))
                 except requests.RequestException:
                     pass
+            note_attempt(
+                diagnostics,
+                dataset,
+                "candidate_discovery_data_healthcare_api",
+                endpoint,
+                status_code=response.status_code,
+                final_url=response.url,
+                content_type=response.headers.get("content-type"),
+                content_length=response.headers.get("content-length"),
+                error=None,
+                preview=json.dumps(sorted(urls))[:200] if urls else None,
+            )
     return urls
 
 
-def discover_page_urls(session: requests.Session, dataset: PufDataset) -> set[str]:
+def discover_page_urls(
+    session: requests.Session,
+    dataset: PufDataset,
+    diagnostics: list[dict[str, Any]],
+) -> set[str]:
     urls: set[str] = set()
     pages = (*LANDING_PAGES, *dataset.landing_urls)
     for page in pages:
         try:
             response = session.get(page, headers=headers(), timeout=(8, 10))
             if response.ok:
-                urls.update(extract_urls(response.text))
+                found = extract_urls(response.text)
+                urls.update(found)
+                note_attempt(
+                    diagnostics,
+                    dataset,
+                    "candidate_discovery_page_links",
+                    page,
+                    status_code=response.status_code,
+                    final_url=response.url,
+                    content_type=response.headers.get("content-type"),
+                    content_length=response.headers.get("content-length"),
+                    error=None,
+                    preview=json.dumps(sorted(found))[:200] if found else None,
+                )
         except requests.RequestException:
             continue
     return urls
 
 
-def candidate_urls(session: requests.Session, dataset: PufDataset) -> list[str]:
+def candidate_urls(
+    session: requests.Session,
+    dataset: PufDataset,
+    diagnostics: list[dict[str, Any]],
+) -> list[str]:
     candidates: set[str] = {dataset.datafile_url, dataset.cms_zip_url}
-    healthdata_map = discover_healthdata_data_json(session)
-    label_lower = dataset.label.lower().replace("–", "-")
-    for title, urls in healthdata_map.items():
-        title_norm = title.replace("–", "-")
-        specific_terms = [term for term in dataset.search_terms if term not in {"2026", "puf"}]
-        if label_lower == title_norm or all(term.lower() in title_norm for term in specific_terms):
-            candidates.update(urls)
-    candidates.update(discover_catalog_data_gov(session, dataset))
-    candidates.update(discover_data_healthcare_api(session, dataset))
-    candidates.update(discover_page_urls(session, dataset))
+    candidates.update(discover_socrata_asset_metadata(session, dataset, diagnostics))
+    candidates.update(discover_catalog_data_gov(session, dataset, diagnostics))
+    candidates.update(discover_page_urls(session, dataset, diagnostics))
     scored = [(score_candidate(url, dataset), url) for url in candidates]
-    return [url for score, url in sorted(scored, reverse=True) if score >= 0][:MAX_ATTEMPTS_PER_FILE]
+    result = [url for score, url in sorted(scored, reverse=True) if score >= 0][:MAX_ATTEMPTS_PER_FILE]
+    note_attempt(
+        diagnostics,
+        dataset,
+        "candidate_discovery_summary",
+        f"metadata://{dataset.key}",
+        status_code=None,
+        error=None if result else "no_candidate_urls",
+        preview=json.dumps(result)[:2000],
+    )
+    return result
 
 
 def is_probably_download(response: requests.Response, url: str) -> bool:
@@ -491,6 +660,59 @@ def download_with_requests(
         return False
 
 
+def discover_links_from_html_candidate(
+    session: requests.Session,
+    dataset: PufDataset,
+    url: str,
+    diagnostics: list[dict[str, Any]],
+    *,
+    referer: str | None,
+    debug: bool,
+) -> list[str]:
+    try:
+        response = session.get(
+            url,
+            headers=headers(referer),
+            timeout=(8, 20),
+            allow_redirects=True,
+            verify=certifi.where(),
+        )
+    except requests.RequestException as exc:
+        note_attempt(
+            diagnostics,
+            dataset,
+            "html_link_discovery",
+            url,
+            error=repr(exc),
+        )
+        return []
+    content_type = response.headers.get("content-type", "")
+    discovered: list[str] = []
+    if "html" in content_type.lower() or response.text.lstrip().lower().startswith("<"):
+        urls = extract_urls(response.text)
+        scored = [(score_candidate(candidate, dataset), candidate) for candidate in urls]
+        discovered = [
+            candidate
+            for score, candidate in sorted(scored, reverse=True)
+            if score >= 0
+        ]
+    note_attempt(
+        diagnostics,
+        dataset,
+        "html_link_discovery",
+        url,
+        status_code=response.status_code,
+        final_url=response.url,
+        content_type=content_type,
+        content_length=response.headers.get("content-length"),
+        error=None if discovered else "no_file_links_found_in_html",
+        preview=json.dumps(discovered)[:500] if discovered else safe_preview(response.text),
+    )
+    if debug:
+        debug_attempt(diagnostics[-1])
+    return discovered
+
+
 def curl_headers(referer: str | None) -> list[str]:
     result: list[str] = []
     for key, value in headers(referer).items():
@@ -547,7 +769,7 @@ def download_with_curl(
             "--connect-timeout",
             "30",
             "--max-time",
-            "300",
+            "90",
             "-C",
             "-",
             "-A",
@@ -694,7 +916,11 @@ def download_dataset(
 
     print(f"\nDownloading {dataset.label} -> {destination}")
     tried = 0
-    for url in file_urls:
+    queue = list(dict.fromkeys(file_urls))
+    index = 0
+    while index < len(queue):
+        url = queue[index]
+        index += 1
         print(f"  Trying {url}")
         for referer in referers_for(url):
             tried += 1
@@ -733,6 +959,16 @@ def download_dataset(
             ):
                 print(f"    Saved {destination} ({destination.stat().st_size:,} bytes)")
                 return True
+            for discovered_url in discover_links_from_html_candidate(
+                session,
+                dataset,
+                url,
+                diagnostics,
+                referer=referer,
+                debug=debug,
+            ):
+                if discovered_url not in queue:
+                    queue.append(discovered_url)
         if tried > MAX_ATTEMPTS_PER_FILE:
             break
     print(f"  Failed to download {dataset.label}; attempted {tried} strategies.")
@@ -777,7 +1013,7 @@ def main() -> int:
 
     missing: list[PufDataset] = []
     for dataset in datasets:
-        urls = candidate_urls(session, dataset)
+        urls = candidate_urls(session, dataset, diagnostics)
         print(f"\nDiscovered {len(urls)} official candidate URLs for {dataset.key}.")
         if args.debug:
             for url in urls:

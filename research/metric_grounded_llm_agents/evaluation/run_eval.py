@@ -33,13 +33,15 @@ def write_report(path: Path, summary: dict, results: list[dict]) -> None:
         "",
         "## Summary",
         "",
-        "| System | Questions | OK | SQL valid rate | Unsupported claim rate | Citation coverage | Traceability score |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| System | Questions | OK | SQL valid rate | Unsupported claim rate | Skipped rate | Missing DB | Missing key | SQL errors | Citation coverage | Traceability score |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for system, row in summary.items():
         lines.append(
             f"| {system} | {row['questions']} | {row['ok']} | {row['sql_valid_rate']} | "
-            f"{row['unsupported_claim_rate']} | {row['citation_coverage']} | {row['traceability_score']} |"
+            f"{row['unsupported_claim_rate'] if row['unsupported_claim_rate'] is not None else 'N/A'} | "
+            f"{row['skipped_rate']} | {row['missing_database_count']} | {row['missing_api_key_count']} | "
+            f"{row['sql_error_count']} | {row['citation_coverage']} | {row['traceability_score']} |"
         )
     lines.extend(["", "## Execution Success", ""])
     lines.append("| System | Execution success rate |")
