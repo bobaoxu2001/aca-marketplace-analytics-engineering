@@ -1,0 +1,406 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-13T08:31:10.750445+00:00",
+  "purpose": "application-package strict rescore provenance; no model calls",
+  "git": {
+    "commit": "cb234fc5e986bc77e85b7a5e30ed202214858124",
+    "branch": "research/phd-application-package",
+    "dirty": false,
+    "status_porcelain": []
+  },
+  "runtime": {
+    "python": "3.11.0",
+    "platform": "macOS-14.3.1-x86_64-i386-64bit",
+    "duckdb": "1.5.4",
+    "dbt": null,
+    "codex": "codex-cli 0.144.2"
+  },
+  "limitations": [
+    "Underlying subscription-Codex calls predate this source freeze.",
+    "Model-generated challenge questions are not independently human validated.",
+    "Gold SQL awaits a second independent reviewer.",
+    "Human qualitative review is pending."
+  ],
+  "files": [
+    {
+      "path": "data/processed/aca_marketplace_py2026.duckdb",
+      "bytes": 427569152,
+      "sha256": "37fd54a559e3730abca6d38da734dc6b371ae610e298e157974ccba4f894578d"
+    },
+    {
+      "path": "data/raw/py2026/benefits_cost_sharing_puf_py2026.csv",
+      "bytes": 375326808,
+      "sha256": "d22320ab6356b191cbf389b9716fe7203b9b8aeccedbee25342f6517969d654b"
+    },
+    {
+      "path": "data/raw/py2026/plan_attributes_puf_py2026.csv",
+      "bytes": 32140587,
+      "sha256": "6a905aade5a37d35a320d8af640fb7ef16cb773647283ffde30b93b65ab72fe0"
+    },
+    {
+      "path": "data/raw/py2026/plan_id_crosswalk_puf_py2025_py2026.csv",
+      "bytes": 21053238,
+      "sha256": "bcbb4d945f565e604af22aeb88e572d684c9c387ee5a21f7b9fdbc01d72e188b"
+    },
+    {
+      "path": "data/raw/py2026/quality_puf_py2026.csv",
+      "bytes": 319240,
+      "sha256": "31f74ddf28a7b75fc11da3edfd435fc46be2118f059252ffdb61f247cb57e940"
+    },
+    {
+      "path": "data/raw/py2026/rate_puf_py2026.csv",
+      "bytes": 280686230,
+      "sha256": "a2b03f7e45445480e0eec064d1bf35bfb274d8a40343530ecb3f28f85ae6139c"
+    },
+    {
+      "path": "data/raw/py2026/service_area_puf_py2026.csv",
+      "bytes": 798274,
+      "sha256": "ca429f0ef8a31a9763c74faf07259d24e32bad44a606234a4c0884a7162d1731"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/__init__.py",
+      "bytes": 51,
+      "sha256": "68c795c24b044c7575e5584fe20ad18704274f77a2b51c6a3e38fcaadd2a11a3"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/citation_builder.py",
+      "bytes": 703,
+      "sha256": "13eabcc1d72d76e8f193079d9b09f524b77c7ebd327e551a94c05769ae36580a"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/direct_llm.py",
+      "bytes": 1944,
+      "sha256": "100e6f4099ed202b4c03a2f1241b7fc6d091eaea08267757ae9a1f7e39efc8b7"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/llm_sql.py",
+      "bytes": 3851,
+      "sha256": "5cabc133d0f214f1b924c8190c1519f659ef79005a7a766613cef0cf174e94eb"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/metric_grounded_agent.py",
+      "bytes": 3728,
+      "sha256": "a0a9843fa056d10d256d0c6b31c69f037334864bdbe1ec00528ce0216ede8f40"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/metric_registry.py",
+      "bytes": 2243,
+      "sha256": "0392e31d9c7407f8ad780c0cd2856134c94018eb551b3ff6410009fe45c14a18"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/metric_router.py",
+      "bytes": 2723,
+      "sha256": "bf063604e55ec634c0552aefacc389cc41d9f749f2a2e8109e3caa43aeb47a9e"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/metric_sql.py",
+      "bytes": 13983,
+      "sha256": "fa4fe591995402337b188eea6b216dad19574e3e26637835834cf9d4e63409b5"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/model_client.py",
+      "bytes": 3757,
+      "sha256": "301ad8e41ec03c4dcf3bfcf431515be1d57e7b091169268e79169397ec2ca6d1"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/paths.py",
+      "bytes": 418,
+      "sha256": "2599c15631b0104cf5ec0c185ed1070af2d09aedc1cf3c7f029c3446d4a06a44"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/agent/validators.py",
+      "bytes": 2136,
+      "sha256": "bda731268554ea7d5f64c4f98c0bbf1867a30921b29822252947f6dfc5e8b533"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/challenge_bootstrap_strict.json",
+      "bytes": 6615,
+      "sha256": "37eb04e812034460c807b92ff5078fa8fb9a91d8e78665fdfc2a3a3d8e5edd10"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/challenge_codex_sql_summary.json",
+      "bytes": 1146,
+      "sha256": "1c8b45970ed16f61e447bfbdb7727bca59b23764d3c7bd7ffdb05371cf11bdb7"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/challenge_routing_summary.json",
+      "bytes": 3316,
+      "sha256": "d10ae69560321005be5ea50dceabc9e74d6df29b9a4bebafcc00d88881b23542"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/original_bootstrap_strict.json",
+      "bytes": 2627,
+      "sha256": "38bdd50373570509da6a23b2a86bc624754c5809ee363c3000c06ceb6d95d504"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/original_codex_pilot_summary.json",
+      "bytes": 2167,
+      "sha256": "e1199ffc8b69efa07ad286cd4a1484d7bfb74fcd71fea0d3e9841ab1be142bdd"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/original_three_system_summary.json",
+      "bytes": 3095,
+      "sha256": "b8d8aa37a0d00a180af6a22de5c3c551ac8031ffbdc8fd583806d350c2e76871"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/artifacts/2026-07-13/posthoc_paraphrase_summary.json",
+      "bytes": 3213,
+      "sha256": "bd4b23b639e5b4e0039c20b00014f78a3c74c451bafcb71c16dab19f73bb431e"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q001.sql",
+      "bytes": 182,
+      "sha256": "574bd87231517fd6c16b102c53d199b212e4b202603c9583ec66a1ebfe9268b6"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q002.sql",
+      "bytes": 318,
+      "sha256": "d269dd9abf071e258c65ee2ceab2f72a6f5386af0a20d2d5855bbb4a10b75aff"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q003.sql",
+      "bytes": 273,
+      "sha256": "978a98e320cb68f73edf72186d27f0b38a58a2d4348d244263b248b884616c97"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q004.sql",
+      "bytes": 162,
+      "sha256": "374eb66938c4bf772bb21b3ecb042b1a5a18dc544a05e70d1a36a725ce0f771e"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q005.sql",
+      "bytes": 265,
+      "sha256": "9fbeafb2d1b2792ab536d0a57a956d6655734489b5eafe674e1d9ca9956dd5bc"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q006.sql",
+      "bytes": 161,
+      "sha256": "cb14fd7e5129bfebdae60b4fa6bfe4f7f8a8ad3f5cf7a28ff245b205ed87dfe6"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q007.sql",
+      "bytes": 148,
+      "sha256": "78c8e564c372ff95f2ead1dfc8f707fa83eaa75c22781e0765f4abbe3d281f31"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q008.sql",
+      "bytes": 693,
+      "sha256": "a8e9c5ca2a8adbaa31aae56efcb12d0818dbe4b8d87838bb9bb434887435f500"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q009.sql",
+      "bytes": 513,
+      "sha256": "86849c0f2d410185f91929ccbe35507245d801c5117106eb4300451e67ae8229"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q010.sql",
+      "bytes": 323,
+      "sha256": "4997e575db2f958cffe1f2a336b799b892b8c5693b31c65a255d90ed047bd298"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q011.sql",
+      "bytes": 655,
+      "sha256": "9bfb07221ca851710cf3a29642fcc130491bc861dc02507255427e7309b5a0c4"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q012.sql",
+      "bytes": 545,
+      "sha256": "6ecf4879c321ef1239316ee384f79f91a6f4f4860ea7a6f10621564e34f4414f"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q013.sql",
+      "bytes": 326,
+      "sha256": "54587a0092e3c2d24c0368d6b66f65dce0b83ad18c0a0ee7451b9fc84cbab91a"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q014.sql",
+      "bytes": 219,
+      "sha256": "aa59828559624da90f413788fb763280b81c0703a6d4bf32fcc2e5fa841e0e81"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q015.sql",
+      "bytes": 207,
+      "sha256": "67ae4c2c519c9b975158aa4e5d325ee167a55c727ef8108eb76a17a7a0b98186"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q016.sql",
+      "bytes": 505,
+      "sha256": "14828cf187b0dbf145ae298cb0258c28093bf2e3892cd7d036db95907772b5db"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q017.sql",
+      "bytes": 538,
+      "sha256": "6845b966255192e553b7f3f92f827b7749d25ca4976c9b6110c11ebc8f19dee2"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q018.sql",
+      "bytes": 321,
+      "sha256": "433145c2240e2f1a686f8378ed02f988a3ff5a333f38aec263b855074bf0dd45"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q019.sql",
+      "bytes": 153,
+      "sha256": "23288948c48a67cde36fe6664662473aa3e4f2181392aab9dbfa205b7deee478"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q020.sql",
+      "bytes": 405,
+      "sha256": "b6fce9da124e118048ea7a2914f19135b07c07c1dc13b2e9607b4a154689184c"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q021.sql",
+      "bytes": 690,
+      "sha256": "20290d5d8e91a2fc49533664cd53747848e271c463a4d8f9ea609a6f60624398"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q022.sql",
+      "bytes": 532,
+      "sha256": "d2604c066c8004ffecfe9f56e615d13138a2e149750b85024fdc343e5654c586"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q023.sql",
+      "bytes": 371,
+      "sha256": "a72e53a6e424afdf59e04af7f2869a39fa487a34eb3b9fc56913279bb1b25a6d"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q024.sql",
+      "bytes": 413,
+      "sha256": "838b4a46a71b3722398d2678fde381e488dcaff7a4f9976b90e9b65e61eca86e"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q025.sql",
+      "bytes": 432,
+      "sha256": "84bf7bd5d5f3d2b8b61a6a1648eac4a020b5536dd3a628816a057193e37d14c5"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q026.sql",
+      "bytes": 675,
+      "sha256": "52f1b14e200e6494bf0f23f857f203f679a68ee8afbb3be8767ab9ae8ef751c6"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q027.sql",
+      "bytes": 262,
+      "sha256": "6fa90ab6e0f82df9c96d7502f22d10098fc159b72a928484c3bff82509103068"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q028.sql",
+      "bytes": 205,
+      "sha256": "e7ce0514f2f822a81a51c47d90f2e99c3839e0e99e5c6eea7e4caaa737447f2e"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q029.sql",
+      "bytes": 240,
+      "sha256": "a73e7c1486ce2b8804dcc4e060ec7528ee874fc31fd275aa8f301eae8eacf4c6"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/gold_sql/Q030.sql",
+      "bytes": 302,
+      "sha256": "463601c3f3f33844a3ae576ed52952ae97bb78f72254e6e7cbcf738648f2761d"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/paraphrases.json",
+      "bytes": 11693,
+      "sha256": "7717031aa863caa2df63cc4a9b092a84fa6e853f6df796784ad3a6b3e6b4538a"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/questions.yaml",
+      "bytes": 8012,
+      "sha256": "272b48bbdec44cc03a57ce85dacbe911c1bb56404162925980a40e9bc6cd6df0"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/benchmark/routing_challenge_v1.json",
+      "bytes": 10035,
+      "sha256": "c630cd346cc0ee935bc466b5503f1c3189ce65afc12a04bdfb6fbf87877ac3fd"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/configs/data_sources.yaml",
+      "bytes": 2043,
+      "sha256": "ecce57f347598051d0898902c41fb25945da76aff72953205f3c7b07c8a9c214"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/configs/metrics.yaml",
+      "bytes": 3670,
+      "sha256": "2592e6a3334a38442989a3fa7dbefc280a850432df2951076ec96a30cb5e9e42"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/configs/model_config.example.yaml",
+      "bytes": 716,
+      "sha256": "9fb79d7e926c85948f31d5210eab30e96248cadfed9e1cbb422424e66b8a5f21"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/__init__.py",
+      "bytes": 27,
+      "sha256": "41efdf2f3fcbee5018c7aa68f332eea8d4fee99080eca44a036f082ffaa09fb4"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/aggregate_human_review.py",
+      "bytes": 5462,
+      "sha256": "290bd8eeda21a90694779ad2d1c8b486a68a9986ac0bf7da5426623c228badfd"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/analyze_router_results.py",
+      "bytes": 4571,
+      "sha256": "fa64b5ec81c7645ab64aa703207343604ca68888ddc48d78aaf50f5faf2e772b"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/bootstrap_intervals.py",
+      "bytes": 3971,
+      "sha256": "cf152d1e53081cf60cbd72f1ff3ade45fff62456a1e1420153e8a2ced690b161"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/bootstrap_saved_systems.py",
+      "bytes": 2233,
+      "sha256": "0f424769b6ab0960cff3138124087f437be4b925bfe44c51638eb5c274caae37"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/build_human_review_packet.py",
+      "bytes": 4185,
+      "sha256": "c10742b2ff3181916202e7e0f387e04edc3f568f62e616f6bb0bd7215b3770ce"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/create_provenance_manifest.py",
+      "bytes": 3783,
+      "sha256": "cc7d770acad307324dd71774b24006fc808b64b36ac992e3606a30eb205d625f"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/generate_error_analysis.py",
+      "bytes": 3819,
+      "sha256": "e5f509aa57c90d2b09b09becb9d5a3bb099ea674adc97b592eeb2e9a51753a13"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/metrics.py",
+      "bytes": 6672,
+      "sha256": "5852f179baa667773760af54b979149c4e394d125ec380695ce6c3ee0f9389ac"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/rescore_results.py",
+      "bytes": 2658,
+      "sha256": "6dd631014a7d3c1f676a7b1523fbe1040fb6ca1326130932fa4208ce4432d642"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/result_metrics.py",
+      "bytes": 12001,
+      "sha256": "7844b69c4c1035cf5f7bf5f4421b55438d30b537b9382141b6ae67a290bd5ec7"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/run_codex_pilot.py",
+      "bytes": 14152,
+      "sha256": "4fcd81936b45baab0c4bbc964d5891eca8b661b10b2e0b7f779fa1d3f681aaee"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/run_end_to_end_router_eval.py",
+      "bytes": 8543,
+      "sha256": "283e97a06de0a358b0383cc96265f45f2bbbc375c21e9addd9b1f3266fc45df0"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/run_eval.py",
+      "bytes": 7933,
+      "sha256": "c307385fd2a8edee8256342264508e979467a47c75c091941129e756b7470aaa"
+    },
+    {
+      "path": "research/metric_grounded_llm_agents/evaluation/run_router_eval.py",
+      "bytes": 7934,
+      "sha256": "9fa7a5b2032eaa5ba3028da751b6190ff9afa672687aff984183aac41cd54e1e"
+    }
+  ]
+}
