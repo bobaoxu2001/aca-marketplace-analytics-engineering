@@ -91,7 +91,7 @@ def main() -> int:
             "python": sys.version.split()[0],
             "platform": platform.platform(),
             "duckdb": version("duckdb"),
-            "dbt": command(sys.executable, "-m", "dbt", "--version"),
+            "dbt": command(str(Path(sys.executable).with_name("dbt")), "--version"),
             "codex": command("codex", "--version"),
         },
         "limitations": [
