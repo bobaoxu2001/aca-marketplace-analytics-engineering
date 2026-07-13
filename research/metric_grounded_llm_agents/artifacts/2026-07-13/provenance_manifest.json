@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "created_at_utc": "2026-07-13T08:31:10.750445+00:00",
+  "created_at_utc": "2026-07-13T08:31:35.213893+00:00",
   "purpose": "application-package strict rescore provenance; no model calls",
   "git": {
-    "commit": "cb234fc5e986bc77e85b7a5e30ed202214858124",
+    "commit": "6359accf974fb440ec5d206d3944fa314d64741e",
     "branch": "research/phd-application-package",
     "dirty": false,
     "status_porcelain": []
@@ -359,8 +359,8 @@
     },
     {
       "path": "research/metric_grounded_llm_agents/evaluation/create_provenance_manifest.py",
-      "bytes": 3783,
-      "sha256": "cc7d770acad307324dd71774b24006fc808b64b36ac992e3606a30eb205d625f"
+      "bytes": 3805,
+      "sha256": "44c3481288ef8b6d93620996393041c2814e90d36d80fa83ccdbb1e27b880541"
     },
     {
       "path": "research/metric_grounded_llm_agents/evaluation/generate_error_analysis.py",
