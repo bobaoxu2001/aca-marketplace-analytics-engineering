@@ -4,6 +4,5 @@ select benefit_name,
 from main_marts.fact_benefit_cost_sharing
 group by 1
 having benefit_rows >= 100
-order by quantity_limit_rate desc, benefit_rows desc
+order by quantity_limit_rate desc, benefit_rows desc, benefit_name
 limit 20;
-

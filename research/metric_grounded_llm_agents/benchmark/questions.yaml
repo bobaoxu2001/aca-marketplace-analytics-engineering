@@ -108,7 +108,7 @@ questions:
   - id: Q016
     difficulty: intermediate
     category: premiums
-    question: Which issuers have the highest average silver premiums?
+    question: Which issuers have the highest median silver premiums?
     metrics: [median_silver_premium]
     source_tables: [fact_premium, dim_plan, dim_issuer]
     required_terms: [Silver]
@@ -212,4 +212,3 @@ questions:
     metrics: [benefit_coverage_rate]
     source_tables: [fact_benefit_cost_sharing]
     gold_sql: benchmark/gold_sql/Q030.sql
-

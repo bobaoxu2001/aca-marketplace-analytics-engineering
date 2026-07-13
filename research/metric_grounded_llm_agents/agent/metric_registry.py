@@ -44,6 +44,9 @@ class MetricRegistry:
     def get(self, slug: str) -> MetricDefinition:
         return self._metrics[slug]
 
+    def slugs(self) -> tuple[str, ...]:
+        return tuple(self._metrics)
+
     def select_for_question(self, question: dict[str, Any]) -> list[MetricDefinition]:
         return [self.get(slug) for slug in question.get("metrics", []) if slug in self._metrics]
 
@@ -64,4 +67,3 @@ class MetricRegistry:
                     f"tables={', '.join(metric.primary_tables)}"
                 )
         return "\n".join(lines)
-

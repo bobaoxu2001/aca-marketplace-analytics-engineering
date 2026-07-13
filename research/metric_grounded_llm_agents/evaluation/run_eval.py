@@ -5,8 +5,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
+import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -18,11 +21,52 @@ from agent.llm_sql import LLMSQLBaseline  # noqa: E402
 from agent.metric_grounded_agent import MetricGroundedAgent  # noqa: E402
 from agent.paths import DEFAULT_DATABASE, DEFAULT_QUESTIONS, RESEARCH_DIR  # noqa: E402
 from evaluation.metrics import summarize  # noqa: E402
+from evaluation.result_metrics import compare_result_rows, numeric_claim_faithfulness  # noqa: E402
 
 
 def load_questions(path: Path) -> list[dict]:
     payload = yaml.safe_load(path.read_text()) or {}
     return payload.get("questions", [])
+
+
+def load_gold_answers(output_dir: Path) -> dict[str, dict]:
+    answers: dict[str, dict] = {}
+    for path in sorted(output_dir.glob("Q*.json")):
+        payload = json.loads(path.read_text())
+        answers[payload["question_id"]] = payload
+    return answers
+
+
+def file_sha256(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_sha() -> str | None:
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+def enrich_result(result: dict, gold: dict | None) -> dict:
+    gold_rows = (gold or {}).get("rows") or []
+    result["gold_available"] = bool(gold)
+    result["result_metrics"] = (
+        compare_result_rows(result.get("rows"), gold_rows)
+        if result.get("status") == "ok"
+        else {"status": "not_executed", "execution_result_match": None,
+              "compatible_projection_match": None}
+    )
+    evidence_rows = result.get("rows") or []
+    result["faithfulness_metrics"] = numeric_claim_faithfulness(result.get("answer"), evidence_rows)
+    result["gold_sql"] = (gold or {}).get("gold_sql")
+    return result
 
 
 def write_report(path: Path, summary: dict, results: list[dict]) -> None:
@@ -33,15 +77,17 @@ def write_report(path: Path, summary: dict, results: list[dict]) -> None:
         "",
         "## Summary",
         "",
-        "| System | Questions | OK | SQL valid rate | Unsupported claim rate | Skipped rate | Missing DB | Missing key | SQL errors | Citation coverage | Traceability score |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| System | Runs | OK | End-to-end strict match | Conditional strict match | Compatible projection | Top-k Jaccard | Group F1 | Numeric SMAPE | Numeric faithfulness | SQL policy valid | Unsupported claims | Cost USD |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for system, row in summary.items():
         lines.append(
-            f"| {system} | {row['questions']} | {row['ok']} | {row['sql_valid_rate']} | "
+            f"| {system} | {row['questions']} | {row['ok']} | {row['end_to_end_result_match_rate']} | "
+            f"{row['execution_result_match_rate']} | {row['compatible_projection_match_rate']} | "
+            f"{row['top_k_overlap']} | {row['group_match_rate']} | {row['numeric_smape']} | "
+            f"{row['numeric_claim_faithfulness']} | {row['sql_valid_rate']} | "
             f"{row['unsupported_claim_rate'] if row['unsupported_claim_rate'] is not None else 'N/A'} | "
-            f"{row['skipped_rate']} | {row['missing_database_count']} | {row['missing_api_key_count']} | "
-            f"{row['sql_error_count']} | {row['citation_coverage']} | {row['traceability_score']} |"
+            f"{row['estimated_cost_usd']} |"
         )
     lines.extend(["", "## Execution Success", ""])
     lines.append("| System | Execution success rate |")
@@ -59,34 +105,68 @@ def main() -> int:
     parser.add_argument("--questions", type=Path, default=DEFAULT_QUESTIONS)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
     parser.add_argument("--limit", type=int, default=0, help="Run only the first N questions.")
+    parser.add_argument("--repeats", type=int, default=1, help="Repeat every system-question condition N times.")
     parser.add_argument("--systems", default="direct_llm,llm_sql,metric_grounded")
     parser.add_argument("--output-dir", type=Path, default=RESEARCH_DIR / "evaluation" / "results")
+    parser.add_argument("--gold-dir", type=Path, default=RESEARCH_DIR / "benchmark" / "gold_answers")
+    parser.add_argument("--experiment-id", default="", help="Stable label for this experiment run.")
     args = parser.parse_args()
 
     questions = load_questions(args.questions)
     if args.limit:
         questions = questions[: args.limit]
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    gold_answers = load_gold_answers(args.gold_dir)
+    started_at = datetime.now(timezone.utc).isoformat()
+    experiment_id = args.experiment_id or datetime.now(timezone.utc).strftime("exp_%Y%m%dT%H%M%SZ")
 
     systems = {item.strip() for item in args.systems.split(",") if item.strip()}
     llm_sql = LLMSQLBaseline(database=args.database)
     metric_grounded = MetricGroundedAgent(database=args.database)
     results: list[dict] = []
-    for question in questions:
-        if "direct_llm" in systems:
-            results.append(direct_llm_answer(question))
-        if "llm_sql" in systems:
-            results.append(llm_sql.answer(question))
-        if "metric_grounded" in systems:
-            results.append(metric_grounded.answer(question))
+    for repeat_index in range(args.repeats):
+        for question in questions:
+            condition_results: list[dict] = []
+            if "direct_llm" in systems:
+                condition_results.append(direct_llm_answer(question))
+            if "llm_sql" in systems:
+                condition_results.append(llm_sql.answer(question))
+            if "metric_grounded" in systems:
+                condition_results.append(metric_grounded.answer(question))
+            for result in condition_results:
+                result.update({
+                    "experiment_id": experiment_id,
+                    "repeat_index": repeat_index,
+                    "question": question["question"],
+                    "difficulty": question.get("difficulty"),
+                    "category": question.get("category"),
+                })
+                results.append(enrich_result(result, gold_answers.get(question["id"])))
 
     summary = summarize(results)
     (args.output_dir / "summary.json").write_text(json.dumps(summary, indent=2, default=str))
     (args.output_dir / "results.json").write_text(json.dumps(results, indent=2, default=str))
+    manifest = {
+        "experiment_id": experiment_id,
+        "started_at_utc": started_at,
+        "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+        "git_sha": git_sha(),
+        "database": str(args.database),
+        "database_sha256": file_sha256(args.database),
+        "questions_file": str(args.questions),
+        "questions_sha256": file_sha256(args.questions),
+        "gold_dir": str(args.gold_dir),
+        "gold_answer_count": len(gold_answers),
+        "systems": sorted(systems),
+        "repeats": args.repeats,
+        "question_count": len(questions),
+        "result_count": len(results),
+    }
+    (args.output_dir / "experiment_manifest.json").write_text(json.dumps(manifest, indent=2))
     with (args.output_dir / "results.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["system", "question_id", "status", "support_status", "latency_seconds", "answer"],
+            fieldnames=["experiment_id", "repeat_index", "system", "question_id", "status", "support_status", "latency_seconds", "answer"],
             extrasaction="ignore",
         )
         writer.writeheader()
