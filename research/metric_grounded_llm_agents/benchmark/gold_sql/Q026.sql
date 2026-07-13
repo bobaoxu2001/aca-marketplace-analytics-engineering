@@ -7,6 +7,5 @@ join main_marts.dim_geography as geography on availability.geography_key = geogr
 where geography.geography_type = 'service_area_county'
 group by 1, 2, 3
 having plan_count >= 10 and issuer_count <= 2
-order by plans_per_issuer desc, plan_count desc
+order by plans_per_issuer desc, plan_count desc, geography.state_code, geography.county_name, geography.service_area_id
 limit 20;
-

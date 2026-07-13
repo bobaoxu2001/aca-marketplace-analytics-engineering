@@ -6,6 +6,5 @@ from main_marts.dim_plan_history as history
 left join main_marts.dim_issuer as issuers on history.issuer_key = issuers.issuer_key
 group by 1, 2
 having total_history_rows >= 5
-order by non_continuity_rate desc, non_continuing_rows desc
+order by non_continuity_rate desc, non_continuing_rows desc, history.state_code, issuer_label
 limit 20;
-

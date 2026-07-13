@@ -2,19 +2,19 @@ metrics:
   - slug: average_monthly_premium
     name: Average monthly premium
     expression: avg(fact_premium.monthly_premium)
-    primary_tables: [fact_premium, dim_plan]
+    primary_tables: [fact_premium, dim_plan, dim_issuer]
     allowed_dimensions: [state_code, rating_area_id, issuer_id, metal_level, age_band, tobacco_usage]
     caveats: [Not enrollment weighted, Rating-area and age-band grain]
   - slug: median_silver_premium
     name: Median silver premium
     expression: median(monthly_premium) where dim_plan.metal_level = 'Silver'
-    primary_tables: [fact_premium, dim_plan]
+    primary_tables: [fact_premium, dim_plan, dim_issuer]
     allowed_dimensions: [state_code, rating_area_id, issuer_id, age_band]
     caveats: [Public premiums only, not subsidy-adjusted]
   - slug: plan_count_by_county
     name: Plan count by county
     expression: count(distinct fact_plan_availability.plan_key)
-    primary_tables: [fact_plan_availability, dim_geography, dim_plan]
+    primary_tables: [fact_plan_availability, dim_geography, dim_plan, dim_issuer]
     allowed_dimensions: [state_code, county_name, service_area_id, metal_level, issuer_id]
     caveats: [CMS service-area county labels are used as published]
   - slug: issuer_count_by_county
@@ -38,7 +38,7 @@ metrics:
   - slug: benefit_coverage_rate
     name: Benefit coverage rate
     expression: sum(is_covered_flag) / count(*)
-    primary_tables: [fact_benefit_cost_sharing, dim_benefit, dim_plan]
+    primary_tables: [fact_benefit_cost_sharing, dim_benefit, dim_plan, dim_issuer]
     allowed_dimensions: [benefit_name, benefit_category, state_code, issuer_id, metal_level]
     caveats: [Ambiguous or null coverage values require review]
   - slug: premium_difference_by_metal
@@ -65,4 +65,3 @@ metrics:
     primary_tables: [fact_plan_quality_rating, fact_premium, dim_plan]
     allowed_dimensions: [state_code, issuer_id, metal_level, overall_rating_value]
     caveats: [Association only, not causal, limited to joined plans]
-

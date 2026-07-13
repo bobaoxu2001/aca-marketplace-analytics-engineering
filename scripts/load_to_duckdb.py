@@ -63,7 +63,7 @@ def load_table(connection: duckdb.DuckDBPyConnection, raw_dir: Path, raw_table: 
             ?,
             header = true,
             all_varchar = true,
-            ignore_errors = true,
+            ignore_errors = false,
             union_by_name = true,
             sample_size = 20000
         )

@@ -21,6 +21,33 @@ dbt tests/docs, dimensional modeling, LookML-style semantic modeling,
 stakeholder-facing metrics, plan history modeling, quality-vs-cost analytics,
 and honest limitations.
 
+## PhD Research Track
+
+The repository also contains a research extension on trustworthy analytics
+agents: **Metric-Grounded Analytics Agents: An Evidence-First Evaluation on U.S.
+Health Insurance Marketplace Data**. It contributes a 30-question benchmark,
+three controlled agent conditions, reference SQL, support-aware evaluation, and
+a publication-oriented manuscript.
+
+- Research manuscript: `research/metric_grounded_llm_agents/paper/paper.md`
+- Frozen-run protocol: `research/metric_grounded_llm_agents/paper/experiment_protocol.md`
+- PhD application brief: `docs/phd_application_research_brief.md`
+- Resume-ready entry: `docs/resume_research_entry.md`
+- Codex pilot results: `docs/codex_pilot_results_2026-07-12.md`
+- Held-out router results: `docs/router_eval_results_2026-07-12.md`
+- Router stability and paired error analysis: `docs/router_error_analysis_2026-07-12.md`
+- Frozen high-shift challenge results: `docs/routing_challenge_results_2026-07-12.md`
+- Automated error analysis: `docs/error_analysis_2026-07-12.md`
+- Independent validity audit: `docs/RESEARCH_VALIDITY_AUDIT_2026-07-13.md`
+- Claim boundary: `docs/CLAIM_BOUNDARY.md`
+- Reproduction checklist: `docs/REPRODUCIBILITY_CHECKLIST.md`
+
+The comparative experiment is explicitly marked **manuscript in preparation**.
+Reported subscription-Codex results are versioned pilot/development diagnostics,
+rescored under the strict 2026-07-13 contract. They are not API-model results or
+confirmatory evidence; human-authored testing and independent review remain
+publication gates.
+
 ## Project pitch
 
 A healthcare insurance analytics engineering project using real CMS ACA

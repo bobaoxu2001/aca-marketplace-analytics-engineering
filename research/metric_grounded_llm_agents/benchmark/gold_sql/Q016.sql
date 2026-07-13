@@ -7,6 +7,5 @@ join main_marts.dim_issuer as issuers on premiums.issuer_key = issuers.issuer_ke
 where plans.metal_level = 'Silver'
 group by 1, 2
 having premium_rows >= 20
-order by median_silver_premium desc
+order by median_silver_premium desc, premiums.state_code, issuers.issuer_name
 limit 20;
-

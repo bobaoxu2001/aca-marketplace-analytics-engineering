@@ -18,6 +18,7 @@ from .validators import claim_support_status, validate_sql
 
 def _execute(database: Path, sql: str) -> list[dict[str, Any]]:
     with duckdb.connect(str(database), read_only=True) as connection:
+        connection.execute("set schema 'main_marts'")
         result = connection.execute(sql)
         columns = [column[0] for column in result.description]
         return [dict(zip(columns, row)) for row in result.fetchall()]
@@ -69,17 +70,18 @@ class MetricGroundedAgent:
                 **base,
                 "status": "sql_execution_error",
                 "answer": f"Metric-template SQL could not execute: {exc}",
+                "failure_type": type(exc).__name__,
                 "citations": [],
                 "latency_seconds": round(time.perf_counter() - start, 4),
             }
-        answer = f"Top result for '{question['question']}': {rows[0]}." if rows else "No result rows were returned."
+        answer = f"Top result: {rows[0]}." if rows else "No result rows were returned."
         return {
             **base,
             "status": "ok",
             "answer": answer,
             "citations": build_citations(question, rows, self.registry.as_context(question.get("metrics", []))),
             "support_status": claim_support_status(rows, answer),
-            "rows": rows[:20],
+            "rows": rows,
             "latency_seconds": round(time.perf_counter() - start, 4),
         }
 

@@ -34,3 +34,28 @@ def test_skipped_runs_are_excluded_from_unsupported_claims():
     assert summary["direct_llm"]["missing_api_key_count"] == 1
     assert summary["metric_grounded"]["missing_database_count"] == 1
     assert summary["metric_grounded"]["skipped_rate"] == 1.0
+    assert summary["direct_llm"]["execution_result_match_rate"] is None
+    assert summary["direct_llm"]["end_to_end_result_match_rate"] == 0.0
+
+
+def test_summary_aggregates_result_usage_and_cost_metrics():
+    summary = summarize([{
+        "system": "metric_grounded",
+        "status": "ok",
+        "support_status": "supported_by_result_rows",
+        "result_metrics": {
+            "execution_result_match": True,
+            "top_k_overlap": 0.8,
+            "group_match_rate": 0.9,
+            "mean_numeric_relative_error": 0.05,
+        },
+        "faithfulness_metrics": {"numeric_claim_faithfulness": 1.0},
+        "model_call": {
+            "estimated_cost_usd": 0.001,
+            "usage": {"input_tokens": 100, "output_tokens": 20},
+        },
+    }])["metric_grounded"]
+    assert summary["execution_result_match_rate"] == 1.0
+    assert summary["top_k_overlap"] == 0.8
+    assert summary["total_input_tokens"] == 100
+    assert summary["estimated_cost_usd"] == 0.001

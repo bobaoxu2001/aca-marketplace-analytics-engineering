@@ -5,6 +5,5 @@ select state_code,
 from main_marts.dim_plan_history
 group by 1
 having current_history_rows > 0
-order by new_plan_share desc
+order by new_plan_share desc, state_code
 limit 20;
-

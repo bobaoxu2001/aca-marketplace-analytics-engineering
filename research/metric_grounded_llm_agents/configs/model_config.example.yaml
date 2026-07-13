@@ -1,10 +1,17 @@
 provider: openai
 model: gpt-4.1-mini
+model_snapshot: gpt-4.1-mini-2025-04-14
 temperature: 0
 max_output_tokens: 1200
 api_key_env: OPENAI_API_KEY
+pricing:
+  input_usd_per_million_tokens: 0.40
+  cached_input_usd_per_million_tokens: 0.10
+  output_usd_per_million_tokens: 1.60
+  source: https://developers.openai.com/cookbook/examples/partners/model_selection_guide/model_selection_guide#61-price-and-utility-table-apr-2025
+  checked_at: 2026-07-12
 notes:
   - Direct LLM and live LLM-SQL adapters should use this config.
   - The committed benchmark does not call paid APIs by default.
   - Do not commit real API keys.
-
+  - Cost is an estimate from the pinned pricing snapshot; token usage is the authoritative raw record.

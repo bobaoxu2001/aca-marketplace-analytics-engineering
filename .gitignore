@@ -26,6 +26,7 @@ research/metric_grounded_llm_agents/evaluation/results/*
 !research/metric_grounded_llm_agents/evaluation/results/README.md
 !research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json
 !research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json
+research/metric_grounded_llm_agents/evaluation/human_review_v1/human_review_key.json
 
 # Python caches and environments.
 __pycache__/
