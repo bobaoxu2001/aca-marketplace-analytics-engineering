@@ -1,0 +1,131 @@
+name: Metric-Grounded Research Data Run
+
+on:
+  workflow_dispatch:
+
+jobs:
+  research-data-run:
+    name: Download CMS data and run research benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip certifi
+          python -m pip install -r requirements.txt
+          python -m pip install dbt-core dbt-duckdb
+
+      - name: Download official CMS/HealthData PUF file assets
+        id: download
+        continue-on-error: true
+        run: |
+          set +e
+          python3 scripts/download_cms_pufs.py --debug --force
+          status=$?
+          echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
+          mkdir -p logs
+          if [ -f research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json ]; then
+            cp research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json logs/download_failure_report.json
+          fi
+          if [ -f research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json ]; then
+            cp research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json logs/socrata_download_report.json
+          fi
+          exit "$status"
+
+      - name: List downloaded raw files
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          ls -lh data/raw/py2026/
+
+      - name: Validate raw files
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          python3 scripts/validate_raw_files.py
+
+      - name: Load raw files into DuckDB
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          python3 scripts/load_to_duckdb.py
+
+      - name: Build dbt marts
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          cd dbt_project
+          dbt build --profiles-dir .
+          cd ..
+
+      - name: Generate benchmark gold answers
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          python3 research/metric_grounded_llm_agents/benchmark/generate_gold_answers.py
+
+      - name: Run benchmark evaluation
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          python3 research/metric_grounded_llm_agents/evaluation/run_eval.py
+
+      - name: Stage DuckDB artifact if size is reasonable
+        if: steps.download.outputs.exit_code == '0'
+        run: |
+          mkdir -p artifact-staging/duckdb
+          db_path="data/processed/aca_marketplace_py2026.duckdb"
+          max_bytes=$((500 * 1024 * 1024))
+          if [ -f "$db_path" ]; then
+            size=$(stat -c%s "$db_path")
+            echo "DuckDB size: ${size} bytes"
+            if [ "$size" -le "$max_bytes" ]; then
+              cp "$db_path" artifact-staging/duckdb/
+            else
+              echo "DuckDB is larger than ${max_bytes} bytes; not uploading database artifact."
+            fi
+          fi
+
+      - name: Upload research benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metric-grounded-research-outputs
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            research/metric_grounded_llm_agents/benchmark/gold_answers/
+            research/metric_grounded_llm_agents/evaluation/results/
+            research/metric_grounded_llm_agents/paper/
+
+      - name: Upload DuckDB artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aca-marketplace-duckdb
+          if-no-files-found: ignore
+          retention-days: 7
+          path: artifact-staging/duckdb/
+
+      - name: Upload download failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: download-failure-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            logs/download_failure_report.json
+            logs/socrata_download_report.json
+            research/metric_grounded_llm_agents/evaluation/results/download_failure_report.json
+            research/metric_grounded_llm_agents/evaluation/results/socrata_download_report.json
+
+      - name: Fail if official download did not complete
+        if: steps.download.outputs.exit_code != '0'
+        run: |
+          echo "Official CMS/HealthData download failed. See download-failure-diagnostics artifact."
+          exit 1

@@ -6,12 +6,18 @@ ratings, and geography modeled into tested analytics marts.**
 
 ![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
 ![3.9M Raw Rows](https://img.shields.io/badge/3.9M%2B-Raw%20Rows-green)
-![118 dbt Checks](https://img.shields.io/badge/118-dbt%20Checks%20Passing-brightgreen)
+![97 dbt Data Tests](https://img.shields.io/badge/97-dbt%20Data%20Tests%20Passing-brightgreen)
 ![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
 
 ![Dashboard preview generated from real CMS PY2026 marts](assets/dashboard_preview.png)
 
-## Hiring Manager TL;DR
+This is the **canonical repository** for both the ACA Marketplace analytics
+engineering portfolio project and its Metric-Grounded Analytics Agents research
+extension.
+
+## Analytics Engineering Track
+
+### Hiring Manager TL;DR
 
 This repository is a healthcare analytics engineering case study: it turns large,
 raw CMS ACA Marketplace Public Use Files into a tested local warehouse and
@@ -20,6 +26,29 @@ Engineer I skill set: Python ingestion, DuckDB development, SQL transformations,
 dbt tests/docs, dimensional modeling, LookML-style semantic modeling,
 stakeholder-facing metrics, plan history modeling, quality-vs-cost analytics,
 and honest limitations.
+
+## PhD Research Track
+
+The repository also contains a research extension on trustworthy analytics
+agents: **Metric-Grounded Analytics Agents: An Evidence-First Evaluation on U.S.
+Health Insurance Marketplace Data**. It contributes a 30-question benchmark,
+distinct answering, SQL-generation, oracle-compilation, and predicted-routing
+conditions, reference SQL, support-aware evaluation, and a
+publication-oriented manuscript.
+
+- [Research overview](research/metric_grounded_llm_agents/README.md)
+- [Research manuscript](research/metric_grounded_llm_agents/paper/paper.md)
+- [Internal validity audit](docs/RESEARCH_VALIDITY_AUDIT_2026-07-13.md)
+- [Claim boundary](docs/CLAIM_BOUNDARY.md)
+- [Reproducibility checklist](docs/REPRODUCIBILITY_CHECKLIST.md)
+- [Frozen-run protocol](research/metric_grounded_llm_agents/paper/experiment_protocol.md)
+- [PhD application brief](docs/phd_application_research_brief.md)
+
+The comparative experiment is explicitly marked **manuscript in preparation**.
+Reported subscription-Codex results are versioned pilot/development diagnostics,
+rescored under the strict 2026-07-13 contract. They are not API-model results or
+confirmatory evidence; human-authored testing and independent review remain
+publication gates.
 
 ## Project pitch
 
@@ -101,7 +130,7 @@ Validated against real official CMS PY2026 Marketplace PUF CSVs downloaded from
 Final real-data dbt build:
 
 ```text
-PASS=115 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=117
+PASS=118 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=120
 ```
 
 Raw CSVs, local DuckDB databases, dbt target artifacts, raw profile outputs, and
@@ -137,7 +166,7 @@ Generated static architecture assets:
 | Requirement | How this project demonstrates it |
 | --- | --- |
 | SQL | Builds dimensional marts and sample stakeholder queries over premiums, benefits, issuers, geographies, and plan availability. |
-| dbt | Uses staged, intermediate, and mart layers with model documentation and 115 passing real-data dbt checks. |
+| dbt | Uses staged, intermediate, and mart layers with model documentation and 97 passing real-data tests; the full build completed 118 passing nodes plus two no-op exposures. |
 | Semantic modeling / LookML | Defines LookML views and explores for plans, premiums, benefits, and geography with business metrics. |
 | Cloud warehouse readiness | Uses DuckDB locally while keeping layered models, source contracts, tests, and BI semantics portable to Snowflake, BigQuery, Redshift, or Databricks with adapter/profile changes. |
 | Dimensional modeling | Implements `dim_issuer`, `dim_plan`, `dim_geography`, `dim_metal_level`, `dim_benefit`, `dim_age_band`, `fact_premium`, `fact_plan_availability`, and `fact_benefit_cost_sharing`. |
@@ -440,7 +469,7 @@ benefit cost sharing.
 
 - Built a tested ACA Marketplace analytics warehouse using real CMS PY2026 PUFs,
   DuckDB, dbt, dimensional modeling, and LookML-style semantic models; validated
-  3.9M+ raw rows with 115 passing dbt checks.
+  3.9M+ raw rows with 97 passing dbt data tests.
 
 ### Data Analyst version
 

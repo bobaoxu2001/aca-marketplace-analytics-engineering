@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, "cursor/**"]
+    branches: [main, "research/**", "cursor/**"]
   pull_request:
     branches: [main]
 
@@ -20,4 +20,4 @@ jobs:
           cache-dependency-path: requirements.txt
 
       - name: Install dependencies and run checks
-        run: make install validate
+        run: make ci-check

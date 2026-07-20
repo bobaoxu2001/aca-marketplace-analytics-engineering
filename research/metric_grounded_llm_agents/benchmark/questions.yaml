@@ -1,0 +1,214 @@
+questions:
+  - id: Q001
+    difficulty: simple
+    category: premiums
+    question: Which states have the highest average monthly premiums?
+    metrics: [average_monthly_premium]
+    source_tables: [fact_premium]
+    gold_sql: benchmark/gold_sql/Q001.sql
+  - id: Q002
+    difficulty: simple
+    category: premiums
+    question: Which states have the highest median silver plan premiums?
+    metrics: [median_silver_premium]
+    source_tables: [fact_premium, dim_plan]
+    required_terms: [Silver]
+    gold_sql: benchmark/gold_sql/Q002.sql
+  - id: Q003
+    difficulty: simple
+    category: premiums
+    question: How do average premiums differ by metal level?
+    metrics: [average_monthly_premium]
+    source_tables: [fact_premium, dim_plan]
+    gold_sql: benchmark/gold_sql/Q003.sql
+  - id: Q004
+    difficulty: simple
+    category: competition
+    question: Which states have the most issuer competition?
+    metrics: [issuer_count_by_county]
+    source_tables: [fact_plan_availability]
+    gold_sql: benchmark/gold_sql/Q004.sql
+  - id: Q005
+    difficulty: simple
+    category: availability
+    question: Which metal levels dominate plan availability?
+    metrics: [plan_count_by_county]
+    source_tables: [fact_plan_availability, dim_plan]
+    gold_sql: benchmark/gold_sql/Q005.sql
+  - id: Q006
+    difficulty: simple
+    category: quality
+    question: What is the distribution of public quality rating statuses?
+    metrics: [quality_rating_distribution]
+    source_tables: [fact_plan_quality_rating]
+    gold_sql: benchmark/gold_sql/Q006.sql
+  - id: Q007
+    difficulty: intermediate
+    category: continuity
+    question: Which states experienced the largest PY2025 to PY2026 plan continuity changes?
+    metrics: [plan_continuity_status]
+    source_tables: [dim_plan_history]
+    gold_sql: benchmark/gold_sql/Q007.sql
+  - id: Q008
+    difficulty: intermediate
+    category: continuity
+    question: Which issuers have the worst plan continuity?
+    metrics: [plan_continuity_status]
+    source_tables: [dim_plan_history, dim_issuer]
+    gold_sql: benchmark/gold_sql/Q008.sql
+  - id: Q009
+    difficulty: intermediate
+    category: competition
+    question: Which counties or service areas have limited issuer choices?
+    metrics: [issuer_count_by_county, plan_count_by_county]
+    source_tables: [fact_plan_availability, dim_geography]
+    gold_sql: benchmark/gold_sql/Q009.sql
+  - id: Q010
+    difficulty: intermediate
+    category: premiums
+    question: Which states show unusual premium variation?
+    metrics: [average_monthly_premium]
+    source_tables: [fact_premium]
+    gold_sql: benchmark/gold_sql/Q010.sql
+  - id: Q011
+    difficulty: intermediate
+    category: benefits
+    question: Which benefit categories differ most across metal levels?
+    metrics: [benefit_coverage_rate]
+    source_tables: [fact_benefit_cost_sharing, dim_benefit, dim_plan]
+    gold_sql: benchmark/gold_sql/Q011.sql
+  - id: Q012
+    difficulty: intermediate
+    category: quality
+    question: Are higher quality ratings associated with higher premiums?
+    metrics: [quality_vs_premium]
+    source_tables: [fact_plan_quality_rating, fact_premium]
+    gold_sql: benchmark/gold_sql/Q012.sql
+  - id: Q013
+    difficulty: simple
+    category: benefits
+    question: Which benefit categories have the highest coverage rate?
+    metrics: [benefit_coverage_rate]
+    source_tables: [fact_benefit_cost_sharing, dim_benefit]
+    gold_sql: benchmark/gold_sql/Q013.sql
+  - id: Q014
+    difficulty: simple
+    category: plan_design
+    question: Which metal levels have the highest average deductibles?
+    metrics: [average_deductible]
+    source_tables: [dim_plan]
+    gold_sql: benchmark/gold_sql/Q014.sql
+  - id: Q015
+    difficulty: simple
+    category: plan_design
+    question: Which metal levels have the highest average out-of-pocket maximums?
+    metrics: [average_oop_max]
+    source_tables: [dim_plan]
+    gold_sql: benchmark/gold_sql/Q015.sql
+  - id: Q016
+    difficulty: intermediate
+    category: premiums
+    question: Which issuers have the highest median silver premiums?
+    metrics: [median_silver_premium]
+    source_tables: [fact_premium, dim_plan, dim_issuer]
+    required_terms: [Silver]
+    gold_sql: benchmark/gold_sql/Q016.sql
+  - id: Q017
+    difficulty: intermediate
+    category: competition
+    question: Which states have the largest number of service-area counties with only one issuer?
+    metrics: [issuer_count_by_county]
+    source_tables: [fact_plan_availability, dim_geography]
+    gold_sql: benchmark/gold_sql/Q017.sql
+  - id: Q018
+    difficulty: intermediate
+    category: availability
+    question: Which issuers offer the most distinct plans?
+    metrics: [plan_count_by_county]
+    source_tables: [fact_plan_availability, dim_issuer]
+    gold_sql: benchmark/gold_sql/Q018.sql
+  - id: Q019
+    difficulty: intermediate
+    category: availability
+    question: Which states have the most distinct plans?
+    metrics: [plan_count_by_county]
+    source_tables: [fact_plan_availability]
+    gold_sql: benchmark/gold_sql/Q019.sql
+  - id: Q020
+    difficulty: intermediate
+    category: premiums
+    question: Which rating areas have the highest median silver premium?
+    metrics: [median_silver_premium]
+    source_tables: [fact_premium, dim_plan]
+    required_terms: [Silver]
+    gold_sql: benchmark/gold_sql/Q020.sql
+  - id: Q021
+    difficulty: hard
+    category: premiums
+    question: Which states have the largest Gold versus Silver average premium gap?
+    metrics: [premium_difference_by_metal]
+    source_tables: [fact_premium, dim_plan]
+    gold_sql: benchmark/gold_sql/Q021.sql
+  - id: Q022
+    difficulty: hard
+    category: quality
+    question: Within joined quality rows, which states have the highest average premium for rated plans?
+    metrics: [quality_vs_premium]
+    source_tables: [fact_plan_quality_rating, fact_premium]
+    gold_sql: benchmark/gold_sql/Q022.sql
+  - id: Q023
+    difficulty: hard
+    category: benefits
+    question: Which issuers have the lowest benefit coverage rate?
+    metrics: [benefit_coverage_rate]
+    source_tables: [fact_benefit_cost_sharing, dim_issuer]
+    gold_sql: benchmark/gold_sql/Q023.sql
+  - id: Q024
+    difficulty: hard
+    category: continuity
+    question: Which states have the highest share of new or not-in-crosswalk current plans?
+    metrics: [plan_continuity_status]
+    source_tables: [dim_plan_history]
+    gold_sql: benchmark/gold_sql/Q024.sql
+  - id: Q025
+    difficulty: hard
+    category: premiums
+    question: Which metal levels have the widest interquartile premium range?
+    metrics: [average_monthly_premium]
+    source_tables: [fact_premium, dim_plan]
+    gold_sql: benchmark/gold_sql/Q025.sql
+  - id: Q026
+    difficulty: hard
+    category: competition
+    question: Which state and county combinations have many plans but few issuers?
+    metrics: [plan_count_by_county, issuer_count_by_county]
+    source_tables: [fact_plan_availability, dim_geography]
+    gold_sql: benchmark/gold_sql/Q026.sql
+  - id: Q027
+    difficulty: hard
+    category: quality
+    question: Do unrated plans differ in average deductible from rated plans?
+    metrics: [quality_rating_distribution, average_deductible]
+    source_tables: [fact_plan_quality_rating]
+    gold_sql: benchmark/gold_sql/Q027.sql
+  - id: Q028
+    difficulty: hard
+    category: plan_design
+    question: Which plan types have the highest average out-of-pocket maximum?
+    metrics: [average_oop_max]
+    source_tables: [dim_plan]
+    gold_sql: benchmark/gold_sql/Q028.sql
+  - id: Q029
+    difficulty: hard
+    category: continuity
+    question: Which crosswalk reasons are most common?
+    metrics: [plan_continuity_status]
+    source_tables: [dim_plan_history]
+    gold_sql: benchmark/gold_sql/Q029.sql
+  - id: Q030
+    difficulty: hard
+    category: benefits
+    question: Which benefits most often have quantity limits?
+    metrics: [benefit_coverage_rate]
+    source_tables: [fact_benefit_cost_sharing]
+    gold_sql: benchmark/gold_sql/Q030.sql

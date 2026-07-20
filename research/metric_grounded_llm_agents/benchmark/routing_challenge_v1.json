@@ -1,0 +1,323 @@
+{
+  "created_at_utc": "2026-07-11T22:55:37.631183+00:00",
+  "dataset_sha256": "c03066e075312aa3be3b9e9b3ddab828217c8e6d8a90a14b4250931600099b1d",
+  "lock_policy": "Frozen before any router evaluation or compiler inspection on this dataset.",
+  "split_policy": "High-lexical-shift model-generated challenge; no human authorship claim.",
+  "generator": {
+    "provider": "codex_subscription",
+    "model": "codex_default_logged_in_model",
+    "codex_cli_version": "codex-cli 0.144.0-alpha.4",
+    "usage": {
+      "input_tokens": 12143,
+      "cached_input_tokens": 0,
+      "output_tokens": 822,
+      "reasoning_output_tokens": 35
+    },
+    "latency_seconds": 20.6585
+  },
+  "records": [
+    {
+      "question_id": "Q001",
+      "source_question": "Which states have the highest average monthly premiums?",
+      "metrics": [
+        "average_monthly_premium"
+      ],
+      "paraphrases": [
+        "Rank states by mean premium charged per month, from greatest downward."
+      ]
+    },
+    {
+      "question_id": "Q002",
+      "source_question": "Which states have the highest median silver plan premiums?",
+      "metrics": [
+        "median_silver_premium"
+      ],
+      "paraphrases": [
+        "For Silver-tier offerings, identify the states leading on the median premium."
+      ]
+    },
+    {
+      "question_id": "Q003",
+      "source_question": "How do average premiums differ by metal level?",
+      "metrics": [
+        "average_monthly_premium"
+      ],
+      "paraphrases": [
+        "Compare mean premium amounts across the metal-tier categories."
+      ]
+    },
+    {
+      "question_id": "Q004",
+      "source_question": "Which states have the most issuer competition?",
+      "metrics": [
+        "issuer_count_by_county"
+      ],
+      "paraphrases": [
+        "Where is the state-level marketplace contested by the greatest number of issuers?"
+      ]
+    },
+    {
+      "question_id": "Q005",
+      "source_question": "Which metal levels dominate plan availability?",
+      "metrics": [
+        "plan_count_by_county"
+      ],
+      "paraphrases": [
+        "Determine which metal tiers account for the largest supply of available plans."
+      ]
+    },
+    {
+      "question_id": "Q006",
+      "source_question": "What is the distribution of public quality rating statuses?",
+      "metrics": [
+        "quality_rating_distribution"
+      ],
+      "paraphrases": [
+        "Break down records according to their publicly reported quality-rating status."
+      ]
+    },
+    {
+      "question_id": "Q007",
+      "source_question": "Which states experienced the largest PY2025 to PY2026 plan continuity changes?",
+      "metrics": [
+        "plan_continuity_status"
+      ],
+      "paraphrases": [
+        "Rank states by the magnitude of their plan-continuity shift between PY2025 and PY2026."
+      ]
+    },
+    {
+      "question_id": "Q008",
+      "source_question": "Which issuers have the worst plan continuity?",
+      "metrics": [
+        "plan_continuity_status"
+      ],
+      "paraphrases": [
+        "Identify the issuers whose plans exhibit the weakest continuity."
+      ]
+    },
+    {
+      "question_id": "Q009",
+      "source_question": "Which counties or service areas have limited issuer choices?",
+      "metrics": [
+        "issuer_count_by_county",
+        "plan_count_by_county"
+      ],
+      "paraphrases": [
+        "Locate counties or service regions where consumers face a narrow selection of issuers."
+      ]
+    },
+    {
+      "question_id": "Q010",
+      "source_question": "Which states show unusual premium variation?",
+      "metrics": [
+        "average_monthly_premium"
+      ],
+      "paraphrases": [
+        "Flag states whose premiums display anomalous dispersion."
+      ]
+    },
+    {
+      "question_id": "Q011",
+      "source_question": "Which benefit categories differ most across metal levels?",
+      "metrics": [
+        "benefit_coverage_rate"
+      ],
+      "paraphrases": [
+        "Across metal tiers, determine which benefit groupings vary the most."
+      ]
+    },
+    {
+      "question_id": "Q012",
+      "source_question": "Are higher quality ratings associated with higher premiums?",
+      "metrics": [
+        "quality_vs_premium"
+      ],
+      "paraphrases": [
+        "Assess whether premium amounts rise in association with stronger quality scores."
+      ]
+    },
+    {
+      "question_id": "Q013",
+      "source_question": "Which benefit categories have the highest coverage rate?",
+      "metrics": [
+        "benefit_coverage_rate"
+      ],
+      "paraphrases": [
+        "Rank benefit groupings by the proportion receiving coverage."
+      ]
+    },
+    {
+      "question_id": "Q014",
+      "source_question": "Which metal levels have the highest average deductibles?",
+      "metrics": [
+        "average_deductible"
+      ],
+      "paraphrases": [
+        "Order metal tiers by mean deductible, highest first."
+      ]
+    },
+    {
+      "question_id": "Q015",
+      "source_question": "Which metal levels have the highest average out-of-pocket maximums?",
+      "metrics": [
+        "average_oop_max"
+      ],
+      "paraphrases": [
+        "Determine which metal tiers lead on the mean maximum member outlay."
+      ]
+    },
+    {
+      "question_id": "Q016",
+      "source_question": "Which issuers have the highest median silver premiums?",
+      "metrics": [
+        "median_silver_premium"
+      ],
+      "paraphrases": [
+        "For Silver offerings, rank issuers by median premium from greatest to least."
+      ]
+    },
+    {
+      "question_id": "Q017",
+      "source_question": "Which states have the largest number of service-area counties with only one issuer?",
+      "metrics": [
+        "issuer_count_by_county"
+      ],
+      "paraphrases": [
+        "Rank states by their count of counties in service areas served by a sole issuer."
+      ]
+    },
+    {
+      "question_id": "Q018",
+      "source_question": "Which issuers offer the most distinct plans?",
+      "metrics": [
+        "plan_count_by_county"
+      ],
+      "paraphrases": [
+        "Identify issuers with the broadest count of unique plan offerings."
+      ]
+    },
+    {
+      "question_id": "Q019",
+      "source_question": "Which states have the most distinct plans?",
+      "metrics": [
+        "plan_count_by_county"
+      ],
+      "paraphrases": [
+        "Find the states providing the greatest variety of unique plans."
+      ]
+    },
+    {
+      "question_id": "Q020",
+      "source_question": "Which rating areas have the highest median silver premium?",
+      "metrics": [
+        "median_silver_premium"
+      ],
+      "paraphrases": [
+        "Among rating regions, locate those leading on the median premium for Silver coverage."
+      ]
+    },
+    {
+      "question_id": "Q021",
+      "source_question": "Which states have the largest Gold versus Silver average premium gap?",
+      "metrics": [
+        "premium_difference_by_metal"
+      ],
+      "paraphrases": [
+        "Rank states by the size of the difference between mean Gold and Silver premiums."
+      ]
+    },
+    {
+      "question_id": "Q022",
+      "source_question": "Within joined quality rows, which states have the highest average premium for rated plans?",
+      "metrics": [
+        "quality_vs_premium"
+      ],
+      "paraphrases": [
+        "Restricting analysis to matched quality records and rated offerings, find the states with the greatest mean premium."
+      ]
+    },
+    {
+      "question_id": "Q023",
+      "source_question": "Which issuers have the lowest benefit coverage rate?",
+      "metrics": [
+        "benefit_coverage_rate"
+      ],
+      "paraphrases": [
+        "Rank issuers from lowest upward by the proportion of benefits covered."
+      ]
+    },
+    {
+      "question_id": "Q024",
+      "source_question": "Which states have the highest share of new or not-in-crosswalk current plans?",
+      "metrics": [
+        "plan_continuity_status"
+      ],
+      "paraphrases": [
+        "Identify states where new plans or current offerings absent from the crosswalk constitute the greatest proportion."
+      ]
+    },
+    {
+      "question_id": "Q025",
+      "source_question": "Which metal levels have the widest interquartile premium range?",
+      "metrics": [
+        "average_monthly_premium"
+      ],
+      "paraphrases": [
+        "Determine which metal tiers exhibit the largest premium spread between their first and third quartiles."
+      ]
+    },
+    {
+      "question_id": "Q026",
+      "source_question": "Which state and county combinations have many plans but few issuers?",
+      "metrics": [
+        "plan_count_by_county",
+        "issuer_count_by_county"
+      ],
+      "paraphrases": [
+        "Find state–county pairs characterized by abundant plan offerings alongside a small issuer pool."
+      ]
+    },
+    {
+      "question_id": "Q027",
+      "source_question": "Do unrated plans differ in average deductible from rated plans?",
+      "metrics": [
+        "quality_rating_distribution",
+        "average_deductible"
+      ],
+      "paraphrases": [
+        "Compare mean deductibles between plans lacking ratings and those carrying ratings."
+      ]
+    },
+    {
+      "question_id": "Q028",
+      "source_question": "Which plan types have the highest average out-of-pocket maximum?",
+      "metrics": [
+        "average_oop_max"
+      ],
+      "paraphrases": [
+        "Rank plan-type categories by mean ceiling on members’ out-of-pocket spending."
+      ]
+    },
+    {
+      "question_id": "Q029",
+      "source_question": "Which crosswalk reasons are most common?",
+      "metrics": [
+        "plan_continuity_status"
+      ],
+      "paraphrases": [
+        "Rank the stated crosswalk rationales by frequency."
+      ]
+    },
+    {
+      "question_id": "Q030",
+      "source_question": "Which benefits most often have quantity limits?",
+      "metrics": [
+        "benefit_coverage_rate"
+      ],
+      "paraphrases": [
+        "Identify the benefits for which quantity restrictions occur most frequently."
+      ]
+    }
+  ]
+}
