@@ -12,6 +12,7 @@ import argparse
 import json
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -19,7 +20,6 @@ import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-
 
 DEFAULT_RAW_DIR = Path("data/raw/py2026")
 TIMEOUT_SECONDS = 60
@@ -81,10 +81,20 @@ DATASETS: tuple[PufDataset, ...] = (
 )
 
 
-def request_bytes(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
-        return response.read()
+def request_bytes(url: str, retries: int = 3) -> bytes:
+    last_error: Exception | None = None
+    for attempt in range(retries):
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
+            if attempt < retries - 1:
+                time.sleep(2**attempt)
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError(f"Failed to download {url}")
 
 
 def request_text(url: str) -> str:

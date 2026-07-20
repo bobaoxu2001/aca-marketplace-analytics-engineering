@@ -1,6 +1,6 @@
 # Real Data Validation Results
 
-Validated on June 12, 2026 using official CMS Plan Year 2026 Marketplace Public
+Validated on June 17, 2026 using official CMS Plan Year 2026 Marketplace Public
 Use Files downloaded from `https://download.cms.gov/marketplace-puf/2026/`.
 
 This document is the evidence log for the project. It records the real data
@@ -67,7 +67,7 @@ dbt build --profiles-dir .
 Final `dbt build` status:
 
 ```text
-PASS=108 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=108
+PASS=118 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=120
 ```
 
 Validation included dbt model materialization plus not-null, unique,

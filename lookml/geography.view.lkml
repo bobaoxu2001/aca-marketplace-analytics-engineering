@@ -16,6 +16,24 @@ view: geography {
   dimension: county_name {
     type: string
     sql: ${TABLE}.county_name ;;
+    description: "Raw CMS Service Area county value (often a FIPS code)."
+  }
+
+  dimension: county_display_name {
+    type: string
+    sql: ${TABLE}.county_display_name ;;
+    description: "Display-friendly county name enriched from Census FIPS reference."
+  }
+
+  dimension: county_fips {
+    type: string
+    sql: ${TABLE}.county_fips ;;
+    description: "Five-digit county FIPS code when resolved."
+  }
+
+  dimension: state_name {
+    type: string
+    sql: ${TABLE}.state_name ;;
   }
 
   dimension: rating_area_id {

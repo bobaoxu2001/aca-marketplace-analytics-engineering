@@ -17,7 +17,6 @@ from typing import Any
 
 import polars as pl
 
-
 DEFAULT_RAW_DIR = Path("data/raw/py2026")
 DEFAULT_OUTPUT_DIR = Path("data/processed")
 
