@@ -103,6 +103,8 @@ models:
         tests: [not_null, unique]
       - name: issuer_id
         tests: [not_null]
+      - name: issuer_name
+        description: CMS issuer marketing name for stakeholder-facing reporting.
 
   - name: dim_plan
     description: Conformed standard-component plan dimension containing product, issuer, metal level, network, deductible, out-of-pocket, and plan variant attributes.
@@ -149,6 +151,12 @@ models:
           - accepted_values:
               arguments:
                 values: ['service_area_county', 'rating_area']
+      - name: county_fips
+        description: Five-digit FIPS county code when the CMS county value can be resolved.
+      - name: county_display_name
+        description: Human-readable county label from the FIPS reference seed when available.
+      - name: state_name
+        description: Full state name from the FIPS reference seed when available.
 
   - name: dim_metal_level
     description: Metal level dimension for ACA plan tier ordering and comparisons.
@@ -239,6 +247,9 @@ models:
                 field: issuer_key
       - name: geography_key
         tests:
+          - not_null:
+              config:
+                where: "county_name is not null"
           - relationships:
               arguments:
                 to: ref('dim_geography')

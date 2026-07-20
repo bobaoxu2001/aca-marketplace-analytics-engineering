@@ -26,7 +26,7 @@ metrics, semantic models, and dashboard-ready analysis surfaces.
 | Plan ID Crosswalk PUF - PY2025 to PY2026 | 158,746 |
 | Quality PUF - PY2026 | 4,302 |
 
-Final real-data dbt build status: `PASS=108 WARN=0 ERROR=0 SKIP=0`.
+Final real-data dbt build status: `PASS=118 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=120`.
 
 ## Selected descriptive findings
 
@@ -68,6 +68,9 @@ enrollment weighted.
 - Plan Attributes PUF - PY2026
 - Benefits and Cost Sharing PUF - PY2026
 - Service Area PUF - PY2026
+- Plan ID Crosswalk PUF - PY2025 to PY2026
+- Quality PUF - PY2026
+- County FIPS reference seed (Census Bureau enrichment for geography)
 
 ## Priority metrics
 

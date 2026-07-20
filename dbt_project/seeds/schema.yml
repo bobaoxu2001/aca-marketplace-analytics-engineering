@@ -1,0 +1,16 @@
+version: 2
+
+seeds:
+  - name: county_fips_reference
+    description: >
+      U.S. county FIPS reference from Census Bureau national_county2020 codes.
+      Enriches CMS Service Area county identifiers with display-friendly names.
+    columns:
+      - name: state_code
+        tests: [not_null]
+      - name: full_fips
+        tests: [not_null, unique]
+      - name: county_name
+        tests: [not_null]
+      - name: county_display_name
+        tests: [not_null]

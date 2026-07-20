@@ -120,18 +120,28 @@ The project is designed so a cloud migration would mainly require:
 The LookML files sit on top of the dbt marts and define business-friendly views,
 dimensions, measures, and explores for:
 
-- Plan availability
+- Plan availability at county grain (`plan_availability` explore)
+- Plan product design (`plans` explore)
 - Premium benchmarking
 - Benefit cost sharing
-- Geography filters
+- Geography filters with FIPS-enriched county display names
+- Plan continuity / crosswalk history
+- Quality ratings with plan-level premium summaries to avoid fan-out
 
 This mirrors how analytics engineering teams separate warehouse modeling from BI
 metric consumption.
+
+## County enrichment
+
+CMS Service Area county values are enriched with a Census FIPS reference seed
+(`county_fips_reference`) that adds `county_display_name`, `county_fips`, and
+`state_name` to `dim_geography` when a match is found. Unmatched values retain
+the raw CMS county field.
 
 ## Intentionally not modeled yet
 
 - Claims, enrollment, subsidy eligibility, or member-level data.
 - Provider network files.
 - Nationwide QRS reporting-unit/product-level quality detail.
-- County reference names and geospatial shapes.
+- Geospatial county boundary shapes.
 - Production orchestration, deployment, and monitoring.

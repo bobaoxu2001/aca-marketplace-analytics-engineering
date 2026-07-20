@@ -1,0 +1,43 @@
+version: 2
+
+exposures:
+  - name: marketplace_intelligence_dashboard
+    label: ACA Marketplace Market Intelligence Dashboard
+    type: dashboard
+    maturity: medium
+    url: docs/dashboard_spec.md
+    description: >
+      Stakeholder-facing dashboard for issuer competition, premium benchmarking,
+      benefit design, plan continuity, and quality-vs-cost analysis.
+    depends_on:
+      - ref('fact_plan_availability')
+      - ref('fact_premium')
+      - ref('fact_benefit_cost_sharing')
+      - ref('fact_plan_quality_rating')
+      - ref('dim_plan')
+      - ref('dim_plan_history')
+      - ref('dim_geography')
+      - ref('dim_issuer')
+      - ref('dim_metal_level')
+    owner:
+      name: Analytics Engineering
+
+  - name: lookml_semantic_layer
+    label: LookML Semantic Layer
+    type: analysis
+    maturity: medium
+    url: lookml/marketplace_analytics.model.lkml
+    description: >
+      LookML explores for plans, premiums, benefits, geography, plan history,
+      and quality ratings over the dbt marts.
+    depends_on:
+      - ref('dim_plan')
+      - ref('dim_geography')
+      - ref('dim_issuer')
+      - ref('fact_premium')
+      - ref('fact_plan_availability')
+      - ref('fact_benefit_cost_sharing')
+      - ref('fact_plan_quality_rating')
+      - ref('dim_plan_history')
+    owner:
+      name: Analytics Engineering

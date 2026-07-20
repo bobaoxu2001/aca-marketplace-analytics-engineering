@@ -100,32 +100,32 @@ Deductible and out-of-pocket maximum values come from public Plan Attributes PUF
 | State | Geography label | Service area | Plan count | Issuer count |
 | --- | --- | --- | --- | --- |
 | OH | OHS001 | OHS001 | 97 | 14 |
-| OH | 39151 | OHS001 | 94 | 6 |
-| FL | 12117 | FLS001 | 93 | 8 |
-| OH | 39093 | OHS001 | 93 | 6 |
-| TX | 48085 | TXS001 | 90 | 10 |
-| TX | 48113 | TXS001 | 90 | 10 |
-| FL | 12099 | FLS001 | 85 | 9 |
-| FL | 12069 | FLS001 | 84 | 8 |
-| TX | 48139 | TXS001 | 83 | 9 |
-| TX | 48397 | TXS001 | 83 | 9 |
+| OH | Stark | OHS001 | 94 | 6 |
+| FL | Seminole | FLS001 | 93 | 8 |
+| OH | Lorain | OHS001 | 93 | 6 |
+| TX | Collin | TXS001 | 90 | 10 |
+| TX | Dallas | TXS001 | 90 | 10 |
+| FL | Palm Beach | FLS001 | 85 | 9 |
+| FL | Lake | FLS001 | 84 | 8 |
+| TX | Ellis | TXS001 | 83 | 9 |
+| TX | Rockwall | TXS001 | 83 | 9 |
 
-CMS Service Area `County` values are used as published and may be FIPS-like identifiers rather than display-friendly county names.
+Geography labels prefer `county_display_name` from the Census FIPS seed; unmatched CMS county values retain the raw Service Area value.
 
 ## Examples of low-competition markets
 
 | State | Geography label | Service area | Plan count | Issuer count |
 | --- | --- | --- | --- | --- |
 | MI | MIS009 | MIS009 | 29 | 1 |
-| FL | 12021 | FLS004 | 25 | 1 |
-| FL | 12061 | FLS004 | 25 | 1 |
-| FL | 12065 | FLS004 | 25 | 1 |
-| FL | 12089 | FLS004 | 25 | 1 |
-| FL | 12115 | FLS004 | 25 | 1 |
-| FL | 12129 | FLS004 | 25 | 1 |
-| NE | 31025 | NES002 | 20 | 1 |
-| NE | 31059 | NES002 | 20 | 1 |
-| NE | 31097 | NES002 | 20 | 1 |
+| FL | Collier | FLS004 | 25 | 1 |
+| FL | Indian River | FLS004 | 25 | 1 |
+| FL | Jefferson | FLS004 | 25 | 1 |
+| FL | Nassau | FLS004 | 25 | 1 |
+| FL | Sarasota | FLS004 | 25 | 1 |
+| FL | Wakulla | FLS004 | 25 | 1 |
+| NE | Cass | NES002 | 20 | 1 |
+| NE | Fillmore | NES002 | 20 | 1 |
+| NE | Johnson | NES002 | 20 | 1 |
 
 The marts identify 4,394 service-area geography rows with one issuer represented. These markets may merit closer product, actuarial, or operations review, but public PUF data alone does not explain the cause of limited competition.
 
@@ -179,7 +179,7 @@ Quality-vs-premium metrics are limited to Quality PUF rows that join to `dim_pla
 
 ## Limitations surfaced by the insight queries
 
-- County display names are not modeled yet; the Service Area PUF county field is used as published.
+- County display names are enriched from the Census FIPS reference seed when a match is found; unmatched CMS county values retain the raw Service Area value.
 - Premium metrics are not enrollment weighted because enrollment is not included in the selected public PUFs.
 - The current model focuses on public plan design, premiums, availability, plan history, and Quality PUF ratings; it does not include provider networks, claims, or member-level data.
 - The dashboard preview in `assets/dashboard_preview.png` is a static visual generated from these aggregate queries, not a deployed BI application.
