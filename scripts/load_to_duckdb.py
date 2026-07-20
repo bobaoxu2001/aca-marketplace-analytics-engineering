@@ -64,8 +64,6 @@ def load_table(
     connection: duckdb.DuckDBPyConnection,
     raw_dir: Path,
     raw_table: RawTable,
-    *,
-    ignore_errors: bool,
 ) -> int:
     path = raw_dir / raw_table.filename
     if not path.exists():
@@ -81,7 +79,7 @@ def load_table(
             ?,
             header = true,
             all_varchar = true,
-            ignore_errors = {str(ignore_errors).lower()},
+            ignore_errors = false,
             union_by_name = true,
             sample_size = 20000
         )
@@ -128,11 +126,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--raw-dir", type=Path, default=DEFAULT_RAW_DIR)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE_PATH)
     parser.add_argument("--profile", type=Path, default=DEFAULT_PROFILE_PATH)
-    parser.add_argument(
-        "--ignore-errors",
-        action="store_true",
-        help="Allow read_csv_auto to skip malformed rows (not recommended).",
-    )
     return parser.parse_args()
 
 
@@ -162,12 +155,7 @@ def main() -> int:
             """
         )
         for raw_table in RAW_TABLES:
-            row_count = load_table(
-                connection,
-                args.raw_dir,
-                raw_table,
-                ignore_errors=args.ignore_errors,
-            )
+            row_count = load_table(connection, args.raw_dir, raw_table)
             validate_against_profile(raw_table, row_count, profile_counts)
             print(f"Loaded {raw_table.table_name}: {row_count:,} rows")
 

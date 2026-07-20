@@ -1,0 +1,38 @@
+{
+  "codex_sql_batched": {
+    "questions": 90,
+    "ok": 87,
+    "execution_success_rate": 0.967,
+    "sql_valid_rate": 1.0,
+    "unsupported_claim_rate": 0.0,
+    "citation_coverage": 0.0,
+    "traceability_score": 0.5,
+    "skipped_rate": 0.0,
+    "missing_database_count": 0,
+    "missing_api_key_count": 0,
+    "sql_error_count": 3,
+    "model_api_error_count": 0,
+    "router_abstention_count": 0,
+    "end_to_end_result_match_rate": 0.0,
+    "end_to_end_compatible_projection_rate": 0.133333,
+    "execution_result_match_rate": 0.0,
+    "compatible_projection_match_rate": 0.137931,
+    "top_k_overlap": 0.659327,
+    "top_k_precision": 0.684674,
+    "top_k_recall": 0.706513,
+    "group_match_rate": 0.582581,
+    "group_precision": 0.536217,
+    "group_recall": 0.777778,
+    "group_jaccard": 0.525768,
+    "mean_numeric_relative_error": 3869112888314.305,
+    "mean_numeric_absolute_error": 5878.678344,
+    "numeric_smape": 0.545222,
+    "numeric_claim_faithfulness": 0.966667,
+    "estimated_cost_usd": 0,
+    "total_input_tokens": 42068,
+    "total_output_tokens": 12933,
+    "failure_types": {
+      "BinderException": 3
+    }
+  }
+}

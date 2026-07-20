@@ -1,0 +1,293 @@
+{
+  "status": "failed",
+  "datasets": [
+    {
+      "title": "Rate PUF - PY2026",
+      "view_id": "gwwq-4vdg",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/py2026/Rate_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/gwwq-4vdg",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/gwwq-4vdg",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/gwwq-4vdg.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/gwwq-4vdg.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/gwwq-4vdg/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/gwwq-4vdg/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    },
+    {
+      "title": "Plan Attributes PUF - PY2026",
+      "view_id": "acxs-m8pj",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/py2026/plan_attributes_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/acxs-m8pj",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/acxs-m8pj",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/acxs-m8pj.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/acxs-m8pj.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/acxs-m8pj/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/acxs-m8pj/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    },
+    {
+      "title": "Benefits and Cost Sharing PUF - PY2026",
+      "view_id": "8mje-qxd8",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/py2026/Benefits_Cost_Sharing_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/8mje-qxd8",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/8mje-qxd8",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/8mje-qxd8.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/8mje-qxd8.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/8mje-qxd8/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/8mje-qxd8/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    },
+    {
+      "title": "Service Area PUF - PY2026",
+      "view_id": "nspj-ha43",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/py2026/service_area_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/nspj-ha43",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/nspj-ha43",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/nspj-ha43.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/nspj-ha43.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/nspj-ha43/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/nspj-ha43/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    },
+    {
+      "title": "Plan ID Crosswalk PUF - PY2025 to PY2026",
+      "view_id": "gcd8-gvyi",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/py2026/plan_id_crosswalk_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/gcd8-gvyi",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/gcd8-gvyi",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/gcd8-gvyi.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/gcd8-gvyi.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/gcd8-gvyi/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/gcd8-gvyi/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    },
+    {
+      "title": "Quality PUF - PY2026",
+      "view_id": "vc9z-bs6f",
+      "status": "failed",
+      "reason": "official_socrata_view_is_non_tabular_href_asset",
+      "asset_type": "href",
+      "view_type": "href",
+      "column_count": 0,
+      "official_csv_url": "https://data.healthcare.gov/datafile/PY2026_Quality_PUF.csv",
+      "attempts": [
+        {
+          "url": "https://healthdata.gov/api/views/vc9z-bs6f",
+          "params": {},
+          "status_code": 200,
+          "final_url": "https://healthdata.gov/api/views/vc9z-bs6f",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null
+        },
+        {
+          "url": "https://healthdata.gov/resource/vc9z-bs6f.json",
+          "params": {
+            "$limit": 1
+          },
+          "status_code": 403,
+          "final_url": "https://healthdata.gov/resource/vc9z-bs6f.json?%24limit=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"error\" : true,\n  \"message\" : \"no row or column access to non-tabular tables\"\n}\n"
+        },
+        {
+          "url": "https://healthdata.gov/api/views/vc9z-bs6f/rows.json",
+          "params": {
+            "accessType": "DOWNLOAD",
+            "method": "getByIds",
+            "asHashes": "true",
+            "start": 0,
+            "length": 1
+          },
+          "status_code": 400,
+          "final_url": "https://healthdata.gov/api/views/vc9z-bs6f/rows.json?accessType=DOWNLOAD&method=getByIds&asHashes=true&start=0&length=1",
+          "content_type": "application/json; charset=utf-8",
+          "content_length": null,
+          "error": "{\n  \"code\" : \"invalid_request\",\n  \"error\" : true,\n  \"message\" : \"Non-tabular datasets do not support rows requests.\"\n}\n"
+        }
+      ],
+      "api_probe_payload": null,
+      "rows_probe_payload": null
+    }
+  ]
+}

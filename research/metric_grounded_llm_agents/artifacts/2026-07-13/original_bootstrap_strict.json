@@ -1,0 +1,107 @@
+{
+  "iterations": 10000,
+  "cluster_unit": "question_id",
+  "systems": {
+    "codex_sql_batched": {
+      "end_to_end_result_match": {
+        "question_clusters": 30,
+        "estimate": 0.033333,
+        "ci95_low": 0.0,
+        "ci95_high": 0.1
+      },
+      "execution_result_match": {
+        "question_clusters": 30,
+        "estimate": 0.033333,
+        "ci95_low": 0.0,
+        "ci95_high": 0.1
+      },
+      "top_k_overlap": {
+        "question_clusters": 30,
+        "estimate": 0.657542,
+        "ci95_low": 0.516631,
+        "ci95_high": 0.790432
+      },
+      "group_match_rate": {
+        "question_clusters": 30,
+        "estimate": 0.612501,
+        "ci95_low": 0.476067,
+        "ci95_high": 0.74785
+      },
+      "numeric_smape": {
+        "question_clusters": 29,
+        "estimate": 0.331521,
+        "ci95_low": 0.173032,
+        "ci95_high": 0.500948
+      }
+    },
+    "metric_grounded": {
+      "end_to_end_result_match": {
+        "question_clusters": 30,
+        "estimate": 0.8,
+        "ci95_low": 0.666667,
+        "ci95_high": 0.933333
+      },
+      "execution_result_match": {
+        "question_clusters": 30,
+        "estimate": 0.8,
+        "ci95_low": 0.633333,
+        "ci95_high": 0.933333
+      },
+      "top_k_overlap": {
+        "question_clusters": 30,
+        "estimate": 1.0,
+        "ci95_low": 1.0,
+        "ci95_high": 1.0
+      },
+      "group_match_rate": {
+        "question_clusters": 30,
+        "estimate": 1.0,
+        "ci95_low": 1.0,
+        "ci95_high": 1.0
+      },
+      "numeric_smape": {
+        "question_clusters": 30,
+        "estimate": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      }
+    }
+  },
+  "paired": {
+    "end_to_end_result_match": {
+      "question_clusters": 30,
+      "estimate": 0.766667,
+      "ci95_low": 0.6,
+      "ci95_high": 0.9,
+      "comparison": "left_minus_right"
+    },
+    "execution_result_match": {
+      "question_clusters": 30,
+      "estimate": 0.766667,
+      "ci95_low": 0.6,
+      "ci95_high": 0.9,
+      "comparison": "left_minus_right"
+    },
+    "top_k_overlap": {
+      "question_clusters": 30,
+      "estimate": 0.342458,
+      "ci95_low": 0.209752,
+      "ci95_high": 0.484649,
+      "comparison": "left_minus_right"
+    },
+    "group_match_rate": {
+      "question_clusters": 30,
+      "estimate": 0.387499,
+      "ci95_low": 0.255658,
+      "ci95_high": 0.530396,
+      "comparison": "left_minus_right"
+    },
+    "numeric_smape": {
+      "question_clusters": 29,
+      "estimate": -0.331521,
+      "ci95_low": -0.504323,
+      "ci95_high": -0.175476,
+      "comparison": "left_minus_right"
+    }
+  }
+}
