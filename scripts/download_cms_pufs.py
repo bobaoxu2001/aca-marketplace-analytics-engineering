@@ -145,16 +145,24 @@ def load_datasets() -> list[PufDataset]:
 
 def score_candidate(url: str, dataset: PufDataset) -> int:
     lower_url = url.lower()
+    configured_view = bool(
+        dataset.socrata_view_id
+        and dataset.socrata_view_id.lower() in lower_url
+    )
     if not lower_url.startswith("https://"):
         return -1
     if not any(domain in lower_url for domain in OFFICIAL_DOMAINS):
         return -1
     if not re.search(r"(\.csv|\.zip|export\.csv|rows\.csv|datafile)", lower_url):
         return -1
-    if "2026" not in lower_url and "py2026" not in lower_url:
+    if "2026" not in lower_url and "py2026" not in lower_url and not configured_view:
         return -1
     specific_terms = [term for term in dataset.search_terms if term not in {"2026", "puf"}]
-    if specific_terms and not any(term.lower() in lower_url for term in specific_terms):
+    if (
+        specific_terms
+        and not configured_view
+        and not any(term.lower() in lower_url for term in specific_terms)
+    ):
         return -1
     score = 0
     for term in dataset.search_terms:
@@ -168,6 +176,8 @@ def score_candidate(url: str, dataset: PufDataset) -> int:
         score += 5
     if "quality" in lower_url and dataset.key == "quality":
         score += 5
+    if configured_view:
+        score += 20
     return score
 
 
@@ -467,6 +477,8 @@ def discover_data_healthcare_api(
                 view_id = result.get("id") or result.get("resource", {}).get("id")
                 if not view_id:
                     continue
+                if dataset.socrata_view_id and view_id != dataset.socrata_view_id:
+                    continue
                 for base in domains:
                     urls.add(f"{base}/resource/{view_id}.csv?$limit=50000000")
                     urls.add(f"{base}/api/v3/views/{view_id}/export.csv")
@@ -537,6 +549,7 @@ def candidate_urls(
     candidates: set[str] = {dataset.datafile_url, dataset.cms_zip_url}
     candidates.update(discover_socrata_asset_metadata(session, dataset, diagnostics))
     candidates.update(discover_catalog_data_gov(session, dataset, diagnostics))
+    candidates.update(discover_data_healthcare_api(session, dataset, diagnostics))
     candidates.update(discover_page_urls(session, dataset, diagnostics))
     scored = [(score_candidate(url, dataset), url) for url in candidates]
     result = [url for score, url in sorted(scored, reverse=True) if score >= 0][:MAX_ATTEMPTS_PER_FILE]

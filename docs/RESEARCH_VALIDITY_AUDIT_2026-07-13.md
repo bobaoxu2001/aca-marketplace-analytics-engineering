@@ -17,8 +17,8 @@ it is not the pending independent human review.
   20 models, 97 data tests, one seed, and two exposures. The exact result was
   `PASS=118 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=120`.
 - The repository's `make ci-check` target passed on its declared Python 3.12
-  baseline: Ruff, compilation, five YAML files, all 42 Python tests, and a clean
-  non-partial dbt parse. The split suites were 11 analytics tests and 31
+  baseline: Ruff, compilation, five YAML files, all 46 Python tests, and a clean
+  non-partial dbt parse. The split suites were 14 analytics tests and 32
   research tests.
 - The runtime leakage guard checks both `gold_sql` and `gold_answers` across all
   agent modules; its four focused tests passed. Direct inspection found gold
@@ -89,7 +89,7 @@ frozen provenance package remain unfinished.
 | --- | --- | --- |
 | PhD application, described as an independent research prototype or manuscript in preparation | **Safe with conservative wording** | Do not describe the reported percentages as independently validated generalization or peer-reviewed findings. Commit/version the current source before sharing a repository link. |
 | PhD application, described as a completed paper with a proven accuracy improvement | **Not safe** | The oracle compiler, projected result metric, and model-generated test questions do not support that claim. |
-| Workshop submission in the present state | **Not safe** | Re-freeze the code/data, repair the primary metric, rerun all results, validate the test set independently, and complete human review first. |
+| Workshop submission in the present state | **Not safe** | Freeze the code/data and run a fresh confirmatory evaluation under the repaired strict contract, validate the test set independently, and complete human review first. |
 
 ## Original blocking issues (2026-07-13 baseline)
 
@@ -544,10 +544,12 @@ publication rerun.
 > routing, execution, and result evidence; it includes repeated Codex pilots,
 > question-clustered uncertainty estimates, and explicit post-hoc versus locked
 > diagnostics. Current results show that executable SQL is often semantically
-> wrong and that a benchmark-specific metric compiler improves traceability, but
+> wrong and that a benchmark-specific metric compiler exposes intermediate
+> artifacts for failure localization, but
 > they do not yet establish general superiority: the oracle compiler is an upper
 > bound, test questions are model-generated, qualitative review is pending, and
-> publication metrics require a clean frozen rerun with stricter result contracts.
+> publication metrics require a clean frozen confirmatory rerun under the current
+> strict result contract.
 
 ### Language to avoid
 

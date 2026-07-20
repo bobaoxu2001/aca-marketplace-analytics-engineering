@@ -1,4 +1,16 @@
-with service_area_geography as (
+with county_reference as (
+    select
+        state_code,
+        state_name,
+        lpad(trim(cast(state_fips as varchar)), 2, '0') as state_fips,
+        lpad(trim(cast(county_fips as varchar)), 3, '0') as county_fips,
+        lpad(trim(cast(full_fips as varchar)), 5, '0') as full_fips,
+        county_name,
+        county_display_name
+    from {{ ref('county_fips_reference') }}
+),
+
+service_area_geography as (
     select
         business_year,
         state_code,
@@ -93,15 +105,21 @@ select
     base.partial_county,
     base.zip_codes,
     base.geography_type,
-    coalesce(cast(counties.full_fips as varchar), base.county_name) as county_fips,
+    coalesce(counties.full_fips, base.county_name) as county_fips,
     coalesce(counties.county_display_name, base.county_name) as county_display_name,
     coalesce(counties.state_name, base.state_code) as state_name
 from base_geography as base
-left join {{ ref('county_fips_reference') }} as counties
+left join county_reference as counties
     on base.geography_type = 'service_area_county'
     and base.state_code = counties.state_code
     and (
-        base.county_name = cast(counties.full_fips as varchar)
-        or base.county_name = counties.county_fips
+        (
+            regexp_full_match(trim(base.county_name), '[0-9]{4,5}')
+            and lpad(trim(base.county_name), 5, '0') = counties.full_fips
+        )
+        or (
+            regexp_full_match(trim(base.county_name), '[0-9]{1,3}')
+            and lpad(trim(base.county_name), 3, '0') = counties.county_fips
+        )
         or lower(base.county_name) = lower(counties.county_name)
     )

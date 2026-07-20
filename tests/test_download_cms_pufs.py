@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.download_cms_pufs import PufDataset, load_datasets, score_candidate
+from scripts import download_cms_pufs
+from scripts.download_cms_pufs import PufDataset, candidate_urls, load_datasets, score_candidate
 
 
 def test_score_candidate_prefers_2026_csv_urls() -> None:
@@ -31,3 +32,41 @@ def test_score_candidate_rejects_non_data_urls() -> None:
 def test_all_datasets_have_unique_filenames() -> None:
     filenames = [dataset.filename for dataset in load_datasets()]
     assert len(filenames) == len(set(filenames))
+
+
+def test_candidate_urls_include_data_healthcare_api_results(monkeypatch) -> None:
+    dataset = load_datasets()[0]
+    api_url = (
+        f"https://data.healthcare.gov/resource/{dataset.socrata_view_id}.csv"
+        "?$limit=50000000"
+    )
+
+    monkeypatch.setattr(
+        download_cms_pufs,
+        "discover_socrata_asset_metadata",
+        lambda *_args: set(),
+    )
+    monkeypatch.setattr(
+        download_cms_pufs,
+        "discover_catalog_data_gov",
+        lambda *_args: set(),
+    )
+    monkeypatch.setattr(
+        download_cms_pufs,
+        "discover_data_healthcare_api",
+        lambda *_args: {api_url},
+    )
+    monkeypatch.setattr(
+        download_cms_pufs,
+        "discover_page_urls",
+        lambda *_args: set(),
+    )
+    assert api_url in candidate_urls(object(), dataset, [])
+    assert score_candidate(api_url, dataset) > 0
+    assert (
+        score_candidate(
+            "https://data.healthcare.gov/resource/wxyz-9876.csv?$limit=50000000",
+            dataset,
+        )
+        == -1
+    )

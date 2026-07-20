@@ -37,8 +37,9 @@ projection columns count abstentions or failures as zero.
 Question-clustered strict-match bootstrap intervals (10,000 resamples) are
 0.233–0.567 for oracle routing, 0.133–0.467 for lexical routing, 0.211–0.556
 for Codex routing, and 0.000–0.000 for Codex-to-SQL. Codex routing minus
-Codex-to-SQL is +0.378 (0.211–0.544); Codex routing minus lexical routing is
-+0.056 (−0.033–0.167), which does not establish router superiority.
+Codex-to-SQL end-to-end strict agreement is +0.378 (0.211–0.544);
+Codex-routed minus lexical-routed end-to-end strict agreement is +0.078
+(−0.022–0.200), which does not establish router superiority.
 
 The 40.0% oracle strict result exposes controlled-compiler generalization as a
 major remaining error source. No compiler rule was changed after challenge

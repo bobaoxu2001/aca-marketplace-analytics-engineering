@@ -12,6 +12,14 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+seeds:
+  aca_marketplace_analytics:
+    county_fips_reference:
+      +column_types:
+        state_fips: varchar
+        county_fips: varchar
+        full_fips: varchar
+
 models:
   aca_marketplace_analytics:
     staging:

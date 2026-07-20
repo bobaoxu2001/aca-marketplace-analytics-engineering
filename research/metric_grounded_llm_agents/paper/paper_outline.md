@@ -1,7 +1,10 @@
 # LaTeX-Style Paper Outline
 
+Status: **superseded planning artifact**. The current title, claims, and results
+are maintained in [paper.md](paper.md).
+
 ```text
-\title{Metric-Grounded LLM Agents for Reliable Domain Analytics}
+\title{Metric-Grounded Analytics Agents: Measuring Semantic Reliability Beyond Executable SQL}
 \begin{abstract}
 ...
 \end{abstract}

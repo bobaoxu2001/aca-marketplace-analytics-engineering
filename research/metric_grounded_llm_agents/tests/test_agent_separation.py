@@ -1,12 +1,12 @@
 from pathlib import Path
 
 import yaml
-
-from agent.metric_registry import MetricRegistry
-from agent.paths import DEFAULT_QUESTIONS
-from agent.metric_sql import generate_metric_sql
 from agent.metric_grounded_agent import MetricGroundedAgent
+from agent.metric_registry import MetricRegistry
+from agent.metric_sql import generate_metric_sql
+from agent.paths import DEFAULT_QUESTIONS
 from agent.validators import validate_sql
+from evaluation.run_codex_pilot import build_condition_prompts
 
 
 def test_runtime_agent_modules_do_not_reference_benchmark_answer_files():
@@ -58,3 +58,16 @@ def test_metric_agent_executes_against_dbt_marts_schema(tmp_path):
     result = MetricGroundedAgent(database=database).answer(question)
     assert result["status"] == "ok"
     assert result["rows"][0]["state_code"] == "TX"
+
+
+def test_direct_codex_prompt_does_not_require_a_database(tmp_path):
+    questions = [{"id": "QTEST", "question": "What is the result?"}]
+    prompts = build_condition_prompts(
+        questions,
+        tmp_path / "database-does-not-exist.duckdb",
+        {"direct_codex_batched"},
+    )
+
+    assert len(prompts) == 1
+    assert prompts[0][0] == "direct_codex_batched"
+    assert "QTEST: What is the result?" in prompts[0][1]
