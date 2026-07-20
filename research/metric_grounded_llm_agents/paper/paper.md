@@ -19,8 +19,8 @@ results; 18.9% matched under compatible projection. The oracle compiler achieved
 80.0% strict and 100% projection-compatible agreement, but this is an upper
 bound on a co-developed benchmark, not learned generalization. On a hash-locked,
 model-generated lexical-shift challenge, strict agreement fell to 40.0% even
-with oracle metric routing. These results show that execution is a weak proxy
-for semantics and that metric routing alone does not solve query
+with oracle metric routing. In this benchmark, these results show that execution
+is a weak proxy for semantics and that metric routing alone does not solve query
 generalization. The study is a manuscript-in-preparation diagnostic; independent
 human-authored testing and qualitative review remain pending.
 
@@ -43,8 +43,8 @@ hides those choices can make an incorrect result look authoritative.
 We study a narrow research question:
 
 > When analytics questions are routed through an explicit metric registry and a
-> constrained compiler, which failures become easier to detect, and which
-> semantic errors remain?
+> constrained compiler, which intermediate failures can be localized, and
+> which semantic errors remain?
 
 The goal is not to establish general healthcare reasoning or universal
 hallucination reduction. Instead, the project contributes an inspectable
@@ -321,8 +321,9 @@ that close-paraphrase performance is optimistic for broader generalization.
 Across 180 Codex routing records, exact metric-set accuracy was 0.833, Top-1
 accuracy 0.867, macro precision 0.867, and macro recall 0.850. Predictions were
 identical across repeats for 54 of 60 examples. Per-repeat exact accuracy was
-0.867, 0.833, and 0.800. The deterministic lexical router therefore outperformed
-the Codex router on this close robustness set.
+0.867, 0.833, and 0.800. The deterministic lexical router had higher observed
+agreement than the Codex router on this benchmark-specific close robustness set;
+the conditions are not a general model comparison.
 
 ### 7.4 Post-hoc compiler development
 
@@ -363,8 +364,9 @@ compatible projection.
 Question-clustered strict agreement intervals were 0.233–0.567 for oracle
 routing, 0.133–0.467 for lexical routing, and 0.211–0.556 for Codex routing. The
 paired end-to-end strict difference between Codex routing plus compilation and
-Codex-to-SQL was 0.378 (0.211–0.544). The Codex-versus-lexical routing difference
-was 0.056 with an interval crossing zero (−0.033–0.167).
+Codex-to-SQL was 0.378 (0.211–0.544). The Codex-routed versus lexical-routed
+end-to-end strict difference was 0.078 with an interval crossing zero
+(−0.022–0.200).
 
 The challenge remains model-generated and inherits labels from source questions.
 It is a stronger locked diagnostic, not an independently human-authored test.
@@ -383,8 +385,9 @@ are necessary safety gates, but they do not establish analytical meaning.
 
 Correct metric routing did not guarantee correct rows. Oracle routing on the
 challenge achieved 100% route accuracy by definition but only 40% strict result
-agreement. This decomposition is important: research that reports router labels
-without executing the downstream query can miss the dominant error source.
+agreement. This decomposition is important: in this locked diagnostic, research
+that reports router labels without executing the downstream query would miss a
+major observed error source.
 
 ### 8.3 Strict and compatible metrics answer different questions
 

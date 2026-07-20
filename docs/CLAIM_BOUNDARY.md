@@ -13,7 +13,8 @@
   produced higher strict and compatible-projection result agreement than the
   subscription Codex-to-SQL pilot.
 - Explicit metric definitions, permitted-table records, SQL, validation checks,
-  result rows, and citations improve inspectability and traceability.
+  result rows, and citations expose intermediate artifacts for post-hoc failure
+  localization and traceability.
 - Model-generated paraphrase and challenge diagnostics reveal substantial
   compiler-generalization failures.
 - Repeated stochastic outputs are retained and uncertainty is estimated by

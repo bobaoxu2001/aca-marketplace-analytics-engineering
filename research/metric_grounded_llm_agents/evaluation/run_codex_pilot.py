@@ -131,6 +131,20 @@ def sql_prompt(questions: list[dict[str, Any]], database: Path) -> str:
     return "\n".join(lines)
 
 
+def build_condition_prompts(
+    questions: list[dict[str, Any]],
+    database: Path,
+    selected_conditions: set[str],
+) -> list[tuple[str, str]]:
+    """Build only the prompts required by the selected experimental conditions."""
+    prompts: list[tuple[str, str]] = []
+    if "direct_codex_batched" in selected_conditions:
+        prompts.append(("direct_codex_batched", direct_prompt(questions)))
+    if "codex_sql_batched" in selected_conditions:
+        prompts.append(("codex_sql_batched", sql_prompt(questions, database)))
+    return prompts
+
+
 def shared_model_call(metadata: dict[str, Any], batch_id: str, first: bool) -> dict[str, Any]:
     copied = dict(metadata)
     copied["batch_id"] = batch_id
@@ -196,10 +210,11 @@ def main() -> int:
     started = datetime.now(timezone.utc).isoformat()
 
     selected_conditions = {value.strip() for value in args.conditions.split(",") if value.strip()}
-    condition_prompts = [item for item in (
-            ("direct_codex_batched", direct_prompt(questions)),
-            ("codex_sql_batched", sql_prompt(questions, args.database)),
-        ) if item[0] in selected_conditions]
+    condition_prompts = build_condition_prompts(
+        questions,
+        args.database,
+        selected_conditions,
+    )
     for repeat_index in range(args.repeats):
         for condition, prompt in condition_prompts:
             batch_id = f"{condition}_r{repeat_index}"

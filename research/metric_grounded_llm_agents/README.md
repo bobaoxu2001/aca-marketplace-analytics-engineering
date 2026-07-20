@@ -1,4 +1,4 @@
-# Metric-Grounded Analytics Agents
+# Metric-Grounded Analytics Agents: Measuring Semantic Reliability Beyond Executable SQL
 
 **A research prototype for measuring semantic reliability, evidence traceability,
 and failure behavior in natural-language analytics over U.S. ACA Marketplace
@@ -8,14 +8,18 @@ Status: **manuscript in preparation**. The current experiments are
 benchmark-specific development and diagnostic studies, not evidence of general
 healthcare reasoning or universal hallucination reduction.
 
+Graduate admissions and faculty reviewers can use the
+[PhD research-sample start page](../../docs/phd_application/README.md) for a
+short, application-oriented reading path.
+
 ## Research question
 
 Executable SQL can still encode the wrong measure, grain, population, grouping,
 or ranking. This project asks:
 
 > When analytics questions are routed through an explicit metric registry and a
-> constrained SQL compiler, which parts of the resulting answer become easier to
-> verify, and which semantic errors remain?
+> constrained SQL compiler, which intermediate failures can be localized, and
+> which semantic errors remain?
 
 The contribution is an evaluation scaffold and failure analysis. The project
 does not claim that metric grounding alone solves text-to-SQL or analytical
@@ -29,7 +33,7 @@ The study separates five stages that are often conflated:
 2. query construction;
 3. static SQL policy validation;
 4. execution against tested dbt marts;
-5. comparison with independently stored reference results and evidence rows.
+5. comparison with separately stored reference results and evidence rows.
 
 It evaluates distinct conditions:
 
@@ -53,8 +57,8 @@ system produces its output.
 
 The warehouse uses six official CMS Plan Year 2026 Marketplace public-use
 files: Rate, Plan Attributes, Benefits and Cost Sharing, Service Area, Plan ID
-Crosswalk, and Quality. The validated local build contains more than 3.8 million
-raw rows, 20 dbt models, and 97 data tests.
+Crosswalk, and Quality. The validated local build contains 3,887,640 raw rows,
+20 dbt models, and 97 data tests.
 
 The research benchmark contains 30 questions across premiums, issuer
 competition, plan availability, benefits, continuity, plan design, and quality.
@@ -104,14 +108,15 @@ with the stricter 2026-07-13 metric contract.
   because compiler repairs used observed paraphrase failures.
 - On the locked model-generated challenge, strict match fell to 40.0% for oracle
   routing, 30.0% for lexical routing, and 37.8% end to end for repeated Codex
-  routing. Codex-to-SQL achieved 0% strict match but 13.3% compatible projection
-  match.
+  routing. Codex-to-SQL achieved 0% strict match and 13.3% end-to-end compatible
+  projection match (13.8% among the 87 executed runs).
 - The challenge therefore identifies compiler generalization—not routing alone—
-  as a dominant failure mode.
+  as a major observed error source in this locked diagnostic.
 
 These results support a narrow conclusion: execution success substantially
-overstates semantic correctness, and explicit metric/evidence stages make
-failures more inspectable. They do not establish universal superiority.
+overstates semantic correctness. Explicit metric/evidence stages expose
+intermediate artifacts for post-hoc failure localization; they do not establish
+universal superiority or improved human error detection.
 
 ## Limitations
 

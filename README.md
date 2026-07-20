@@ -1,11 +1,16 @@
 # Health Insurance Marketplace Intelligence Mart
 
+> **Graduate admissions and faculty reviewers:** [start with the PhD research
+> sample](docs/phd_application/README.md). It gives a three-minute overview of
+> the applicant's contribution, observed findings, limitations, and proposed
+> doctoral agenda.
+
 **Business-ready ACA Marketplace intelligence from real CMS PY2026 public data:
 premiums, benefits, issuer competition, plan availability, plan history, quality
 ratings, and geography modeled into tested analytics marts.**
 
 ![Real CMS PY2026 Data](https://img.shields.io/badge/Real%20CMS-PY2026%20Data-blue)
-![3.9M Raw Rows](https://img.shields.io/badge/3.9M%2B-Raw%20Rows-green)
+![3.89M Raw Rows](https://img.shields.io/badge/3.89M-Raw%20Rows-green)
 ![97 dbt Data Tests](https://img.shields.io/badge/97-dbt%20Data%20Tests%20Passing-brightgreen)
 ![DuckDB dbt LookML](https://img.shields.io/badge/DuckDB%20%2B%20dbt%20%2B%20LookML-Analytics%20Engineering-purple)
 
@@ -30,19 +35,20 @@ and honest limitations.
 ## PhD Research Track
 
 The repository also contains a research extension on trustworthy analytics
-agents: **Metric-Grounded Analytics Agents: An Evidence-First Evaluation on U.S.
-Health Insurance Marketplace Data**. It contributes a 30-question benchmark,
+agents: **Metric-Grounded Analytics Agents: Measuring Semantic Reliability
+Beyond Executable SQL**. It contributes a 30-question benchmark,
 distinct answering, SQL-generation, oracle-compilation, and predicted-routing
 conditions, reference SQL, support-aware evaluation, and a
 publication-oriented manuscript.
 
+- [PhD reviewer start page](docs/phd_application/README.md)
+- [Concise research brief](docs/phd_application/research_brief.md)
 - [Research overview](research/metric_grounded_llm_agents/README.md)
 - [Research manuscript](research/metric_grounded_llm_agents/paper/paper.md)
-- [Internal validity audit](docs/RESEARCH_VALIDITY_AUDIT_2026-07-13.md)
 - [Claim boundary](docs/CLAIM_BOUNDARY.md)
 - [Reproducibility checklist](docs/REPRODUCIBILITY_CHECKLIST.md)
 - [Frozen-run protocol](research/metric_grounded_llm_agents/paper/experiment_protocol.md)
-- [PhD application brief](docs/phd_application_research_brief.md)
+- [Internal validity audit](docs/RESEARCH_VALIDITY_AUDIT_2026-07-13.md)
 
 The comparative experiment is explicitly marked **manuscript in preparation**.
 Reported subscription-Codex results are versioned pilot/development diagnostics,
@@ -469,7 +475,7 @@ benefit cost sharing.
 
 - Built a tested ACA Marketplace analytics warehouse using real CMS PY2026 PUFs,
   DuckDB, dbt, dimensional modeling, and LookML-style semantic models; validated
-  3.9M+ raw rows with 97 passing dbt data tests.
+  3.89 million raw rows with 97 passing dbt data tests.
 
 ### Data Analyst version
 

@@ -47,8 +47,9 @@ produced all 180 expected predictions (60 paraphrases × 3 repeats).
 | Stable examples across all repeats | 54 / 60 |
 
 Per-repeat exact accuracy declined from 0.867 to 0.833 and 0.800, with 6, 8,
-and 10 explicit empty-route abstentions. This stochastic Codex router did not
-outperform the deterministic lexical baseline.
+and 10 explicit empty-route abstentions. This stochastic Codex router had lower
+observed exact agreement than the deterministic lexical baseline on this
+benchmark-specific close robustness set.
 
 ## Research implication
 

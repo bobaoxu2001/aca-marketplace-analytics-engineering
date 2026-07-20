@@ -1,5 +1,9 @@
 # Advisor Targeting Notes
 
+Status: **internal application-planning notes; not a reviewer first-click**. Use
+the public [PhD research-sample start page](phd_application/README.md) when
+sharing the project.
+
 Use these frames to connect the same project to a faculty member's research
 agenda without changing the evidence or inflating the claims.
 

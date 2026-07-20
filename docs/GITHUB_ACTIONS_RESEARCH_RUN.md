@@ -1,7 +1,7 @@
 # GitHub Actions Research Run
 
 This repository includes a manual GitHub Actions workflow that runs the full
-Metric-Grounded LLM Agents research pipeline on a GitHub-hosted runner.
+Metric-Grounded Analytics Agents research pipeline on a GitHub-hosted runner.
 
 Workflow file:
 
