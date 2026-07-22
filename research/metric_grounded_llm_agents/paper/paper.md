@@ -219,6 +219,24 @@ held-out question text, then selects the smallest metric-slug set. Three
 independent batched calls measure stochastic stability. Both routers feed the
 same deterministic compiler, isolating route errors from compiler errors.
 
+### 5.5 Registry-grounded LLM SQL (grounding ablation)
+
+The systems above bound the problem from two sides—an LLM with no metric
+grounding (`llm_sql`) and a hand-authored compiler with full grounding
+(`metric_grounded`)—but leave the middle unmeasured: an LLM given the metric
+registry. We therefore add `llm_registry_sql`, which is identical to the
+schema-only `llm_sql` baseline in model, task, schema context, static
+validation policy, and permitted-table gate, and differs only by injecting the
+benchmark's oracle metric definitions (expression, primary tables, allowed
+dimensions, and caveats) into the prompt. Because the metric labels come from
+the benchmark, this is an oracle-metric-conditioned generator, directly
+comparable to the oracle-routed compiler; because it still compiles its own SQL,
+its paired strict-match difference from `llm_sql` estimates the causal effect of
+supplying an explicit registry to a learned generator while holding the compiler
+absent. This condition is defined here and is reported under the pinned,
+snapshot-identified API rerun described in the reproducibility runbook; it is not
+included in the earlier subscription-Codex figures below.
+
 ## 6. Evaluation
 
 ### 6.1 Strict and compatible result agreement
@@ -370,6 +388,30 @@ end-to-end strict difference was 0.078 with an interval crossing zero
 
 The challenge remains model-generated and inherits labels from source questions.
 It is a stronger locked diagnostic, not an independently human-authored test.
+
+### 7.6 Failure taxonomy
+
+Separating the pipeline into inspectable stages lets each failing run be
+assigned to the earliest stage that broke rather than to an undifferentiated
+"wrong answer." Across the saved Codex-to-SQL and predicted-routing records, the
+observed failures fall into five classes. Counts are illustrative of the saved
+diagnostic runs, not population estimates.
+
+| Failure class | Where it is localized | Signature in the records | Representative cases |
+| --- | --- | --- | --- |
+| Metric-route mismatch | routing | predicted metric set ≠ oracle set; compiler then computes the wrong measure | Q003_P2 (premium metric routed to metal-difference), Q027 quality+deductible collapsed to deductible only |
+| Output-contract mismatch | compilation | correct measure and grain but wrong columns, cardinality, or missing rows under strict scoring | strict-vs-compatible gap on the original benchmark (3.3% vs 18.9%) |
+| Ranking/Top-k error | compilation | correct group set but wrong order or truncated `k` | low Top-k Jaccard on Q008, Q009, Q023 while group match stays higher |
+| Grouping error | compilation | wrong partition or filter yields a different group set | Q016, Q018, Q026 group-match collapse |
+| Numeric-value error | compilation/execution | executable rows whose numbers diverge from gold (high SMAPE) | Q017, Q022, Q010 SMAPE ≥ 0.9 despite successful execution |
+
+Two patterns are load-bearing for the paper's argument. First, execution success
+never appears as a discriminating signal: every class above contains runs whose
+SQL executed cleanly. Second, the failures concentrate in **compilation and
+output-contract** stages rather than routing—on the locked challenge, oracle
+routing eliminates route error by construction yet still leaves 60% strict
+failure. A pipeline that reported only router accuracy or execution rate would
+mislabel most of these runs as successes.
 
 ## 8. Discussion
 

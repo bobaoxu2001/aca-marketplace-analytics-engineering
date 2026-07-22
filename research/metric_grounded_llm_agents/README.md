@@ -42,6 +42,12 @@ It evaluates distinct conditions:
 - **Codex-to-SQL:** Codex generates SQL from warehouse schema plus a
   question-specific table allow-list; this is an oracle-table-conditioned pilot,
   not a raw text-to-SQL benchmark.
+- **Registry-grounded LLM SQL:** the same schema-plus-allow-list generator, but
+  with the oracle metric definitions injected into the prompt. This is the
+  grounding ablation that isolates the effect of an explicit metric registry on
+  a learned generator; it is defined and wired into the runner and is reported
+  under the pinned API rerun (see
+  [`evaluation/API_RERUN_RUNBOOK.md`](evaluation/API_RERUN_RUNBOOK.md)).
 - **Oracle-routed deterministic compiler:** benchmark metric labels select a
   hand-authored compiler. This is a benchmark-specific upper bound.
 - **Lexical predicted routing:** a calibrated word/bigram/character n-gram

@@ -17,6 +17,7 @@ import yaml
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from agent.direct_llm import answer as direct_llm_answer  # noqa: E402
+from agent.llm_registry_sql import LLMRegistrySQLBaseline  # noqa: E402
 from agent.llm_sql import LLMSQLBaseline  # noqa: E402
 from agent.metric_grounded_agent import MetricGroundedAgent  # noqa: E402
 from agent.paths import DEFAULT_DATABASE, DEFAULT_QUESTIONS, RESEARCH_DIR  # noqa: E402
@@ -106,7 +107,7 @@ def main() -> int:
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
     parser.add_argument("--limit", type=int, default=0, help="Run only the first N questions.")
     parser.add_argument("--repeats", type=int, default=1, help="Repeat every system-question condition N times.")
-    parser.add_argument("--systems", default="direct_llm,llm_sql,metric_grounded")
+    parser.add_argument("--systems", default="direct_llm,llm_sql,llm_registry_sql,metric_grounded")
     parser.add_argument("--output-dir", type=Path, default=RESEARCH_DIR / "evaluation" / "results")
     parser.add_argument("--gold-dir", type=Path, default=RESEARCH_DIR / "benchmark" / "gold_answers")
     parser.add_argument("--experiment-id", default="", help="Stable label for this experiment run.")
@@ -122,6 +123,7 @@ def main() -> int:
 
     systems = {item.strip() for item in args.systems.split(",") if item.strip()}
     llm_sql = LLMSQLBaseline(database=args.database)
+    llm_registry_sql = LLMRegistrySQLBaseline(database=args.database)
     metric_grounded = MetricGroundedAgent(database=args.database)
     results: list[dict] = []
     for repeat_index in range(args.repeats):
@@ -131,6 +133,8 @@ def main() -> int:
                 condition_results.append(direct_llm_answer(question))
             if "llm_sql" in systems:
                 condition_results.append(llm_sql.answer(question))
+            if "llm_registry_sql" in systems:
+                condition_results.append(llm_registry_sql.answer(question))
             if "metric_grounded" in systems:
                 condition_results.append(metric_grounded.answer(question))
             for result in condition_results:
