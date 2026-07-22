@@ -40,3 +40,6 @@ venv/
 # Local environment files.
 .env
 .env.*
+
+# Applicant-internal planning notes (never publish)
+applicant_private/
