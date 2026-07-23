@@ -37,7 +37,9 @@ def load_gold_answers(output_dir: Path) -> dict[str, dict]:
     answers: dict[str, dict] = {}
     for path in sorted(output_dir.glob("*.json")):
         payload = json.loads(path.read_text())
-        answers[payload["question_id"]] = payload
+        # Skip non-gold files in the directory (e.g. a manifest.json list).
+        if isinstance(payload, dict) and "question_id" in payload:
+            answers[payload["question_id"]] = payload
     return answers
 
 
