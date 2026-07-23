@@ -1,0 +1,211 @@
+questions:
+  - id: N001
+    difficulty: simple
+    category: volume
+    question: Which agencies receive the most service requests?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N001.sql
+  - id: N002
+    difficulty: simple
+    category: volume
+    question: Which boroughs receive the most service requests?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N002.sql
+  - id: N003
+    difficulty: simple
+    category: volume
+    question: What are the most common complaint types?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N003.sql
+  - id: N004
+    difficulty: simple
+    category: status
+    question: What is the distribution of request status values?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N004.sql
+  - id: N005
+    difficulty: simple
+    category: channel
+    question: What is the intake channel mix?
+    metrics: [channel_mix]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N005.sql
+  - id: N006
+    difficulty: simple
+    category: response
+    question: What is the median response time in hours by borough?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N006.sql
+  - id: N007
+    difficulty: simple
+    category: resolution
+    question: What is the resolution rate by borough?
+    metrics: [resolution_rate]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N007.sql
+  - id: N008
+    difficulty: simple
+    category: resolution
+    question: Which complaint types have the highest resolution rate?
+    metrics: [resolution_rate]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N008.sql
+  - id: N009
+    difficulty: simple
+    category: volume
+    question: How many distinct complaint types does each agency handle?
+    metrics: [request_volume]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N009.sql
+  - id: N010
+    difficulty: simple
+    category: response
+    question: What is the median response time by agency?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N010.sql
+  - id: N011
+    difficulty: intermediate
+    category: per_capita
+    question: Which boroughs have the most requests per 1,000 residents?
+    metrics: [requests_per_1k_residents]
+    source_tables: [fact_service_request, dim_borough]
+    gold_sql: benchmark/nyc311/gold_sql/N011.sql
+  - id: N012
+    difficulty: intermediate
+    category: response
+    question: Which complaint types take longest to resolve?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N012.sql
+  - id: N013
+    difficulty: intermediate
+    category: share
+    question: What share of all requests does each agency handle?
+    metrics: [agency_share]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N013.sql
+  - id: N014
+    difficulty: intermediate
+    category: response
+    question: How do median and mean response times compare by borough?
+    metrics: [median_response_hours, mean_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N014.sql
+  - id: N015
+    difficulty: intermediate
+    category: response
+    question: Which agencies have the slowest mean response time?
+    metrics: [mean_response_hours]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N015.sql
+  - id: N016
+    difficulty: intermediate
+    category: trend
+    question: How does request volume vary month over month?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N016.sql
+  - id: N017
+    difficulty: intermediate
+    category: status
+    question: Which complaint types have the most unresolved requests?
+    metrics: [request_volume, resolution_rate]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N017.sql
+  - id: N018
+    difficulty: intermediate
+    category: per_capita
+    question: Which boroughs have the most noise complaints per 1,000 residents?
+    metrics: [requests_per_1k_residents]
+    source_tables: [fact_service_request, dim_borough]
+    gold_sql: benchmark/nyc311/gold_sql/N018.sql
+  - id: N019
+    difficulty: intermediate
+    category: channel
+    question: Which boroughs have the highest share of requests made online?
+    metrics: [channel_mix]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N019.sql
+  - id: N020
+    difficulty: intermediate
+    category: resolution
+    question: What is the resolution rate by agency?
+    metrics: [resolution_rate]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N020.sql
+  - id: N021
+    difficulty: intermediate
+    category: volume
+    question: What is the most common complaint type in each borough?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N021.sql
+  - id: N022
+    difficulty: intermediate
+    category: response
+    question: What is the median response time by intake channel?
+    metrics: [median_response_hours, channel_mix]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N022.sql
+  - id: N023
+    difficulty: hard
+    category: response
+    question: Do noise complaints resolve faster than heat/hot-water complaints?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N023.sql
+  - id: N024
+    difficulty: hard
+    category: per_capita
+    question: Which boroughs have high per-capita volume but low resolution rates?
+    metrics: [requests_per_1k_residents, resolution_rate]
+    source_tables: [fact_service_request, dim_borough]
+    gold_sql: benchmark/nyc311/gold_sql/N024.sql
+  - id: N025
+    difficulty: hard
+    category: response
+    question: For the five highest-volume complaint types, what is the median response time by borough?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N025.sql
+  - id: N026
+    difficulty: hard
+    category: response
+    question: Which agency and borough combinations have the slowest median response?
+    metrics: [median_response_hours]
+    source_tables: [fact_service_request, dim_agency]
+    gold_sql: benchmark/nyc311/gold_sql/N026.sql
+  - id: N027
+    difficulty: hard
+    category: trend
+    question: What is the month-over-month change in request volume?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N027.sql
+  - id: N028
+    difficulty: hard
+    category: response
+    question: Which complaint types have the widest gap between mean and median response time?
+    metrics: [mean_response_hours, median_response_hours]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N028.sql
+  - id: N029
+    difficulty: hard
+    category: volume
+    question: Which incident addresses generate the most repeat requests?
+    metrics: [request_volume]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N029.sql
+  - id: N030
+    difficulty: hard
+    category: status
+    question: What share of requests is unresolved by borough?
+    metrics: [resolution_rate]
+    source_tables: [fact_service_request]
+    gold_sql: benchmark/nyc311/gold_sql/N030.sql

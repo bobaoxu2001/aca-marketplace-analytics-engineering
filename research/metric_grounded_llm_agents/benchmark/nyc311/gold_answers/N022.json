@@ -1,0 +1,33 @@
+{
+  "question_id": "N022",
+  "question": "What is the median response time by intake channel?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N022.sql",
+  "row_count": 5,
+  "rows": [
+    {
+      "open_data_channel_type": "UNKNOWN",
+      "median_response_hours": 71.0,
+      "closed_rows": 260209
+    },
+    {
+      "open_data_channel_type": "PHONE",
+      "median_response_hours": 29.0,
+      "closed_rows": 1051400
+    },
+    {
+      "open_data_channel_type": "ONLINE",
+      "median_response_hours": 5.0,
+      "closed_rows": 1360244
+    },
+    {
+      "open_data_channel_type": "OTHER",
+      "median_response_hours": 3.0,
+      "closed_rows": 13
+    },
+    {
+      "open_data_channel_type": "MOBILE",
+      "median_response_hours": 2.0,
+      "closed_rows": 719940
+    }
+  ]
+}

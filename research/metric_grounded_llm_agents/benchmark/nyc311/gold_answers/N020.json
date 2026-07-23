@@ -1,0 +1,73 @@
+{
+  "question_id": "N020",
+  "question": "What is the resolution rate by agency?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N020.sql",
+  "row_count": 13,
+  "rows": [
+    {
+      "agency": "DHS",
+      "resolution_rate": 1.0,
+      "request_rows": 51990
+    },
+    {
+      "agency": "DOE",
+      "resolution_rate": 1.0,
+      "request_rows": 1751
+    },
+    {
+      "agency": "NYPD",
+      "resolution_rate": 0.9999425090596679,
+      "request_rows": 1548070
+    },
+    {
+      "agency": "DSNY",
+      "resolution_rate": 0.9957374671735978,
+      "request_rows": 306156
+    },
+    {
+      "agency": "HPD",
+      "resolution_rate": 0.9951343934751004,
+      "request_rows": 733927
+    },
+    {
+      "agency": "DEP",
+      "resolution_rate": 0.988443679240361,
+      "request_rows": 191670
+    },
+    {
+      "agency": "DOB",
+      "resolution_rate": 0.9830572765204197,
+      "request_rows": 102817
+    },
+    {
+      "agency": "DOT",
+      "resolution_rate": 0.9748690230314394,
+      "request_rows": 204807
+    },
+    {
+      "agency": "DCWP",
+      "resolution_rate": 0.9639567480977173,
+      "request_rows": 19976
+    },
+    {
+      "agency": "DOHMH",
+      "resolution_rate": 0.9540892378018484,
+      "request_rows": 90567
+    },
+    {
+      "agency": "TLC",
+      "resolution_rate": 0.9242372118870571,
+      "request_rows": 37789
+    },
+    {
+      "agency": "DPR",
+      "resolution_rate": 0.8995419273730908,
+      "request_rows": 138406
+    },
+    {
+      "agency": "EDC",
+      "resolution_rate": 0.8671825977828906,
+      "request_rows": 28686
+    }
+  ]
+}

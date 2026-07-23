@@ -1,0 +1,18 @@
+{
+  "question_id": "N023",
+  "question": "Do noise complaints resolve faster than heat/hot-water complaints?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N023.sql",
+  "row_count": 2,
+  "rows": [
+    {
+      "category": "Noise",
+      "median_response_hours": 1.0,
+      "closed_rows": 749347
+    },
+    {
+      "category": "Heat/Hot Water",
+      "median_response_hours": 37.0,
+      "closed_rows": 262648
+    }
+  ]
+}

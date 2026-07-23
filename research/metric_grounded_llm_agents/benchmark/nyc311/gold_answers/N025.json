@@ -1,0 +1,38 @@
+{
+  "question_id": "N025",
+  "question": "For the five highest-volume complaint types, what is the median response time by borough?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N025.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "BRONX",
+      "median_response_hours": 3.0,
+      "closed_rows": 382172
+    },
+    {
+      "borough": "QUEENS",
+      "median_response_hours": 2.0,
+      "closed_rows": 352934
+    },
+    {
+      "borough": "BROOKLYN",
+      "median_response_hours": 1.0,
+      "closed_rows": 457847
+    },
+    {
+      "borough": "MANHATTAN",
+      "median_response_hours": 1.0,
+      "closed_rows": 253436
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 1.0,
+      "closed_rows": 33501
+    },
+    {
+      "borough": "UNSPECIFIED",
+      "median_response_hours": 1.0,
+      "closed_rows": 57
+    }
+  ]
+}

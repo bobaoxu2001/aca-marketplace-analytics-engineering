@@ -1,0 +1,108 @@
+{
+  "question_id": "N008",
+  "question": "Which complaint types have the highest resolution rate?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N008.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "complaint_type": "Abandoned Bike",
+      "resolution_rate": 1.0,
+      "request_rows": 2508
+    },
+    {
+      "complaint_type": "Air Quality",
+      "resolution_rate": 1.0,
+      "request_rows": 9269
+    },
+    {
+      "complaint_type": "Animal in a Park",
+      "resolution_rate": 1.0,
+      "request_rows": 5560
+    },
+    {
+      "complaint_type": "Animal-Abuse",
+      "resolution_rate": 1.0,
+      "request_rows": 9655
+    },
+    {
+      "complaint_type": "Bike/Roller/Skate Chronic",
+      "resolution_rate": 1.0,
+      "request_rows": 4353
+    },
+    {
+      "complaint_type": "Blocked Driveway",
+      "resolution_rate": 1.0,
+      "request_rows": 170192
+    },
+    {
+      "complaint_type": "Broken Parking Meter",
+      "resolution_rate": 1.0,
+      "request_rows": 2611
+    },
+    {
+      "complaint_type": "Bus Stop Shelter Complaint",
+      "resolution_rate": 1.0,
+      "request_rows": 1097
+    },
+    {
+      "complaint_type": "Curb Condition",
+      "resolution_rate": 1.0,
+      "request_rows": 7041
+    },
+    {
+      "complaint_type": "Day Care",
+      "resolution_rate": 1.0,
+      "request_rows": 1536
+    },
+    {
+      "complaint_type": "Dead Animal",
+      "resolution_rate": 1.0,
+      "request_rows": 9980
+    },
+    {
+      "complaint_type": "Drinking",
+      "resolution_rate": 1.0,
+      "request_rows": 4465
+    },
+    {
+      "complaint_type": "Drug Activity",
+      "resolution_rate": 1.0,
+      "request_rows": 23295
+    },
+    {
+      "complaint_type": "Dumpster Complaint",
+      "resolution_rate": 1.0,
+      "request_rows": 1837
+    },
+    {
+      "complaint_type": "Encampment",
+      "resolution_rate": 1.0,
+      "request_rows": 42916
+    },
+    {
+      "complaint_type": "Highway Condition",
+      "resolution_rate": 1.0,
+      "request_rows": 3562
+    },
+    {
+      "complaint_type": "Homeless Person Assistance",
+      "resolution_rate": 1.0,
+      "request_rows": 39566
+    },
+    {
+      "complaint_type": "Illegal Posting",
+      "resolution_rate": 1.0,
+      "request_rows": 4519
+    },
+    {
+      "complaint_type": "Litter Basket Request",
+      "resolution_rate": 1.0,
+      "request_rows": 3821
+    },
+    {
+      "complaint_type": "Lost Property",
+      "resolution_rate": 1.0,
+      "request_rows": 6362
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "question_id": "N016",
+  "question": "How does request volume vary month over month?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N016.sql",
+  "row_count": 12,
+  "rows": [
+    {
+      "month": "2024-01-01T00:00:00",
+      "request_count": 287186
+    },
+    {
+      "month": "2024-02-01T00:00:00",
+      "request_count": 240436
+    },
+    {
+      "month": "2024-03-01T00:00:00",
+      "request_count": 266604
+    },
+    {
+      "month": "2024-04-01T00:00:00",
+      "request_count": 267565
+    },
+    {
+      "month": "2024-05-01T00:00:00",
+      "request_count": 283982
+    },
+    {
+      "month": "2024-06-01T00:00:00",
+      "request_count": 306200
+    },
+    {
+      "month": "2024-07-01T00:00:00",
+      "request_count": 298936
+    },
+    {
+      "month": "2024-08-01T00:00:00",
+      "request_count": 284823
+    },
+    {
+      "month": "2024-09-01T00:00:00",
+      "request_count": 306770
+    },
+    {
+      "month": "2024-10-01T00:00:00",
+      "request_count": 306803
+    },
+    {
+      "month": "2024-11-01T00:00:00",
+      "request_count": 293516
+    },
+    {
+      "month": "2024-12-01T00:00:00",
+      "request_count": 313949
+    }
+  ]
+}

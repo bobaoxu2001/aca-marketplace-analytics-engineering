@@ -1,0 +1,48 @@
+{
+  "question_id": "N003",
+  "question": "What are the most common complaint types?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N003.sql",
+  "row_count": 10,
+  "rows": [
+    {
+      "complaint_type": "Illegal Parking",
+      "request_count": 505728
+    },
+    {
+      "complaint_type": "Noise - Residential",
+      "request_count": 379296
+    },
+    {
+      "complaint_type": "HEAT/HOT WATER",
+      "request_count": 264750
+    },
+    {
+      "complaint_type": "Blocked Driveway",
+      "request_count": 170192
+    },
+    {
+      "complaint_type": "Noise - Street/Sidewalk",
+      "request_count": 163001
+    },
+    {
+      "complaint_type": "UNSANITARY CONDITION",
+      "request_count": 120854
+    },
+    {
+      "complaint_type": "Street Condition",
+      "request_count": 71159
+    },
+    {
+      "complaint_type": "Abandoned Vehicle",
+      "request_count": 70326
+    },
+    {
+      "complaint_type": "Noise - Commercial",
+      "request_count": 68347
+    },
+    {
+      "complaint_type": "PLUMBING",
+      "request_count": 65904
+    }
+  ]
+}

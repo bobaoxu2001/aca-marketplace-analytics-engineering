@@ -1,0 +1,108 @@
+{
+  "question_id": "N012",
+  "question": "Which complaint types take longest to resolve?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N012.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "complaint_type": "New Tree Request",
+      "median_response_hours": 8143.0,
+      "closed_rows": 20952
+    },
+    {
+      "complaint_type": "Lot Condition",
+      "median_response_hours": 4624.0,
+      "closed_rows": 1835
+    },
+    {
+      "complaint_type": "Day Care",
+      "median_response_hours": 4587.0,
+      "closed_rows": 1536
+    },
+    {
+      "complaint_type": "Mobile Food Vendor",
+      "median_response_hours": 4484.0,
+      "closed_rows": 6699
+    },
+    {
+      "complaint_type": "Food Establishment",
+      "median_response_hours": 3208.0,
+      "closed_rows": 12512
+    },
+    {
+      "complaint_type": "Smoking or Vaping",
+      "median_response_hours": 2962.5,
+      "closed_rows": 3590
+    },
+    {
+      "complaint_type": "Root/Sewer/Sidewalk Condition",
+      "median_response_hours": 2935.0,
+      "closed_rows": 9875
+    },
+    {
+      "complaint_type": "Building/Use",
+      "median_response_hours": 2317.0,
+      "closed_rows": 20948
+    },
+    {
+      "complaint_type": "Taxi Complaint",
+      "median_response_hours": 2102.0,
+      "closed_rows": 6532
+    },
+    {
+      "complaint_type": "For Hire Vehicle Complaint",
+      "median_response_hours": 2045.0,
+      "closed_rows": 21519
+    },
+    {
+      "complaint_type": "Overgrown Tree/Branches",
+      "median_response_hours": 875.0,
+      "closed_rows": 17715
+    },
+    {
+      "complaint_type": "Noise - Helicopter",
+      "median_response_hours": 841.0,
+      "closed_rows": 24876
+    },
+    {
+      "complaint_type": "Elevator",
+      "median_response_hours": 728.0,
+      "closed_rows": 20864
+    },
+    {
+      "complaint_type": "School Maintenance",
+      "median_response_hours": 596.0,
+      "closed_rows": 1751
+    },
+    {
+      "complaint_type": "Special Projects Inspection Team (SPIT)",
+      "median_response_hours": 587.0,
+      "closed_rows": 4451
+    },
+    {
+      "complaint_type": "Maintenance or Facility",
+      "median_response_hours": 478.0,
+      "closed_rows": 25941
+    },
+    {
+      "complaint_type": "Dead/Dying Tree",
+      "median_response_hours": 354.0,
+      "closed_rows": 8071
+    },
+    {
+      "complaint_type": "Graffiti",
+      "median_response_hours": 326.0,
+      "closed_rows": 22835
+    },
+    {
+      "complaint_type": "OUTSIDE BUILDING",
+      "median_response_hours": 326.0,
+      "closed_rows": 1299
+    },
+    {
+      "complaint_type": "Plumbing",
+      "median_response_hours": 325.0,
+      "closed_rows": 3146
+    }
+  ]
+}

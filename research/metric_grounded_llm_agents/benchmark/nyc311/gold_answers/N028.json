@@ -1,0 +1,148 @@
+{
+  "question_id": "N028",
+  "question": "Which complaint types have the widest gap between mean and median response time?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N028.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "complaint_type": "Dead/Dying Tree",
+      "mean_response_hours": 2216.4730516664604,
+      "median_response_hours": 354.0,
+      "skew_gap": 1862.4730516664604,
+      "closed_rows": 8071
+    },
+    {
+      "complaint_type": "Overgrown Tree/Branches",
+      "mean_response_hours": 2568.865255433249,
+      "median_response_hours": 875.0,
+      "skew_gap": 1693.8652554332489,
+      "closed_rows": 17715
+    },
+    {
+      "complaint_type": "Maintenance or Facility",
+      "mean_response_hours": 1835.1849196253036,
+      "median_response_hours": 478.0,
+      "skew_gap": 1357.1849196253036,
+      "closed_rows": 25941
+    },
+    {
+      "complaint_type": "Building/Use",
+      "mean_response_hours": 3623.3927343899177,
+      "median_response_hours": 2317.0,
+      "skew_gap": 1306.3927343899177,
+      "closed_rows": 20948
+    },
+    {
+      "complaint_type": "Special Projects Inspection Team (SPIT)",
+      "mean_response_hours": 1888.0959334980903,
+      "median_response_hours": 587.0,
+      "skew_gap": 1301.0959334980903,
+      "closed_rows": 4451
+    },
+    {
+      "complaint_type": "Plumbing",
+      "mean_response_hours": 1597.6611570247933,
+      "median_response_hours": 325.0,
+      "skew_gap": 1272.6611570247933,
+      "closed_rows": 3146
+    },
+    {
+      "complaint_type": "General Construction/Plumbing",
+      "mean_response_hours": 1241.2767304103215,
+      "median_response_hours": 83.0,
+      "skew_gap": 1158.2767304103215,
+      "closed_rows": 36971
+    },
+    {
+      "complaint_type": "Damaged Tree",
+      "mean_response_hours": 1182.4472769409037,
+      "median_response_hours": 104.0,
+      "skew_gap": 1078.4472769409037,
+      "closed_rows": 25890
+    },
+    {
+      "complaint_type": "School Maintenance",
+      "mean_response_hours": 1393.9880068532268,
+      "median_response_hours": 596.0,
+      "skew_gap": 797.9880068532268,
+      "closed_rows": 1751
+    },
+    {
+      "complaint_type": "Illegal Tree Damage",
+      "mean_response_hours": 1087.9282682512733,
+      "median_response_hours": 303.0,
+      "skew_gap": 784.9282682512733,
+      "closed_rows": 4712
+    },
+    {
+      "complaint_type": "Street Light Condition",
+      "mean_response_hours": 880.899521032903,
+      "median_response_hours": 141.0,
+      "skew_gap": 739.899521032903,
+      "closed_rows": 28812
+    },
+    {
+      "complaint_type": "Food Poisoning",
+      "mean_response_hours": 699.8456026058632,
+      "median_response_hours": 48.0,
+      "skew_gap": 651.8456026058632,
+      "closed_rows": 3070
+    },
+    {
+      "complaint_type": "Street Sign - Missing",
+      "mean_response_hours": 751.3275659824047,
+      "median_response_hours": 116.0,
+      "skew_gap": 635.3275659824047,
+      "closed_rows": 3410
+    },
+    {
+      "complaint_type": "Lot Condition",
+      "mean_response_hours": 5239.019073569482,
+      "median_response_hours": 4624.0,
+      "skew_gap": 615.0190735694823,
+      "closed_rows": 1835
+    },
+    {
+      "complaint_type": "Street Sign - Damaged",
+      "mean_response_hours": 679.4436560934892,
+      "median_response_hours": 114.0,
+      "skew_gap": 565.4436560934892,
+      "closed_rows": 4792
+    },
+    {
+      "complaint_type": "Elevator",
+      "mean_response_hours": 1272.9053393404909,
+      "median_response_hours": 728.0,
+      "skew_gap": 544.9053393404909,
+      "closed_rows": 20864
+    },
+    {
+      "complaint_type": "Root/Sewer/Sidewalk Condition",
+      "mean_response_hours": 3421.5321518987344,
+      "median_response_hours": 2935.0,
+      "skew_gap": 486.53215189873436,
+      "closed_rows": 9875
+    },
+    {
+      "complaint_type": "Curb Condition",
+      "mean_response_hours": 715.991194432609,
+      "median_response_hours": 262.0,
+      "skew_gap": 453.99119443260895,
+      "closed_rows": 7041
+    },
+    {
+      "complaint_type": "Noise - Helicopter",
+      "mean_response_hours": 1282.926796912687,
+      "median_response_hours": 841.0,
+      "skew_gap": 441.926796912687,
+      "closed_rows": 24876
+    },
+    {
+      "complaint_type": "Smoking or Vaping",
+      "mean_response_hours": 3337.1069637883006,
+      "median_response_hours": 2962.5,
+      "skew_gap": 374.6069637883006,
+      "closed_rows": 3590
+    }
+  ]
+}

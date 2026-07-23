@@ -1,0 +1,3 @@
+select complaint_type, count(*) as request_count
+from marts.fact_service_request
+group by 1 order by request_count desc, complaint_type limit 10;

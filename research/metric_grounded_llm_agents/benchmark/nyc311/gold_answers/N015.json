@@ -1,0 +1,86 @@
+{
+  "question_id": "N015",
+  "question": "Which agencies have the slowest mean response time?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N015.sql",
+  "row_count": 13,
+  "rows": [
+    {
+      "agency": "DPR",
+      "mean_response_hours": 2790.5773147850673,
+      "median_response_hours": 600.0,
+      "closed_rows": 124504
+    },
+    {
+      "agency": "TLC",
+      "mean_response_hours": 1890.748067342381,
+      "median_response_hours": 1732.0,
+      "closed_rows": 34926
+    },
+    {
+      "agency": "DOB",
+      "mean_response_hours": 1610.2667263195774,
+      "median_response_hours": 370.0,
+      "closed_rows": 102817
+    },
+    {
+      "agency": "DOE",
+      "mean_response_hours": 1393.9880068532268,
+      "median_response_hours": 596.0,
+      "closed_rows": 1751
+    },
+    {
+      "agency": "EDC",
+      "mean_response_hours": 1282.926796912687,
+      "median_response_hours": 841.0,
+      "closed_rows": 24876
+    },
+    {
+      "agency": "DOHMH",
+      "mean_response_hours": 1190.5215836910368,
+      "median_response_hours": 24.0,
+      "closed_rows": 86431
+    },
+    {
+      "agency": "DCWP",
+      "mean_response_hours": 387.5550420604424,
+      "median_response_hours": 93.0,
+      "closed_rows": 19258
+    },
+    {
+      "agency": "HPD",
+      "mean_response_hours": 340.1315375115354,
+      "median_response_hours": 92.0,
+      "closed_rows": 730362
+    },
+    {
+      "agency": "DOT",
+      "mean_response_hours": 300.87379602124406,
+      "median_response_hours": 46.0,
+      "closed_rows": 199962
+    },
+    {
+      "agency": "DEP",
+      "mean_response_hours": 131.79559116121234,
+      "median_response_hours": 26.0,
+      "closed_rows": 189483
+    },
+    {
+      "agency": "DSNY",
+      "mean_response_hours": 126.63596045216273,
+      "median_response_hours": 30.0,
+      "closed_rows": 304846
+    },
+    {
+      "agency": "DHS",
+      "mean_response_hours": 117.70671522691002,
+      "median_response_hours": 5.0,
+      "closed_rows": 24437
+    },
+    {
+      "agency": "NYPD",
+      "mean_response_hours": 2.7057875819442327,
+      "median_response_hours": 1.0,
+      "closed_rows": 1548004
+    }
+  ]
+}

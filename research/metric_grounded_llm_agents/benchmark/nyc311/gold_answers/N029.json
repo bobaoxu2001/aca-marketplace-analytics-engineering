@@ -1,0 +1,108 @@
+{
+  "question_id": "N029",
+  "question": "Which incident addresses generate the most repeat requests?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N029.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "incident_address": "655 EAST  230 STREET",
+      "borough": "BRONX",
+      "request_count": 56594
+    },
+    {
+      "incident_address": "78-15 PARSONS BOULEVARD",
+      "borough": "QUEENS",
+      "request_count": 6912
+    },
+    {
+      "incident_address": "82-68 164 STREET",
+      "borough": "QUEENS",
+      "request_count": 6899
+    },
+    {
+      "incident_address": "661 EAST  230 STREET",
+      "borough": "BRONX",
+      "request_count": 6068
+    },
+    {
+      "incident_address": "158-33 78 AVENUE",
+      "borough": "QUEENS",
+      "request_count": 4663
+    },
+    {
+      "incident_address": "1465 WASHINGTON AVENUE",
+      "borough": "BRONX",
+      "request_count": 4146
+    },
+    {
+      "incident_address": "601 WEST  115 STREET",
+      "borough": "MANHATTAN",
+      "request_count": 4139
+    },
+    {
+      "incident_address": "31-35 CRESCENT STREET",
+      "borough": "QUEENS",
+      "request_count": 3624
+    },
+    {
+      "incident_address": "516 SCHROEDERS AVENUE",
+      "borough": "BROOKLYN",
+      "request_count": 3590
+    },
+    {
+      "incident_address": "957 WOODYCREST AVENUE",
+      "borough": "BRONX",
+      "request_count": 3224
+    },
+    {
+      "incident_address": "191 UNION STREET",
+      "borough": "BROOKLYN",
+      "request_count": 3015
+    },
+    {
+      "incident_address": "177 SANDS STREET",
+      "borough": "BROOKLYN",
+      "request_count": 2927
+    },
+    {
+      "incident_address": "BROADWAY",
+      "borough": "MANHATTAN",
+      "request_count": 2711
+    },
+    {
+      "incident_address": "159-06 UNION TURNPIKE",
+      "borough": "QUEENS",
+      "request_count": 2664
+    },
+    {
+      "incident_address": "2176 TIEBOUT AVENUE",
+      "borough": "BRONX",
+      "request_count": 2637
+    },
+    {
+      "incident_address": "233 LANDING ROAD",
+      "borough": "BRONX",
+      "request_count": 2631
+    },
+    {
+      "incident_address": "526 SCHROEDERS AVENUE",
+      "borough": "BROOKLYN",
+      "request_count": 2435
+    },
+    {
+      "incident_address": "2400 7 AVENUE",
+      "borough": "MANHATTAN",
+      "request_count": 2306
+    },
+    {
+      "incident_address": "88-12 151 AVENUE",
+      "borough": "QUEENS",
+      "request_count": 2182
+    },
+    {
+      "incident_address": "1000 5 AVENUE",
+      "borough": "MANHATTAN",
+      "request_count": 2139
+    }
+  ]
+}

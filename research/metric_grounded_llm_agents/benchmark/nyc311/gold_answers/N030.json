@@ -1,0 +1,44 @@
+{
+  "question_id": "N030",
+  "question": "What share of requests is unresolved by borough?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N030.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "UNSPECIFIED",
+      "unresolved_count": 91,
+      "request_rows": 2638,
+      "unresolved_share": 0.03449583017437453
+    },
+    {
+      "borough": "QUEENS",
+      "unresolved_count": 13871,
+      "request_rows": 827070,
+      "unresolved_share": 0.016771252735560474
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "unresolved_count": 2003,
+      "request_rows": 121197,
+      "unresolved_share": 0.01652681171976204
+    },
+    {
+      "borough": "MANHATTAN",
+      "unresolved_count": 8084,
+      "request_rows": 722755,
+      "unresolved_share": 0.011184979695747522
+    },
+    {
+      "borough": "BROOKLYN",
+      "unresolved_count": 11544,
+      "request_rows": 1045072,
+      "unresolved_share": 0.011046128879158566
+    },
+    {
+      "borough": "BRONX",
+      "unresolved_count": 3940,
+      "request_rows": 738038,
+      "unresolved_share": 0.005338478506526764
+    }
+  ]
+}

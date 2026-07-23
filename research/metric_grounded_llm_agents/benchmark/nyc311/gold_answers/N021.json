@@ -1,0 +1,38 @@
+{
+  "question_id": "N021",
+  "question": "What is the most common complaint type in each borough?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N021.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "BROOKLYN",
+      "complaint_type": "Illegal Parking",
+      "request_count": 193543
+    },
+    {
+      "borough": "QUEENS",
+      "complaint_type": "Illegal Parking",
+      "request_count": 149764
+    },
+    {
+      "borough": "BRONX",
+      "complaint_type": "Noise - Residential",
+      "request_count": 143171
+    },
+    {
+      "borough": "MANHATTAN",
+      "complaint_type": "Illegal Parking",
+      "request_count": 72960
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "complaint_type": "Illegal Parking",
+      "request_count": 15073
+    },
+    {
+      "borough": "UNSPECIFIED",
+      "complaint_type": "Ferry Inquiry",
+      "request_count": 327
+    }
+  ]
+}

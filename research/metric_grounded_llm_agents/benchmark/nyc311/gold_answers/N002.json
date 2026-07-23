@@ -1,0 +1,32 @@
+{
+  "question_id": "N002",
+  "question": "Which boroughs receive the most service requests?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N002.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "BROOKLYN",
+      "request_count": 1045072
+    },
+    {
+      "borough": "QUEENS",
+      "request_count": 827070
+    },
+    {
+      "borough": "BRONX",
+      "request_count": 738038
+    },
+    {
+      "borough": "MANHATTAN",
+      "request_count": 722755
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "request_count": 121197
+    },
+    {
+      "borough": "UNSPECIFIED",
+      "request_count": 2638
+    }
+  ]
+}

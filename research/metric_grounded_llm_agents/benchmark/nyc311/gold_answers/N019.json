@@ -1,0 +1,38 @@
+{
+  "question_id": "N019",
+  "question": "Which boroughs have the highest share of requests made online?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N019.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "MANHATTAN",
+      "request_count": 722755,
+      "online_share": 0.47167158995786956
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "request_count": 121197,
+      "online_share": 0.4378243685899816
+    },
+    {
+      "borough": "QUEENS",
+      "request_count": 827070,
+      "online_share": 0.39951394682433167
+    },
+    {
+      "borough": "BROOKLYN",
+      "request_count": 1045072,
+      "online_share": 0.39443789518808275
+    },
+    {
+      "borough": "UNSPECIFIED",
+      "request_count": 2638,
+      "online_share": 0.37680060652009095
+    },
+    {
+      "borough": "BRONX",
+      "request_count": 738038,
+      "online_share": 0.3332646828483086
+    }
+  ]
+}

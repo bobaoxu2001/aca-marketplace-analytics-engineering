@@ -1,0 +1,28 @@
+{
+  "question_id": "N005",
+  "question": "What is the intake channel mix?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N005.sql",
+  "row_count": 5,
+  "rows": [
+    {
+      "open_data_channel_type": "ONLINE",
+      "request_count": 1383564
+    },
+    {
+      "open_data_channel_type": "PHONE",
+      "request_count": 1068375
+    },
+    {
+      "open_data_channel_type": "MOBILE",
+      "request_count": 737832
+    },
+    {
+      "open_data_channel_type": "UNKNOWN",
+      "request_count": 266985
+    },
+    {
+      "open_data_channel_type": "OTHER",
+      "request_count": 14
+    }
+  ]
+}

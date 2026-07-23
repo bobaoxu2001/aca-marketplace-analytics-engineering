@@ -1,0 +1,38 @@
+{
+  "question_id": "N011",
+  "question": "Which boroughs have the most requests per 1,000 residents?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N011.sql",
+  "row_count": 5,
+  "rows": [
+    {
+      "borough": "BRONX",
+      "request_count": 738038,
+      "population_2020": 1472654,
+      "requests_per_1k": 501.1618479289772
+    },
+    {
+      "borough": "MANHATTAN",
+      "request_count": 722755,
+      "population_2020": 1694251,
+      "requests_per_1k": 426.5926359199434
+    },
+    {
+      "borough": "BROOKLYN",
+      "request_count": 1045072,
+      "population_2020": 2736074,
+      "requests_per_1k": 381.96042943282964
+    },
+    {
+      "borough": "QUEENS",
+      "request_count": 827070,
+      "population_2020": 2405464,
+      "requests_per_1k": 343.8297143503291
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "request_count": 121197,
+      "population_2020": 495747,
+      "requests_per_1k": 244.47349151885942
+    }
+  ]
+}

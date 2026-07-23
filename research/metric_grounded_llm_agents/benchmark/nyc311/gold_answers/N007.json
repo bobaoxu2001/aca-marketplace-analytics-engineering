@@ -1,0 +1,38 @@
+{
+  "question_id": "N007",
+  "question": "What is the resolution rate by borough?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N007.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "BRONX",
+      "resolution_rate": 0.9946615214934732,
+      "request_rows": 738038
+    },
+    {
+      "borough": "BROOKLYN",
+      "resolution_rate": 0.9889538711208414,
+      "request_rows": 1045072
+    },
+    {
+      "borough": "MANHATTAN",
+      "resolution_rate": 0.9888150203042525,
+      "request_rows": 722755
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "resolution_rate": 0.983473188280238,
+      "request_rows": 121197
+    },
+    {
+      "borough": "QUEENS",
+      "resolution_rate": 0.9832287472644395,
+      "request_rows": 827070
+    },
+    {
+      "borough": "UNSPECIFIED",
+      "resolution_rate": 0.9655041698256255,
+      "request_rows": 2638
+    }
+  ]
+}

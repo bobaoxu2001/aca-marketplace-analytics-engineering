@@ -1,0 +1,83 @@
+{
+  "question_id": "N009",
+  "question": "How many distinct complaint types does each agency handle?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N009.sql",
+  "row_count": 15,
+  "rows": [
+    {
+      "agency": "DOHMH",
+      "distinct_complaint_types": 38,
+      "request_rows": 90567
+    },
+    {
+      "agency": "DOT",
+      "distinct_complaint_types": 33,
+      "request_rows": 204807
+    },
+    {
+      "agency": "DSNY",
+      "distinct_complaint_types": 29,
+      "request_rows": 306156
+    },
+    {
+      "agency": "DOB",
+      "distinct_complaint_types": 24,
+      "request_rows": 102817
+    },
+    {
+      "agency": "NYPD",
+      "distinct_complaint_types": 23,
+      "request_rows": 1548070
+    },
+    {
+      "agency": "HPD",
+      "distinct_complaint_types": 13,
+      "request_rows": 733927
+    },
+    {
+      "agency": "TLC",
+      "distinct_complaint_types": 12,
+      "request_rows": 37789
+    },
+    {
+      "agency": "DEP",
+      "distinct_complaint_types": 11,
+      "request_rows": 191670
+    },
+    {
+      "agency": "DPR",
+      "distinct_complaint_types": 11,
+      "request_rows": 138406
+    },
+    {
+      "agency": "DHS",
+      "distinct_complaint_types": 2,
+      "request_rows": 51990
+    },
+    {
+      "agency": "OTI",
+      "distinct_complaint_types": 2,
+      "request_rows": 157
+    },
+    {
+      "agency": "3-1-1",
+      "distinct_complaint_types": 1,
+      "request_rows": 1
+    },
+    {
+      "agency": "DCWP",
+      "distinct_complaint_types": 1,
+      "request_rows": 19976
+    },
+    {
+      "agency": "DOE",
+      "distinct_complaint_types": 1,
+      "request_rows": 1751
+    },
+    {
+      "agency": "EDC",
+      "distinct_complaint_types": 1,
+      "request_rows": 28686
+    }
+  ]
+}

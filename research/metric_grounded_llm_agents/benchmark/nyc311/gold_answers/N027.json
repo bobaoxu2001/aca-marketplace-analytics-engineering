@@ -1,0 +1,68 @@
+{
+  "question_id": "N027",
+  "question": "What is the month-over-month change in request volume?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N027.sql",
+  "row_count": 12,
+  "rows": [
+    {
+      "month": "2024-01-01T00:00:00",
+      "request_count": 287186,
+      "mom_change": null
+    },
+    {
+      "month": "2024-02-01T00:00:00",
+      "request_count": 240436,
+      "mom_change": -46750
+    },
+    {
+      "month": "2024-03-01T00:00:00",
+      "request_count": 266604,
+      "mom_change": 26168
+    },
+    {
+      "month": "2024-04-01T00:00:00",
+      "request_count": 267565,
+      "mom_change": 961
+    },
+    {
+      "month": "2024-05-01T00:00:00",
+      "request_count": 283982,
+      "mom_change": 16417
+    },
+    {
+      "month": "2024-06-01T00:00:00",
+      "request_count": 306200,
+      "mom_change": 22218
+    },
+    {
+      "month": "2024-07-01T00:00:00",
+      "request_count": 298936,
+      "mom_change": -7264
+    },
+    {
+      "month": "2024-08-01T00:00:00",
+      "request_count": 284823,
+      "mom_change": -14113
+    },
+    {
+      "month": "2024-09-01T00:00:00",
+      "request_count": 306770,
+      "mom_change": 21947
+    },
+    {
+      "month": "2024-10-01T00:00:00",
+      "request_count": 306803,
+      "mom_change": 33
+    },
+    {
+      "month": "2024-11-01T00:00:00",
+      "request_count": 293516,
+      "mom_change": -13287
+    },
+    {
+      "month": "2024-12-01T00:00:00",
+      "request_count": 313949,
+      "mom_change": 20433
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "question_id": "N024",
+  "question": "Which boroughs have high per-capita volume but low resolution rates?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N024.sql",
+  "row_count": 5,
+  "rows": [
+    {
+      "borough": "BRONX",
+      "requests_per_1k": 501.1618479289772,
+      "resolution_rate": 0.9946615214934732,
+      "request_count": 738038
+    },
+    {
+      "borough": "MANHATTAN",
+      "requests_per_1k": 426.5926359199434,
+      "resolution_rate": 0.9888150203042525,
+      "request_count": 722755
+    },
+    {
+      "borough": "BROOKLYN",
+      "requests_per_1k": 381.96042943282964,
+      "resolution_rate": 0.9889538711208414,
+      "request_count": 1045072
+    },
+    {
+      "borough": "QUEENS",
+      "requests_per_1k": 343.8297143503291,
+      "resolution_rate": 0.9832287472644395,
+      "request_count": 827070
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "requests_per_1k": 244.47349151885942,
+      "resolution_rate": 0.983473188280238,
+      "request_count": 121197
+    }
+  ]
+}

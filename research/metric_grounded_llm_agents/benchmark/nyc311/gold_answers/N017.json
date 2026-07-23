@@ -1,0 +1,108 @@
+{
+  "question_id": "N017",
+  "question": "Which complaint types have the most unresolved requests?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N017.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "complaint_type": "Damaged Tree",
+      "unresolved_count": 5833,
+      "request_rows": 31721
+    },
+    {
+      "complaint_type": "Overgrown Tree/Branches",
+      "unresolved_count": 4432,
+      "request_rows": 22147
+    },
+    {
+      "complaint_type": "Noise - Helicopter",
+      "unresolved_count": 3810,
+      "request_rows": 28686
+    },
+    {
+      "complaint_type": "HEAT/HOT WATER",
+      "unresolved_count": 2967,
+      "request_rows": 264750
+    },
+    {
+      "complaint_type": "Street Condition",
+      "unresolved_count": 2754,
+      "request_rows": 71159
+    },
+    {
+      "complaint_type": "Street Light Condition",
+      "unresolved_count": 2076,
+      "request_rows": 30881
+    },
+    {
+      "complaint_type": "Dead/Dying Tree",
+      "unresolved_count": 1931,
+      "request_rows": 10002
+    },
+    {
+      "complaint_type": "Construction Lead Dust",
+      "unresolved_count": 1335,
+      "request_rows": 1335
+    },
+    {
+      "complaint_type": "For Hire Vehicle Complaint",
+      "unresolved_count": 1275,
+      "request_rows": 22794
+    },
+    {
+      "complaint_type": "Sewer",
+      "unresolved_count": 992,
+      "request_rows": 26249
+    },
+    {
+      "complaint_type": "General Construction/Plumbing",
+      "unresolved_count": 806,
+      "request_rows": 36971
+    },
+    {
+      "complaint_type": "Water System",
+      "unresolved_count": 749,
+      "request_rows": 65789
+    },
+    {
+      "complaint_type": "Consumer Complaint",
+      "unresolved_count": 720,
+      "request_rows": 19976
+    },
+    {
+      "complaint_type": "Root/Sewer/Sidewalk Condition",
+      "unresolved_count": 663,
+      "request_rows": 10538
+    },
+    {
+      "complaint_type": "Taxi Report",
+      "unresolved_count": 661,
+      "request_rows": 663
+    },
+    {
+      "complaint_type": "Unleashed Dog",
+      "unresolved_count": 637,
+      "request_rows": 1621
+    },
+    {
+      "complaint_type": "Building/Use",
+      "unresolved_count": 569,
+      "request_rows": 20948
+    },
+    {
+      "complaint_type": "Dirty Condition",
+      "unresolved_count": 540,
+      "request_rows": 59118
+    },
+    {
+      "complaint_type": "For Hire Vehicle Report",
+      "unresolved_count": 503,
+      "request_rows": 504
+    },
+    {
+      "complaint_type": "Harboring Bees/Wasps",
+      "unresolved_count": 486,
+      "request_rows": 486
+    }
+  ]
+}

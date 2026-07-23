@@ -1,0 +1,36 @@
+{
+  "question_id": "N004",
+  "question": "What is the distribution of request status values?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N004.sql",
+  "row_count": 7,
+  "rows": [
+    {
+      "status": "Closed",
+      "request_count": 3417237
+    },
+    {
+      "status": "In Progress",
+      "request_count": 26646
+    },
+    {
+      "status": "Open",
+      "request_count": 5985
+    },
+    {
+      "status": "Pending",
+      "request_count": 3673
+    },
+    {
+      "status": "Assigned",
+      "request_count": 2475
+    },
+    {
+      "status": "Started",
+      "request_count": 655
+    },
+    {
+      "status": "Unspecified",
+      "request_count": 99
+    }
+  ]
+}

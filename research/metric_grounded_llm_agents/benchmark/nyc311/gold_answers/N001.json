@@ -1,0 +1,48 @@
+{
+  "question_id": "N001",
+  "question": "Which agencies receive the most service requests?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N001.sql",
+  "row_count": 10,
+  "rows": [
+    {
+      "agency": "NYPD",
+      "request_count": 1548070
+    },
+    {
+      "agency": "HPD",
+      "request_count": 733927
+    },
+    {
+      "agency": "DSNY",
+      "request_count": 306156
+    },
+    {
+      "agency": "DOT",
+      "request_count": 204807
+    },
+    {
+      "agency": "DEP",
+      "request_count": 191670
+    },
+    {
+      "agency": "DPR",
+      "request_count": 138406
+    },
+    {
+      "agency": "DOB",
+      "request_count": 102817
+    },
+    {
+      "agency": "DOHMH",
+      "request_count": 90567
+    },
+    {
+      "agency": "DHS",
+      "request_count": 51990
+    },
+    {
+      "agency": "TLC",
+      "request_count": 37789
+    }
+  ]
+}

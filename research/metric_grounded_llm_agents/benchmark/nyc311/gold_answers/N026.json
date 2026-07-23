@@ -1,0 +1,128 @@
+{
+  "question_id": "N026",
+  "question": "Which agency and borough combinations have the slowest median response?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N026.sql",
+  "row_count": 20,
+  "rows": [
+    {
+      "agency": "TLC",
+      "borough": "BRONX",
+      "median_response_hours": 2418.0,
+      "closed_rows": 1088
+    },
+    {
+      "agency": "TLC",
+      "borough": "BROOKLYN",
+      "median_response_hours": 2010.5,
+      "closed_rows": 4572
+    },
+    {
+      "agency": "TLC",
+      "borough": "MANHATTAN",
+      "median_response_hours": 1673.0,
+      "closed_rows": 22569
+    },
+    {
+      "agency": "TLC",
+      "borough": "QUEENS",
+      "median_response_hours": 1615.5,
+      "closed_rows": 6012
+    },
+    {
+      "agency": "TLC",
+      "borough": "UNSPECIFIED",
+      "median_response_hours": 1385.0,
+      "closed_rows": 591
+    },
+    {
+      "agency": "DOE",
+      "borough": "BROOKLYN",
+      "median_response_hours": 1373.0,
+      "closed_rows": 707
+    },
+    {
+      "agency": "DPR",
+      "borough": "BROOKLYN",
+      "median_response_hours": 1335.5,
+      "closed_rows": 41030
+    },
+    {
+      "agency": "DOB",
+      "borough": "QUEENS",
+      "median_response_hours": 1062.0,
+      "closed_rows": 27269
+    },
+    {
+      "agency": "EDC",
+      "borough": "BROOKLYN",
+      "median_response_hours": 985.5,
+      "closed_rows": 856
+    },
+    {
+      "agency": "EDC",
+      "borough": "QUEENS",
+      "median_response_hours": 919.0,
+      "closed_rows": 7655
+    },
+    {
+      "agency": "DOB",
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 817.5,
+      "closed_rows": 4236
+    },
+    {
+      "agency": "EDC",
+      "borough": "MANHATTAN",
+      "median_response_hours": 788.0,
+      "closed_rows": 15492
+    },
+    {
+      "agency": "DPR",
+      "borough": "QUEENS",
+      "median_response_hours": 592.0,
+      "closed_rows": 37955
+    },
+    {
+      "agency": "DOB",
+      "borough": "BRONX",
+      "median_response_hours": 466.0,
+      "closed_rows": 18151
+    },
+    {
+      "agency": "DPR",
+      "borough": "MANHATTAN",
+      "median_response_hours": 385.0,
+      "closed_rows": 19815
+    },
+    {
+      "agency": "DOB",
+      "borough": "BROOKLYN",
+      "median_response_hours": 207.0,
+      "closed_rows": 34084
+    },
+    {
+      "agency": "DPR",
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 173.0,
+      "closed_rows": 11780
+    },
+    {
+      "agency": "DPR",
+      "borough": "BRONX",
+      "median_response_hours": 172.0,
+      "closed_rows": 13849
+    },
+    {
+      "agency": "DCWP",
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 146.5,
+      "closed_rows": 542
+    },
+    {
+      "agency": "HPD",
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 134.0,
+      "closed_rows": 11948
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "question_id": "N013",
+  "question": "What share of all requests does each agency handle?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N013.sql",
+  "row_count": 15,
+  "rows": [
+    {
+      "agency": "NYPD",
+      "request_count": 1548070,
+      "request_share": 0.44783714276622394
+    },
+    {
+      "agency": "HPD",
+      "request_count": 733927,
+      "request_share": 0.21231583241002439
+    },
+    {
+      "agency": "DSNY",
+      "request_count": 306156,
+      "request_share": 0.08856707272974482
+    },
+    {
+      "agency": "DOT",
+      "request_count": 204807,
+      "request_share": 0.059248084194204416
+    },
+    {
+      "agency": "DEP",
+      "request_count": 191670,
+      "request_share": 0.055447715642058915
+    },
+    {
+      "agency": "DPR",
+      "request_count": 138406,
+      "request_share": 0.04003911165625714
+    },
+    {
+      "agency": "DOB",
+      "request_count": 102817,
+      "request_share": 0.029743662436320612
+    },
+    {
+      "agency": "DOHMH",
+      "request_count": 90567,
+      "request_share": 0.026199891806513016
+    },
+    {
+      "agency": "DHS",
+      "request_count": 51990,
+      "request_share": 0.015040051840301785
+    },
+    {
+      "agency": "TLC",
+      "request_count": 37789,
+      "request_share": 0.01093188149631014
+    },
+    {
+      "agency": "EDC",
+      "request_count": 28686,
+      "request_share": 0.008298498309115157
+    },
+    {
+      "agency": "DCWP",
+      "request_count": 19976,
+      "request_share": 0.0057788050694723685
+    },
+    {
+      "agency": "DOE",
+      "request_count": 1751,
+      "request_share": 0.0005065422345137224
+    },
+    {
+      "agency": "OTI",
+      "request_count": 157,
+      "request_share": 4.541812154120754e-05
+    },
+    {
+      "agency": "3-1-1",
+      "request_count": 1,
+      "request_share": 2.892873983516404e-07
+    }
+  ]
+}

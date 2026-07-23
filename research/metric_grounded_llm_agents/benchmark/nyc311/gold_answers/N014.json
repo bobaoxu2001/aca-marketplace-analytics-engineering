@@ -1,0 +1,44 @@
+{
+  "question_id": "N014",
+  "question": "How do median and mean response times compare by borough?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N014.sql",
+  "row_count": 6,
+  "rows": [
+    {
+      "borough": "UNSPECIFIED",
+      "median_response_hours": 103.0,
+      "mean_response_hours": 902.3413103177717,
+      "closed_rows": 2549
+    },
+    {
+      "borough": "BRONX",
+      "median_response_hours": 14.0,
+      "mean_response_hours": 209.35074485316494,
+      "closed_rows": 732829
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "median_response_hours": 13.0,
+      "mean_response_hours": 445.5918117370695,
+      "closed_rows": 119195
+    },
+    {
+      "borough": "MANHATTAN",
+      "median_response_hours": 10.0,
+      "mean_response_hours": 375.5686027752278,
+      "closed_rows": 696087
+    },
+    {
+      "borough": "BROOKLYN",
+      "median_response_hours": 6.0,
+      "mean_response_hours": 333.57546969242463,
+      "closed_rows": 1030089
+    },
+    {
+      "borough": "QUEENS",
+      "median_response_hours": 6.0,
+      "mean_response_hours": 356.5277841138169,
+      "closed_rows": 811057
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "question_id": "N018",
+  "question": "Which boroughs have the most noise complaints per 1,000 residents?",
+  "gold_sql": "benchmark/nyc311/gold_sql/N018.sql",
+  "row_count": 5,
+  "rows": [
+    {
+      "borough": "BRONX",
+      "noise_requests": 213606,
+      "population_2020": 1472654,
+      "noise_per_1k": 145.04832771309486
+    },
+    {
+      "borough": "MANHATTAN",
+      "noise_requests": 190773,
+      "population_2020": 1694251,
+      "noise_per_1k": 112.60019914404654
+    },
+    {
+      "borough": "BROOKLYN",
+      "noise_requests": 190487,
+      "population_2020": 2736074,
+      "noise_per_1k": 69.62055850828597
+    },
+    {
+      "borough": "QUEENS",
+      "noise_requests": 142327,
+      "population_2020": 2405464,
+      "noise_per_1k": 59.16821037438099
+    },
+    {
+      "borough": "STATEN ISLAND",
+      "noise_requests": 16056,
+      "population_2020": 495747,
+      "noise_per_1k": 32.38748797269575
+    }
+  ]
+}
