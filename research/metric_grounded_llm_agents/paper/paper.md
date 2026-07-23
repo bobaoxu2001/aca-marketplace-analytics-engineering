@@ -27,8 +27,11 @@ agreement—and shows that an injected metric registry nearly doubles executabil
 and lowers numeric error without reaching strict correctness. The gap replicates
 again on a second, non-healthcare domain (NYC 311 Service Requests) with a third
 model family (Claude): 96.7% executable SQL yet still 0% strict agreement
-(bootstrap interval [0.000, 0.000]), so the finding is not an artifact of one
-benchmark or one model. The study is a
+(bootstrap interval [0.000, 0.000]), and Claude reproduces the same 0% strict
+result on the original CMS benchmark, giving a same-domain three-model comparison.
+A deterministic compiler ported to the second domain reaches 0.900 strict, so the
+questions are answerable and the 0% is an LLM-compilation gap, not an artifact of
+one benchmark or one model. The study is a
 manuscript-in-preparation diagnostic; independent human-authored testing and
 qualitative review remain pending.
 
@@ -517,6 +520,39 @@ difference, mirroring the CMS oracle's strict-versus-compatible margin. With two
 domains and three model families (subscription Codex, DeepSeek, Claude) all
 showing a 0% LLM strict interval of [0.000, 0.000] against oracle upper bounds of
 0.80–0.90, the gap is not an artifact of one benchmark or one model.
+
+### 7.9 Third model on the CMS benchmark (Claude)
+
+To complete a same-domain three-model comparison, we also ran the two LLM
+conditions on the original CMS benchmark with `claude-haiku-4-5-20251001`
+(three repeats, 90 runs each). Table 5 places all three snapshot-identified
+models on the identical questions.
+
+| CMS, schema-only LLM-SQL | Executable SQL | End-to-end strict |
+| --- | ---: | ---: |
+| Subscription Codex (§7.1 pilot) | 1.000 | 0.033 |
+| DeepSeek (§7.7) | 0.211 | 0.000 [0.000, 0.000] |
+| Claude (this section) | 0.500 | 0.000 [0.000, 0.000] |
+
+Strict complete-result agreement is again **0%** for both Claude conditions
+(schema-only and registry-grounded), so the execution–semantics gap holds for a
+third model on the original domain. Two nuances are worth stating honestly.
+First, Claude's executable rate (0.500 schema-only, 0.489 registry) is depressed
+not by SQL errors but by the benchmark's strict source-table allow-list: 42 of 45
+schema-only failures were validation rejections (`ValueError`) for joining a
+descriptive dimension table the question did not pre-declare—typically
+`dim_geography` for a state name or `dim_metal_level` as a proper dimension—while
+only three were execution errors. Executability is therefore itself sensitive to
+the validation policy and to how much descriptive structure a model volunteers,
+whereas strict correctness is robustly zero regardless. Second, the registry did
+**not** help here and slightly hurt: paired registry-minus-schema-only Top-k was
+−0.124 (95% interval [−0.278, −0.014], excluding zero) and group match −0.093
+([−0.257, 0.004]), because the registry's listed primary tables encouraged still
+more non-declared joins and thus more allow-list rejections. This contrasts with
+DeepSeek on CMS (registry nearly doubled executability) and Claude on NYC 311
+(registry halved numeric error): metric grounding's effect on the executed set is
+model- and harness-dependent and is not uniformly positive. The one invariant
+across every model, domain, and grounding condition is the 0% strict interval.
 
 ## 8. Discussion
 
