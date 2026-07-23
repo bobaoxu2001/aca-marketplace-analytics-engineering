@@ -1,9 +1,24 @@
 # Running the NYC 311 second-domain benchmark
 
 The evaluation harness is domain-parameterized. The `llm_sql` and
-`llm_registry_sql` conditions run on NYC 311 with no code changes — only flags.
-(`metric_grounded` is the CMS-specific deterministic compiler and is not wired
-for this domain; it is intentionally omitted here.)
+`llm_registry_sql` conditions run on NYC 311 with only flags. The
+`metric_grounded` oracle compiler is also available for this domain via
+`--compiler nyc311`; it is deterministic and needs no API key.
+
+The oracle upper bound (no key required):
+
+```bash
+python evaluation/run_eval.py \
+  --database ../../data/processed/nyc311_2024.duckdb \
+  --schema marts --metrics configs/metrics.nyc311.yaml --compiler nyc311 \
+  --questions benchmark/nyc311/questions.yaml \
+  --gold-dir benchmark/nyc311/gold_answers \
+  --systems metric_grounded --repeats 1 \
+  --experiment-id nyc311_oracle --output-dir evaluation/results/nyc311_oracle
+```
+
+This reproduces the second-domain oracle result: executable 1.000, strict 0.900
+[0.800, 1.000], compatible projection 0.933.
 
 ## One-time setup
 

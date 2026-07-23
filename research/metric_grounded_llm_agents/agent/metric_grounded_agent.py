@@ -9,6 +9,8 @@ from typing import Any
 
 import duckdb
 
+from typing import Callable
+
 from .citation_builder import build_citations
 from .metric_registry import MetricRegistry
 from .metric_sql import generate_metric_sql
@@ -16,9 +18,9 @@ from .paths import DEFAULT_DATABASE
 from .validators import claim_support_status, validate_sql
 
 
-def _execute(database: Path, sql: str) -> list[dict[str, Any]]:
+def _execute(database: Path, sql: str, schema: str = "main_marts") -> list[dict[str, Any]]:
     with duckdb.connect(str(database), read_only=True) as connection:
-        connection.execute("set schema 'main_marts'")
+        connection.execute(f"set schema '{schema}'")
         result = connection.execute(sql)
         columns = [column[0] for column in result.description]
         return [dict(zip(columns, row)) for row in result.fetchall()]
@@ -27,9 +29,17 @@ def _execute(database: Path, sql: str) -> list[dict[str, Any]]:
 class MetricGroundedAgent:
     """Runs a documented metric-template generator over approved mart tables."""
 
-    def __init__(self, database: Path = DEFAULT_DATABASE, registry: MetricRegistry | None = None):
+    def __init__(
+        self,
+        database: Path = DEFAULT_DATABASE,
+        registry: MetricRegistry | None = None,
+        schema: str = "main_marts",
+        compiler: Callable[[dict[str, Any]], str] = generate_metric_sql,
+    ):
         self.database = database
         self.registry = registry or MetricRegistry.from_yaml()
+        self.schema = schema
+        self.compiler = compiler
 
     def answer(self, question: dict[str, Any]) -> dict[str, Any]:
         start = time.perf_counter()
@@ -37,7 +47,7 @@ class MetricGroundedAgent:
         allowed_tables = set(question.get("source_tables", [])) | {
             table for metric in selected_metrics for table in metric.primary_tables
         }
-        sql = generate_metric_sql(question)
+        sql = self.compiler(question)
         validation = validate_sql(sql, allowed_tables, question.get("required_terms", []))
         base = {
             "system": "metric_grounded",
@@ -64,7 +74,7 @@ class MetricGroundedAgent:
                 "latency_seconds": round(time.perf_counter() - start, 4),
             }
         try:
-            rows = _execute(self.database, sql)
+            rows = _execute(self.database, sql, self.schema)
         except duckdb.Error as exc:
             return {
                 **base,

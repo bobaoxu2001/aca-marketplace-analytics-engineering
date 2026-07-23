@@ -21,6 +21,8 @@ from agent.llm_registry_sql import LLMRegistrySQLBaseline  # noqa: E402
 from agent.llm_sql import LLMSQLBaseline  # noqa: E402
 from agent.metric_grounded_agent import MetricGroundedAgent  # noqa: E402
 from agent.metric_registry import MetricRegistry  # noqa: E402
+from agent.metric_sql import generate_metric_sql  # noqa: E402
+from agent.metric_sql_nyc311 import generate_nyc311_metric_sql  # noqa: E402
 from agent.paths import DEFAULT_DATABASE, DEFAULT_METRICS_CONFIG, DEFAULT_QUESTIONS, RESEARCH_DIR  # noqa: E402
 from evaluation.metrics import summarize  # noqa: E402
 from evaluation.result_metrics import compare_result_rows, numeric_claim_faithfulness  # noqa: E402
@@ -108,6 +110,7 @@ def main() -> int:
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
     parser.add_argument("--schema", default="main_marts", help="DuckDB marts schema name (CMS: main_marts, NYC 311: marts).")
     parser.add_argument("--metrics", type=Path, default=DEFAULT_METRICS_CONFIG, help="Metric registry YAML for the llm_registry_sql grounding block.")
+    parser.add_argument("--compiler", choices=["cms", "nyc311"], default="cms", help="Deterministic metric_grounded compiler to use (CMS or NYC 311).")
     parser.add_argument("--limit", type=int, default=0, help="Run only the first N questions.")
     parser.add_argument("--repeats", type=int, default=1, help="Repeat every system-question condition N times.")
     parser.add_argument("--systems", default="direct_llm,llm_sql,llm_registry_sql,metric_grounded")
@@ -138,7 +141,16 @@ def main() -> int:
         if "llm_registry_sql" in systems
         else None
     )
-    metric_grounded = MetricGroundedAgent(database=args.database) if "metric_grounded" in systems else None
+    metric_grounded = (
+        MetricGroundedAgent(
+            database=args.database,
+            registry=MetricRegistry.from_yaml(args.metrics),
+            schema=args.schema,
+            compiler=generate_nyc311_metric_sql if args.compiler == "nyc311" else generate_metric_sql,
+        )
+        if "metric_grounded" in systems
+        else None
+    )
     results: list[dict] = []
     for repeat_index in range(args.repeats):
         for question in questions:

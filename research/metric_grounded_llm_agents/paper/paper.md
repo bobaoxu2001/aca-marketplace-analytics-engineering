@@ -477,14 +477,17 @@ from the registry-grounded condition. We built a 30-question benchmark
 (10 simple / 12 intermediate / 8 hard) with reference SQL verified to execute and
 return non-empty results against the warehouse. The model is Anthropic
 `claude-haiku-4-5-20251001`, a dated snapshot, run at three repeats over the 30
-questions (90 runs each). The oracle compiler is CMS-specific and is not
-evaluated on this domain. Table 4 reports the strict-rescored summary with
-10,000-sample question-clustered bootstrap intervals.
+questions (90 runs each). We also ported the oracle-routed deterministic compiler
+to this domain—an independent rule-based generator authored from the NYC metric
+registry, not from the gold SQL—to establish the second-domain upper bound.
+Table 4 reports the strict-rescored summary with 10,000-sample question-clustered
+bootstrap intervals.
 
 | Condition | Executable SQL | End-to-end strict | End-to-end compat. projection | Numeric SMAPE |
 | --- | ---: | ---: | ---: | ---: |
 | Schema-only LLM-SQL | 0.967 | 0.000 [0.000, 0.000] | 0.207 | 0.551 [0.265, 0.865] |
 | LLM-SQL + metric registry | 0.967 | 0.000 [0.000, 0.000] | 0.241 | 0.397 [0.123, 0.723] |
+| Oracle compiler | 1.000 | 0.900 [0.800, 1.000] | 0.933 | 0.000 [0.000, 0.000] |
 
 The core finding replicates across both domain and model family. Despite a high
 executable-SQL rate of 96.7%—far above the 21–38% seen with DeepSeek on the CMS
@@ -504,10 +507,16 @@ traceability (0.495 → 0.745) all moved in the registry's favor, with paired
 intervals that reach zero. As on the CMS domain, metric grounding improves
 executability-adjacent fidelity and evidence but does not deliver strict
 complete-result correctness, locating the residual failure in query compilation
-and output-contract generation rather than in metric grounding. With two domains
-and three model families (subscription Codex, DeepSeek, Claude) all showing a
-0% strict interval of [0.000, 0.000], the gap is not an artifact of one benchmark
-or one model.
+and output-contract generation rather than in metric grounding. The second-domain
+oracle compiler makes the same point from the other side: a deterministic
+generator authored from the registry reached 0.900 strict [0.800, 1.000] on the
+identical questions, so the questions are answerable with correct compilation—the
+0% is an LLM-compilation gap, not an artifact of impossible questions. The three
+strict misses were two date-serialization mismatches and one projection-naming
+difference, mirroring the CMS oracle's strict-versus-compatible margin. With two
+domains and three model families (subscription Codex, DeepSeek, Claude) all
+showing a 0% LLM strict interval of [0.000, 0.000] against oracle upper bounds of
+0.80–0.90, the gap is not an artifact of one benchmark or one model.
 
 ## 8. Discussion
 
