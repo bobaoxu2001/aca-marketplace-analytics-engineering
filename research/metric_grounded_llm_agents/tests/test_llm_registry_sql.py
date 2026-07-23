@@ -72,3 +72,30 @@ def test_prompt_matches_schema_only_baseline_except_for_registry(tmp_path, monke
     assert "Metric definitions" not in schema_only["prompt"]
     assert "Metric definitions" in grounded["prompt"]
     assert grounded["prompt"].startswith("Question: Which states")
+
+
+def test_schema_parameter_reads_a_non_default_schema(tmp_path, monkeypatch):
+    """A second domain uses a different marts schema (e.g. NYC 311 -> 'marts')."""
+    from agent.llm_sql import LLMSQLBaseline
+
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    database = tmp_path / "nyc.duckdb"
+    with duckdb.connect(str(database)) as connection:
+        connection.execute("create schema marts")
+        connection.execute(
+            "create table marts.fact_service_request(unique_key varchar, borough varchar)"
+        )
+    question = {
+        "id": "N001",
+        "question": "Which boroughs receive the most service requests?",
+        "metrics": [],
+        "source_tables": ["fact_service_request"],
+    }
+    for baseline in (
+        LLMSQLBaseline(database=database, schema="marts"),
+        LLMRegistrySQLBaseline(database=database, schema="marts"),
+    ):
+        result = baseline.answer(question)
+        assert result["status"] == "skipped_missing_api_key"
+        # The schema context is read from the 'marts' schema, not the CMS default.
+        assert "fact_service_request.borough" in result["prompt"]

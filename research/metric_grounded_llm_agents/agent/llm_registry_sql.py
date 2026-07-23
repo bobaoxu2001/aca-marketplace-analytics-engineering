@@ -51,15 +51,17 @@ def _registry_context(metrics: list[MetricDefinition]) -> str:
 class LLMRegistrySQLBaseline:
     """LLM SQL generation with an explicit metric-registry grounding block."""
 
-    def __init__(self, database: Path = DEFAULT_DATABASE, registry: MetricRegistry | None = None):
+    def __init__(self, database: Path = DEFAULT_DATABASE, registry: MetricRegistry | None = None, schema: str = "main_marts"):
         self.database = database
         self.registry = registry or MetricRegistry.from_yaml()
+        self.schema = schema
 
     def _schema_context(self) -> str:
         with duckdb.connect(str(self.database), read_only=True) as connection:
             rows = connection.execute(
                 "select table_name, column_name from information_schema.columns "
-                "where table_schema = 'main_marts' order by table_name, ordinal_position"
+                "where table_schema = ? order by table_name, ordinal_position",
+                [self.schema],
             ).fetchall()
         return "\n".join(f"{table}.{column}" for table, column in rows)
 
@@ -123,7 +125,7 @@ class LLMRegistrySQLBaseline:
             if not validation.passed:
                 raise ValueError("; ".join(validation.messages) or "Generated SQL failed validation")
             with duckdb.connect(str(self.database), read_only=True) as connection:
-                connection.execute("set schema 'main_marts'")
+                connection.execute(f"set schema '{self.schema}'")
                 result = connection.execute(sql)
                 columns = [column[0] for column in result.description]
                 rows = [dict(zip(columns, row)) for row in result.fetchall()]

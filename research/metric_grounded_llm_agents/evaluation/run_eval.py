@@ -20,7 +20,8 @@ from agent.direct_llm import answer as direct_llm_answer  # noqa: E402
 from agent.llm_registry_sql import LLMRegistrySQLBaseline  # noqa: E402
 from agent.llm_sql import LLMSQLBaseline  # noqa: E402
 from agent.metric_grounded_agent import MetricGroundedAgent  # noqa: E402
-from agent.paths import DEFAULT_DATABASE, DEFAULT_QUESTIONS, RESEARCH_DIR  # noqa: E402
+from agent.metric_registry import MetricRegistry  # noqa: E402
+from agent.paths import DEFAULT_DATABASE, DEFAULT_METRICS_CONFIG, DEFAULT_QUESTIONS, RESEARCH_DIR  # noqa: E402
 from evaluation.metrics import summarize  # noqa: E402
 from evaluation.result_metrics import compare_result_rows, numeric_claim_faithfulness  # noqa: E402
 
@@ -32,7 +33,7 @@ def load_questions(path: Path) -> list[dict]:
 
 def load_gold_answers(output_dir: Path) -> dict[str, dict]:
     answers: dict[str, dict] = {}
-    for path in sorted(output_dir.glob("Q*.json")):
+    for path in sorted(output_dir.glob("*.json")):
         payload = json.loads(path.read_text())
         answers[payload["question_id"]] = payload
     return answers
@@ -105,6 +106,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--questions", type=Path, default=DEFAULT_QUESTIONS)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
+    parser.add_argument("--schema", default="main_marts", help="DuckDB marts schema name (CMS: main_marts, NYC 311: marts).")
+    parser.add_argument("--metrics", type=Path, default=DEFAULT_METRICS_CONFIG, help="Metric registry YAML for the llm_registry_sql grounding block.")
     parser.add_argument("--limit", type=int, default=0, help="Run only the first N questions.")
     parser.add_argument("--repeats", type=int, default=1, help="Repeat every system-question condition N times.")
     parser.add_argument("--systems", default="direct_llm,llm_sql,llm_registry_sql,metric_grounded")
@@ -122,9 +125,20 @@ def main() -> int:
     experiment_id = args.experiment_id or datetime.now(timezone.utc).strftime("exp_%Y%m%dT%H%M%SZ")
 
     systems = {item.strip() for item in args.systems.split(",") if item.strip()}
-    llm_sql = LLMSQLBaseline(database=args.database)
-    llm_registry_sql = LLMRegistrySQLBaseline(database=args.database)
-    metric_grounded = MetricGroundedAgent(database=args.database)
+    # Instantiate only the requested systems so a second domain (e.g. NYC 311)
+    # can run the llm_sql / llm_registry_sql conditions without constructing the
+    # CMS-specific deterministic compiler.
+    llm_sql = LLMSQLBaseline(database=args.database, schema=args.schema) if "llm_sql" in systems else None
+    llm_registry_sql = (
+        LLMRegistrySQLBaseline(
+            database=args.database,
+            registry=MetricRegistry.from_yaml(args.metrics),
+            schema=args.schema,
+        )
+        if "llm_registry_sql" in systems
+        else None
+    )
+    metric_grounded = MetricGroundedAgent(database=args.database) if "metric_grounded" in systems else None
     results: list[dict] = []
     for repeat_index in range(args.repeats):
         for question in questions:
@@ -157,6 +171,9 @@ def main() -> int:
         "git_sha": git_sha(),
         "database": str(args.database),
         "database_sha256": file_sha256(args.database),
+        "schema": args.schema,
+        "metrics_file": str(args.metrics),
+        "metrics_sha256": file_sha256(args.metrics),
         "questions_file": str(args.questions),
         "questions_sha256": file_sha256(args.questions),
         "gold_dir": str(args.gold_dir),
