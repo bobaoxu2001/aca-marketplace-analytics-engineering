@@ -24,7 +24,11 @@ is a weak proxy for semantics and that metric routing alone does not solve query
 generalization. A pinned API-model rerun (DeepSeek) replicates the
 execution–semantics gap—21–38% executable SQL but 0% strict complete-result
 agreement—and shows that an injected metric registry nearly doubles executability
-and lowers numeric error without reaching strict correctness. The study is a
+and lowers numeric error without reaching strict correctness. The gap replicates
+again on a second, non-healthcare domain (NYC 311 Service Requests) with a third
+model family (Claude): 96.7% executable SQL yet still 0% strict agreement
+(bootstrap interval [0.000, 0.000]), so the finding is not an artifact of one
+benchmark or one model. The study is a
 manuscript-in-preparation diagnostic; independent human-authored testing and
 qualitative review remain pending.
 
@@ -55,7 +59,7 @@ hallucination reduction. Instead, the project contributes an inspectable
 evaluation scaffold and a set of negative findings about executable SQL,
 oracle routing, and compiler generalization.
 
-The work makes four contributions:
+The work makes five contributions:
 
 1. A reproducible DuckDB/dbt research substrate over six official CMS
    Marketplace files.
@@ -66,6 +70,8 @@ The work makes four contributions:
 4. A conservative empirical analysis that distinguishes subscription-Codex
    pilots, oracle upper bounds, predicted routing, post-hoc repairs, and locked
    model-generated diagnostics.
+5. A cross-domain, cross-model replication (NYC 311 Service Requests; Claude)
+   showing the execution–semantics gap is not specific to one benchmark or model.
 
 ## 2. Related work
 
@@ -454,8 +460,54 @@ and numeric fidelity for a real API model but does not, by itself, deliver stric
 complete-result correctness—consistent with locating the residual failure in
 query compilation and output-contract generation. The subscription-Codex figures
 in §7.1 and §7.5 are retained as earlier diagnostics; this run is the
-snapshot-identified replacement the model-identity threat called for, and remains
-a single-model, single-domain result.
+snapshot-identified replacement the model-identity threat called for. Section 7.8
+extends it to a second domain and a third model family.
+
+### 7.8 Cross-domain, cross-model replication (NYC 311, Claude)
+
+To test whether the execution–semantics gap is specific to the CMS benchmark or
+to a single model, we replicated the two LLM conditions on an independent,
+non-healthcare domain with a different model family. The domain is NYC 311
+Service Requests (full-year 2024; 3,456,770 requests) built into a DuckDB marts
+schema mirroring the CMS layout. Its metric registry deliberately encodes
+contested definitions—response time over closed requests only, which statuses
+count as resolved, per-capita normalization requiring a borough-population join,
+and window-function share denominators—so that a schema-only model can diverge
+from the registry-grounded condition. We built a 30-question benchmark
+(10 simple / 12 intermediate / 8 hard) with reference SQL verified to execute and
+return non-empty results against the warehouse. The model is Anthropic
+`claude-haiku-4-5-20251001`, a dated snapshot, run at three repeats over the 30
+questions (90 runs each). The oracle compiler is CMS-specific and is not
+evaluated on this domain. Table 4 reports the strict-rescored summary with
+10,000-sample question-clustered bootstrap intervals.
+
+| Condition | Executable SQL | End-to-end strict | End-to-end compat. projection | Numeric SMAPE |
+| --- | ---: | ---: | ---: | ---: |
+| Schema-only LLM-SQL | 0.967 | 0.000 [0.000, 0.000] | 0.207 | 0.551 [0.265, 0.865] |
+| LLM-SQL + metric registry | 0.967 | 0.000 [0.000, 0.000] | 0.241 | 0.397 [0.123, 0.723] |
+
+The core finding replicates across both domain and model family. Despite a high
+executable-SQL rate of 96.7%—far above the 21–38% seen with DeepSeek on the CMS
+questions—strict complete-result agreement is again **0%**, with a bootstrap
+interval of [0.000, 0.000] for both conditions. A 97%-executable model that
+reproduces the exact reference table on none of 90 runs is the sharpest form of
+the execution–semantics gap: fluency and execution success are uninformative
+about strict correctness. The registry again helps directionally without reaching
+significance or strict correctness. It lowered numeric error (SMAPE 0.551 → 0.397;
+paired registry-minus-schema-only −0.154, 95% interval [−0.460, 0.171]) and, most
+strikingly, cut the mean numeric relative error from 25,958 to 4.66—the signature
+of the per-capita denominator trap, where the schema-only model chooses a wrong
+normalization and returns ratios off by orders of magnitude that the registry
+definition corrects. Compatible projection (0.207 → 0.241), Top-k overlap
+(paired 0.018 [−0.051, 0.104]), group match (0.032 [−0.000, 0.097]), and
+traceability (0.495 → 0.745) all moved in the registry's favor, with paired
+intervals that reach zero. As on the CMS domain, metric grounding improves
+executability-adjacent fidelity and evidence but does not deliver strict
+complete-result correctness, locating the residual failure in query compilation
+and output-contract generation rather than in metric grounding. With two domains
+and three model families (subscription Codex, DeepSeek, Claude) all showing a
+0% strict interval of [0.000, 0.000], the gap is not an artifact of one benchmark
+or one model.
 
 ## 8. Discussion
 
@@ -522,9 +574,12 @@ condition blinded because SQL/evidence presentation can reveal system family.
 Two independent reviews and adjudication remain incomplete, so no qualitative
 faithfulness result is claimed.
 
-**Statistical scope.** Bootstrap intervals resample 30 questions from one domain.
-They do not represent uncertainty over schemas, domains, model snapshots, or
-human-authored intents.
+**Statistical scope.** Each bootstrap resamples 30 questions within a single
+domain; the study now spans two domains (CMS, NYC 311) and three model families,
+but no interval represents uncertainty jointly over schemas, domains, model
+snapshots, or human-authored intents. The cross-domain replication (§7.8)
+strengthens external validity qualitatively rather than through a pooled
+random-effects estimate.
 
 **External validity.** CMS Marketplace data is public insurance-market data, not
 clinical or claims data. Findings should not be transferred to medical decision
