@@ -1,0 +1,54 @@
+# Second-domain metric registry: NYC 311 Service Requests (2024).
+# Mirrors the structure of metrics.yaml (CMS domain). Several metrics
+# deliberately encode a contested definition in `expression`/`caveats` so the
+# schema-only LLM baseline can diverge from the registry-grounded condition -
+# that divergence is the evidence the second domain is meant to produce.
+metrics:
+  - slug: request_volume
+    name: Service request volume
+    expression: count(*)
+    primary_tables: [fact_service_request]
+    allowed_dimensions: [complaint_type, agency, borough, status, open_data_channel_type]
+    caveats: [Counts request rows at complaint_type grain, Descriptor is a finer grain and is not the default, Duplicate requests are not merged]
+
+  - slug: median_response_hours
+    name: Median response time (hours)
+    expression: median(date_diff('hour', created_at, closed_at))
+    primary_tables: [fact_service_request]
+    allowed_dimensions: [complaint_type, agency, borough]
+    caveats: [Only closed requests with closed_at >= created_at, Open/unresolved requests are excluded not treated as censored, Wall-clock hours not business hours, Median is the default because the mean is dominated by extreme tails]
+
+  - slug: mean_response_hours
+    name: Mean response time (hours)
+    expression: avg(date_diff('hour', created_at, closed_at))
+    primary_tables: [fact_service_request]
+    allowed_dimensions: [complaint_type, agency, borough]
+    caveats: [Same closed-only population as median_response_hours, Heavily right-skewed - reported only alongside the median]
+
+  - slug: resolution_rate
+    name: Resolution rate
+    expression: avg(case when status = 'Closed' then 1.0 else 0.0 end)
+    primary_tables: [fact_service_request]
+    allowed_dimensions: [complaint_type, agency, borough]
+    caveats: [Only status = 'Closed' counts as resolved, In Progress/Open/Pending/Assigned/Started/Unspecified do not count]
+
+  - slug: requests_per_1k_residents
+    name: Requests per 1,000 residents
+    expression: count(*) * 1000.0 / dim_borough.population_2020
+    primary_tables: [fact_service_request, dim_borough]
+    allowed_dimensions: [borough]
+    caveats: [Requires the dim_borough population join, Not raw counts, Uses 2020 Census borough population, Unspecified borough has no population and is excluded]
+
+  - slug: agency_share
+    name: Share of requests by agency
+    expression: count(*) / sum(count(*)) over ()
+    primary_tables: [fact_service_request, dim_agency]
+    allowed_dimensions: [agency, borough, complaint_type]
+    caveats: [Denominator is all requests in scope via a window function, Agency is taken as published - some requests are reassigned]
+
+  - slug: channel_mix
+    name: Intake channel mix
+    expression: count(*) grouped by open_data_channel_type
+    primary_tables: [fact_service_request]
+    allowed_dimensions: [open_data_channel_type, agency, borough]
+    caveats: [Channel labels used as published including UNKNOWN and Unspecified]

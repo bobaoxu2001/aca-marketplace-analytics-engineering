@@ -47,3 +47,7 @@ applicant_private/
 # Local active model config (no secrets; key stays in env)
 research/metric_grounded_llm_agents/configs/model_config.yaml
 .venv.x86-broken/
+
+# NYC 311 second-domain raw data and warehouse (large; rebuild via scripts)
+data/raw/nyc311/monthly/*.csv
+data/processed/nyc311_2024.duckdb
