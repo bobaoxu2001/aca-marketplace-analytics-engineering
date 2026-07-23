@@ -1,0 +1,27 @@
+provider: qwen
+api_style: chat_completions
+# DashScope exposes an OpenAI-compatible Chat Completions endpoint.
+base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+model: qwen-plus
+model_snapshot: qwen-plus
+temperature: 0
+max_output_tokens: 1200
+api_key_env: DASHSCOPE_API_KEY
+max_retries: 4
+retry_backoff_seconds: 2
+pricing:
+  # Fill in from the DashScope pricing page at run time; raw per-call token usage
+  # recorded in results is the authoritative record, cost is a derived estimate.
+  input_usd_per_million_tokens: 0.40
+  output_usd_per_million_tokens: 1.20
+  source: https://help.aliyun.com/zh/model-studio/billing-for-model-studio
+  checked_at: TODO-fill-run-date
+notes:
+  - A second independent provider so the execution-semantics gap can be shown as
+    model-agnostic rather than DeepSeek-specific.
+  - Copy this file to configs/model_config.yaml to activate it (that name wins),
+    then run the same benchmark command used for the DeepSeek rerun.
+  - Reachable from mainland China without a VPN; pay in RMB via Alibaba Cloud.
+  - Set the key in the shell only, never commit it - export DASHSCOPE_API_KEY=...
+  - qwen-plus tracks a moving snapshot; record the run date the same way the
+    DeepSeek and OpenAI notes do.
