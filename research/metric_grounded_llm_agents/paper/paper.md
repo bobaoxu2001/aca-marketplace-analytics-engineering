@@ -21,8 +21,12 @@ bound on a co-developed benchmark, not learned generalization. On a hash-locked,
 model-generated lexical-shift challenge, strict agreement fell to 40.0% even
 with oracle metric routing. In this benchmark, these results show that execution
 is a weak proxy for semantics and that metric routing alone does not solve query
-generalization. The study is a manuscript-in-preparation diagnostic; independent
-human-authored testing and qualitative review remain pending.
+generalization. A pinned API-model rerun (DeepSeek) replicates the
+execution–semantics gap—21–38% executable SQL but 0% strict complete-result
+agreement—and shows that an injected metric registry nearly doubles executability
+and lowers numeric error without reaching strict correctness. The study is a
+manuscript-in-preparation diagnostic; independent human-authored testing and
+qualitative review remain pending.
 
 ## 1. Introduction
 
@@ -412,6 +416,46 @@ output-contract** stages rather than routing—on the locked challenge, oracle
 routing eliminates route error by construction yet still leaves 60% strict
 failure. A pipeline that reported only router accuracy or execution rate would
 mislabel most of these runs as successes.
+
+### 7.7 Pinned API-model rerun (DeepSeek)
+
+To retire the model-identity threat for the online conditions, we reran the full
+benchmark against a pinned, snapshot-identified API model reachable without a
+subscription CLI. The runtime requested `deepseek-chat` and the service reported
+`deepseek-v4-flash`; each call records the served model, token usage, and an
+estimated cost. This run evaluates four conditions—direct (question only),
+schema-only LLM-SQL, LLM-SQL plus the injected metric registry
+(§5.5), and the oracle compiler—at three repeats over the 30 questions (90 runs
+each). Table 3 reports the strict-rescored summary with 10,000-sample
+question-clustered bootstrap intervals.
+
+| Condition | Executable SQL | End-to-end strict | End-to-end compat. projection | Numeric SMAPE |
+| --- | ---: | ---: | ---: | ---: |
+| Direct (no data access) | — | 0.000 | 0.000 | — |
+| Schema-only LLM-SQL | 0.211 | 0.000 [0.000, 0.000] | 0.033 | 0.676 [0.322, 0.934] |
+| LLM-SQL + metric registry | 0.378 | 0.000 [0.000, 0.000] | 0.044 | 0.356 [0.033, 0.722] |
+| Oracle compiler | 1.000 | 0.800 [0.667, 0.933] | 1.000 | 0.000 [0.000, 0.000] |
+
+Three observations replicate and sharpen the subscription-pilot findings with a
+citable model. First, the execution–semantics gap persists: the LLM-SQL systems
+produced executable SQL on 21–38% of runs but reproduced the complete reference
+result on **0%** (bootstrap interval [0.000, 0.000]); direct answers were 100%
+unsupported. Second, injecting the metric registry (schema-only → registry)
+nearly doubled the executable-SQL rate (0.211 → 0.378) and lowered numeric error,
+with a paired registry-minus-schema-only SMAPE difference of −0.407
+(95% interval [−0.814, 0.000])—an improvement whose interval just reaches zero.
+The same paired comparison showed no significant difference on the questions both
+systems executed for Top-k overlap (−0.019 [−0.100, 0.066]) or group match
+(0.005 [−0.056, 0.081]); the lower marginal Top-k/group means for the registry
+condition reflect its larger and harder executed set, not a regression. Third,
+neither LLM condition reached strict correctness, while the oracle compiler again
+scored 0.800 [0.667, 0.933]. Metric grounding therefore improves executability
+and numeric fidelity for a real API model but does not, by itself, deliver strict
+complete-result correctness—consistent with locating the residual failure in
+query compilation and output-contract generation. The subscription-Codex figures
+in §7.1 and §7.5 are retained as earlier diagnostics; this run is the
+snapshot-identified replacement the model-identity threat called for, and remains
+a single-model, single-domain result.
 
 ## 8. Discussion
 
