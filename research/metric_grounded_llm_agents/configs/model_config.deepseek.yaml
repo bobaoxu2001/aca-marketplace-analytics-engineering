@@ -1,0 +1,23 @@
+provider: deepseek
+api_style: chat_completions
+base_url: https://api.deepseek.com
+model: deepseek-chat
+model_snapshot: deepseek-chat
+temperature: 0
+max_output_tokens: 1200
+api_key_env: DEEPSEEK_API_KEY
+pricing:
+  # Estimated list pricing for deepseek-chat. Raw token usage recorded per call
+  # is the authoritative record; cost is a derived estimate from this snapshot.
+  input_usd_per_million_tokens: 0.27
+  cached_input_usd_per_million_tokens: 0.07
+  output_usd_per_million_tokens: 1.10
+  source: https://api-docs.deepseek.com/quick_start/pricing
+  checked_at: 2026-07-22
+notes:
+  - Copy this file to configs/model_config.yaml to activate it (that name wins).
+  - DeepSeek exposes an OpenAI-compatible Chat Completions API reachable from
+    mainland China without a VPN; pay in RMB via the DeepSeek platform.
+  - Set the key in the shell only, never commit it - export DEEPSEEK_API_KEY=...
+  - deepseek-chat tracks DeepSeek's latest chat model; record the run date since
+    the underlying snapshot can change, the same way the OpenAI note does.

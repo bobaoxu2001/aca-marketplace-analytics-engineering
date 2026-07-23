@@ -43,3 +43,7 @@ venv/
 
 # Applicant-internal planning notes (never publish)
 applicant_private/
+
+# Local active model config (no secrets; key stays in env)
+research/metric_grounded_llm_agents/configs/model_config.yaml
+.venv.x86-broken/
