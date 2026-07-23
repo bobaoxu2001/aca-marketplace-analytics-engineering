@@ -14,12 +14,24 @@ for this domain; it is intentionally omitted here.)
    ```
 
 2. Point the model client at a provider and set the key in the shell only.
-   Either DeepSeek or Qwen works (both OpenAI-compatible, reachable from China):
+   Claude (Anthropic) is recommended: it uses a dated snapshot for a stable,
+   citable model identity. DeepSeek and Qwen (OpenAI-compatible) also work.
 
    ```bash
-   cp research/metric_grounded_llm_agents/configs/model_config.deepseek.yaml \
+   # Claude / Anthropic (recommended: pinned snapshot)
+   cp research/metric_grounded_llm_agents/configs/model_config.claude.yaml \
       research/metric_grounded_llm_agents/configs/model_config.yaml
-   export DEEPSEEK_API_KEY=sk-...        # or DASHSCOPE_API_KEY with the qwen config
+   export ANTHROPIC_API_KEY=sk-ant-...
+
+   # or DeepSeek:  model_config.deepseek.yaml  + export DEEPSEEK_API_KEY=sk-...
+   # or Qwen:      model_config.qwen.yaml      + export DASHSCOPE_API_KEY=sk-...
+   ```
+
+   Optional one-call smoke test before the full run (costs a fraction of a cent):
+
+   ```bash
+   cd research/metric_grounded_llm_agents
+   PYTHONPATH=. python -c "from agent.model_client import response_text; print(response_text('Reply with the single word OK.'))"
    ```
 
 ## Run the two LLM conditions

@@ -78,6 +78,14 @@ def _normalize_usage(raw: dict[str, Any], style: str) -> dict[str, Any]:
         input_tokens = int(raw.get("input_tokens") or 0)
         output_tokens = int(raw.get("output_tokens") or 0)
         cached = int((raw.get("input_tokens_details") or {}).get("cached_tokens") or 0)
+    elif style == "anthropic":
+        # Anthropic Messages API reports input_tokens as the UNcached portion and
+        # lists cache reads/writes separately. _estimated_cost treats input_tokens
+        # as the total (cached included), so fold cache tokens back into the total.
+        cached = int(raw.get("cache_read_input_tokens") or 0)
+        cache_write = int(raw.get("cache_creation_input_tokens") or 0)
+        input_tokens = int(raw.get("input_tokens") or 0) + cached + cache_write
+        output_tokens = int(raw.get("output_tokens") or 0)
     else:  # chat_completions
         input_tokens = int(raw.get("prompt_tokens") or 0)
         output_tokens = int(raw.get("completion_tokens") or 0)
@@ -105,7 +113,14 @@ def response_call(prompt: str, *, instructions: str | None = None) -> ModelCall:
     style = _api_style(config)
     model = config.get("model_snapshot") or config.get("model", "gpt-4.1-mini")
     max_output_tokens = int(config.get("max_output_tokens", 1200))
-    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    if style == "anthropic":
+        headers = {
+            "x-api-key": key,
+            "anthropic-version": str(config.get("anthropic_version", "2023-06-01")),
+            "Content-Type": "application/json",
+        }
+    else:
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
 
     if style == "responses":
         url = f"{_base_url(config)}/responses"
@@ -119,6 +134,17 @@ def response_call(prompt: str, *, instructions: str | None = None) -> ModelCall:
             payload["temperature"] = config["temperature"]
         if instructions:
             payload["instructions"] = instructions
+    elif style == "anthropic":
+        url = f"{_base_url(config)}/v1/messages"
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": max_output_tokens,
+        }
+        if config.get("temperature") is not None:
+            payload["temperature"] = config["temperature"]
+        if instructions:
+            payload["system"] = instructions
     else:
         url = f"{_base_url(config)}/chat/completions"
         messages: list[dict[str, str]] = []
@@ -169,6 +195,12 @@ def response_call(prompt: str, *, instructions: str | None = None) -> ModelCall:
             for output in data.get("output", [])
             for item in output.get("content", [])
             if item.get("type") == "output_text"
+        ).strip()
+    elif style == "anthropic":
+        text = "".join(
+            block.get("text", "")
+            for block in data.get("content", [])
+            if block.get("type") == "text"
         ).strip()
     else:
         text = "".join(

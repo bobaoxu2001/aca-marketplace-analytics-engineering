@@ -1,0 +1,31 @@
+provider: anthropic
+api_style: anthropic
+base_url: https://api.anthropic.com
+# Dated snapshot: a pinned model identity, which directly addresses the paper's
+# reproducibility concern (subscription Codex could not be pinned).
+model: claude-haiku-4-5-20251001
+model_snapshot: claude-haiku-4-5-20251001
+anthropic_version: "2023-06-01"
+temperature: 0
+max_output_tokens: 1200
+api_key_env: ANTHROPIC_API_KEY
+max_retries: 4
+retry_backoff_seconds: 2
+pricing:
+  # VERIFY against https://www.anthropic.com/pricing before citing cost; raw
+  # per-call token usage recorded in results is the authoritative record and the
+  # derived cost is only an estimate from this snapshot.
+  input_usd_per_million_tokens: 1.00
+  cached_input_usd_per_million_tokens: 0.10
+  output_usd_per_million_tokens: 5.00
+  source: https://www.anthropic.com/pricing
+  checked_at: TODO-verify
+notes:
+  - A third, independent provider (Anthropic Messages API) so the
+    execution-semantics gap can be shown across model families.
+  - Copy this file to configs/model_config.yaml to activate it (that name wins).
+  - Uses a DATED snapshot for a stable, citable model identity. To use a stronger
+    model swap model/model_snapshot to claude-sonnet-5 or claude-opus-4-8 (higher
+    cost); a stronger model that still misses strict correctness strengthens the
+    paper's point.
+  - Set the key in the shell only, never commit it - export ANTHROPIC_API_KEY=...
